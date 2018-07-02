@@ -1,27 +1,30 @@
-import { Directive, ElementRef, HostListener } from '@angular/core';
+import {Directive, ElementRef, HostListener} from '@angular/core';
+import { ImageProvider } from "../../providers/image/image";
 
 let element: HTMLCanvasElement;
 let context: CanvasRenderingContext2D;
 let isDrawing: boolean;
-let lastMouse: {x: number, y: number};
+let lastMouse: { x: number, y: number };
 
 
 /**
  * Directive for drawing elements on the HTML5 Canvas
  */
 @Directive({
-  selector: '[canvas-line]'
+    selector: '[canvas-line]'
 })
 export class CanvasLineDirective {
 
-    constructor(el: ElementRef) {
+    constructor(el: ElementRef,
+                imageProvider: ImageProvider) {
         element = (<HTMLCanvasElement>el.nativeElement);
         context = element.getContext('2d');
         isDrawing = false;
         lastMouse = {x: 0, y: 0};
+        console.log(imageProvider.currentImage);
     }
 
-    ngOnInit(){
+    ngOnInit() {
 
     }
 
@@ -31,6 +34,7 @@ export class CanvasLineDirective {
         context.beginPath();
         isDrawing = true;
     }
+
     @HostListener('mousemove', ['$event']) onMouseMove(event) {
         if (isDrawing) {
             context.moveTo(lastMouse.x, lastMouse.y);
@@ -42,6 +46,7 @@ export class CanvasLineDirective {
             lastMouse.y = event.offsetY;
         }
     }
+
     @HostListener('mouseup') onMouseUp() {
         isDrawing = false;
     }
