@@ -6,7 +6,8 @@ let isDrawing: boolean;
 let default_color = 'black';
 let boxes = [];
 let curBox = {x1: 0, y1: 0, x2: 0, y2: 0};
-
+let selectedIndex = 0;
+let i = 0;
 
 @Directive({
     selector: '[canvas-rect]' // Attribute selector
@@ -21,6 +22,18 @@ export class CanvasRectDirective {
 
     ngOnInit() {
     }
+
+	drawAllBoxes(): void {
+		i = 0;
+		for (let box of boxes) {
+			if(i == selectedIndex){
+				this.drawBox(box, 'yellow');
+			}else{
+					this.drawBox(box, 'red');
+			}		
+			i ++;
+		}
+	}
 
 
     drawLine(start, end, color = default_color): void {
@@ -53,10 +66,7 @@ export class CanvasRectDirective {
 		}
         isDrawing = false;
         context.clearRect(0, 0, element.width, element.height);
-
-        for (let box of boxes) {
-            this.drawBox(box, 'red');
-        }
+		this.drawAllBoxes();
     }
 
     @HostListener('mousemove', ['$event']) onMouseMove(event) {
