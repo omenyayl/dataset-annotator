@@ -15,7 +15,6 @@ export class CanvasRectDirective {
 		element = (<HTMLCanvasElement>el.nativeElement);
 		context = element.getContext('2d');
 		isDrawing = false;	
-		startingPosition = {x: 0, y: 0};
  	}
 
 	ngOnInit(){}
@@ -39,7 +38,7 @@ export class CanvasRectDirective {
 	}
 
 	@HostListener('mousedown', ['$event']) onMouseDown(event) {
-		console.log("mousedown");
+		console.log("mousedown!");
 		this.curBox = {x1: event.offsetX, y1: event.offsetY, x2: 0, y2: 0};
 		context.beginPath();
 		isDrawing = true;
