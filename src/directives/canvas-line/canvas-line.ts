@@ -20,6 +20,11 @@ export class CanvasLineDirective {
         isDrawing = false;
         lastMouse = {x: 0, y: 0};
     }
+
+    ngOnInit(){
+
+    }
+
     @HostListener('mousedown', ['$event']) onMouseDown(event) {
         lastMouse.x = event.offsetX;
         lastMouse.y = event.offsetY;

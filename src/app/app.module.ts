@@ -10,13 +10,15 @@ import { NavProxyService } from '../providers/nav-proxy/nav-proxy';
 import {ItemsPage} from "../pages/items/items";
 import {ItemPage} from "../pages/item/item";
 import {PlaceholderPage} from "../pages/placeholder/placeholder";
+import {CanvasLineDirective} from "../directives/canvas-line/canvas-line";
 
 @NgModule({
   declarations: [
     MyApp,
     ItemsPage,
     ItemPage,
-    PlaceholderPage
+    PlaceholderPage,
+    CanvasLineDirective
   ],
   imports: [
     BrowserModule,
