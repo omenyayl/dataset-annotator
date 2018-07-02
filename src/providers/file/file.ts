@@ -89,7 +89,9 @@ export class FileProvider {
                 });
             }),
             catchError((error: any): Observable<string[]> => {
-                this.filesLoading.next(false);
+                this.ngZone.run(() => {
+                    this.filesLoading.next(false);
+                });
                 console.log(`Caught error when listing files: ${error}`);
                 return of([] as string[]);
             })
