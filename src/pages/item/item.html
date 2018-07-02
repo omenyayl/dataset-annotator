@@ -6,8 +6,14 @@
 
 <ion-content padding>
     <div class="image-canvas-div">
-        <img class="img-position" src="{{currentImage.src}}" width="{{currentImage.width}}" height="{{currentImage.height}}"/>
-        <canvas class="canvas-position" width="{{currentImage.width}}" height="{{currentImage.height}}" canvas-line></canvas>
+        <img class="img-position"
+             src="{{getCurrentImage().src}}"
+             width="{{getCurrentImage().width}}"
+             height="{{getCurrentImage().height}}"/>
+        <canvas class="canvas-position"
+                width="{{getCurrentImage().width}}"
+                height="{{getCurrentImage().height}}"
+                canvas-line></canvas>
     </div>
 </ion-content>
 

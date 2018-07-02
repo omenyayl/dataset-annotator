@@ -11,6 +11,7 @@ import {ItemsPage} from "../pages/items/items";
 import {ItemPage} from "../pages/item/item";
 import {PlaceholderPage} from "../pages/placeholder/placeholder";
 import {CanvasLineDirective} from "../directives/canvas-line/canvas-line";
+import { ImageProvider } from '../providers/image/image';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import {CanvasLineDirective} from "../directives/canvas-line/canvas-line";
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     FileProvider,
-    NavProxyService
+    NavProxyService,
+    ImageProvider
   ]
 })
 export class AppModule {}

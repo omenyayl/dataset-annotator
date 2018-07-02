@@ -1,4 +1,4 @@
-export class Image {
+export class ImageObject {
     src: string;
     width: number;
     height: number;
