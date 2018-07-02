@@ -25,6 +25,7 @@ export class ItemsPage extends _MasterPage {
 
     files$: Observable<string[]>;
     filesLoading$: Observable<boolean>;
+    selected: string;
 
     constructor(public navCtrl: NavController,
                 public navParams: NavParams,
@@ -46,6 +47,8 @@ export class ItemsPage extends _MasterPage {
         // Rather than using:
         //     this.navCtrl.push(...)
         // Use our proxy:
+        this.selected = item;
+        console.log(this.selected);
         this.navProxy.pushDetail(ItemPage, item);
     }
 
