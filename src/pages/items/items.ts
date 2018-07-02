@@ -58,15 +58,17 @@ export class ItemsPage extends _MasterPage {
 
     @HostListener('window:keydown.a', ['$event'])
     nextItem($event) {
-        if(this.selected[1] - 1 >= 0) {
-            console.log(this.files[this.selected[1] - 1]);
+        let newIndex = this.selected[1] - 1;
+        if(newIndex >= 0) {
+            this.onItemSelected(this.files[newIndex], newIndex);
         }
     }
 
     @HostListener('window:keydown.d', ['$event'])
     previousItem($event) {
-        if(this.selected[1] + 1 < this.files.length) {
-            console.log(this.files[this.selected[1] + 1]);
+        let newIndex = this.selected[1] + 1;
+        if(newIndex < this.files.length) {
+            this.onItemSelected(this.files[newIndex], newIndex);
         }
     }
 }
