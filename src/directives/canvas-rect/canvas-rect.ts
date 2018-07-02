@@ -3,7 +3,6 @@ import { Directive, ElementRef, HostListener } from '@angular/core';
 let element: HTMLCanvasElement;
 let context: CanvasRenderingContext2D;
 let isDrawing: boolean;
-let startingPosition: {x: number, y: number};
 let default_color = 'black';
 let boxes = [];
 
