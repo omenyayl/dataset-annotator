@@ -75,4 +75,3 @@ dist/mac/dataset-annotator.app/Contents/Resources/app/electron/
 dist/mac/dataset-annotator.app/Contents/Resources/app/package.json
 dist/mac/dataset-annotator.app/Contents/Resources/electron.asar
 dist/mac/dataset-annotator.app/Contents/Resources/electron.icns
-src/directives/
