@@ -1,0 +1,10 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>{{ item }}</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <img *ngIf="item" class="image-full" [src]="getImageSrc()"/>
+</ion-content>
+

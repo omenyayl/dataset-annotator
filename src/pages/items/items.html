@@ -1,0 +1,21 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <button menuToggle ion-button icon-only>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>
+      Images
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-spinner padding class="center large-spinner" *ngIf="filesLoading$ | async"></ion-spinner>
+  <ion-list>
+    <button ion-item *ngFor="let file of files$ | async" (click)="onItemSelected(file)">
+      <h2>
+        {{ file }}
+      </h2>
+    </button>
+  </ion-list>
+</ion-content>
