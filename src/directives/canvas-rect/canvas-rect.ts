@@ -47,10 +47,16 @@ export class CanvasRectDirective {
     }
 
 	@HostListener('mouseup') onMouseUp() {
+		//curBox.label = null;
 		if(curBox.x2 != -1){
 			boxes.push(curBox);
 		}
         isDrawing = false;
+        context.clearRect(0, 0, element.width, element.height);
+
+        for (let box of boxes) {
+            this.drawBox(box, 'red');
+        }
     }
 
     @HostListener('mousemove', ['$event']) onMouseMove(event) {
