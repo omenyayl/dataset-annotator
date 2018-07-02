@@ -60,7 +60,6 @@ node_modules/
 src/.DS_Store
 www/
 /.sourcemaps/
-.gitignore
 dist/dataset-annotator-0.0.1-mac.zip
 dist/dataset-annotator-0.0.1.dmg
 dist/dataset-annotator-0.0.1.dmg.blockmap
@@ -76,3 +75,4 @@ dist/mac/dataset-annotator.app/Contents/Resources/app/electron/
 dist/mac/dataset-annotator.app/Contents/Resources/app/package.json
 dist/mac/dataset-annotator.app/Contents/Resources/electron.asar
 dist/mac/dataset-annotator.app/Contents/Resources/electron.icns
+src/directives/
