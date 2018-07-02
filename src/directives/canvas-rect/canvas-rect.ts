@@ -41,13 +41,15 @@ export class CanvasRectDirective {
 
     @HostListener('mousedown', ['$event']) onMouseDown(event) {
         console.log("mousedown");
-        curBox = {x1: event.offsetX, y1: event.offsetY, x2: 0, y2: 0};
+        curBox = {x1: event.offsetX, y1: event.offsetY, x2: -1, y2: -1};
         context.beginPath();
         isDrawing = true;
     }
 
-    @HostListener('mouseup') onMouseUp() {
-        boxes.push(curBox);
+	@HostListener('mouseup') onMouseUp() {
+		if(curBox.x2 != -1){
+			boxes.push(curBox);
+		}
         isDrawing = false;
     }
 
