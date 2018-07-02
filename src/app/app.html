@@ -5,7 +5,7 @@
     </ion-toolbar>
   </ion-header>
 </ion-menu>
-<ion-split-pane (ionChange)="navProxy.onSplitPaneChanged($event._visible);">
+<ion-split-pane when="(min-width: 1px)" (ionChange)="navProxy.onSplitPaneChanged($event._visible);">
   <ion-nav [root]="masterPage" #masterNav></ion-nav>
   <ion-nav [root]="detailPage" #detailNav main></ion-nav>
   <ion-fab bottom right padding>
