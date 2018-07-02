@@ -1,11 +1,13 @@
 <ion-header>
-  <ion-navbar>
-    <ion-title>{{ item }}</ion-title>
-  </ion-navbar>
+    <ion-navbar>
+        <ion-title>{{ item }}</ion-title>
+    </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  <!--<img *ngIf="item" class="image-full" [src]="getImageSrc()"/>-->
-  <canvas style="border: 1px solid blue;" width="500" height="300" canvas-line></canvas>
+    <div class="image-canvas-div">
+        <img class="img-position" src="{{currentImage.src}}"/>
+        <canvas class="canvas-position" width="{{currentImage.width}}" height="{{currentImage.height}}" canvas-line></canvas>
+    </div>
 </ion-content>
 

@@ -3,6 +3,8 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { _DetailPage } from '../_DetailPage';
 import { FileProvider } from "../../providers/file/file";
 import * as path from 'path';
+import { Image } from '../../image';
+import * as imageSize from 'image-size';
 
 @IonicPage()
 @Component({
@@ -16,12 +18,20 @@ import * as path from 'path';
 export class ItemPage extends _DetailPage {
 
   item: string = null;
+  currentImage: Image;
+
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
               private fileProvider: FileProvider) {
     super();
     this.item = navParams.data;
+    const sizeOfCurrentImage = imageSize(path.join(this.fileProvider.selectedFolder, this.item));
+    this.currentImage = {
+        src: this.getImageSrc(),
+        width: sizeOfCurrentImage.width,
+        height: sizeOfCurrentImage.height
+    } as Image;
   }
 
   /**
