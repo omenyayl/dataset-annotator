@@ -23,7 +23,7 @@ import {Observable} from "rxjs/Observable";
  */
 export class ItemsPage extends _MasterPage {
 
-    files$: Observable<string[]>;
+    files: string[];
     filesLoading$: Observable<boolean>;
     selected: string;
 
@@ -35,7 +35,9 @@ export class ItemsPage extends _MasterPage {
     }
 
     ngOnInit() {
-        this.files$ = this.fileProvider.filesChange.pipe();
+        this.fileProvider.filesChange.pipe().subscribe((files) => {
+            this.files = files;
+        });
         this.filesLoading$ = this.fileProvider.filesLoading.pipe();
     }
 
