@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, HostListener} from '@angular/core';
 import {
     IonicPage,
     NavController,
@@ -25,7 +25,7 @@ export class ItemsPage extends _MasterPage {
 
     files: string[];
     filesLoading$: Observable<boolean>;
-    selected: string;
+    selected: [string, number];
 
     constructor(public navCtrl: NavController,
                 public navParams: NavParams,
@@ -35,23 +35,40 @@ export class ItemsPage extends _MasterPage {
     }
 
     ngOnInit() {
+        this.filesLoading$ = this.fileProvider.filesLoading.pipe();
         this.fileProvider.filesChange.pipe().subscribe((files) => {
             this.files = files;
-        });
-        this.filesLoading$ = this.fileProvider.filesLoading.pipe();
+        })
+        this.selected = [null, -1];
     }
 
     /**
      * Called when the user clicks on an item in the master section.
-     * @param item
+     * @param item: string
+     * @param index: number
      */
-    onItemSelected(item) {
+    onItemSelected(item, index) {
         // Rather than using:
         //     this.navCtrl.push(...)
         // Use our proxy:
-        this.selected = item;
-        console.log(this.selected);
+        this.selected = [item, index];
+        console.log(`file name: ${this.selected[0]} index: ${this.selected[1]}`);
         this.navProxy.pushDetail(ItemPage, item);
     }
 
+    @HostListener('window:keydown.a', ['$event'])
+    nextItem($event) {
+        let newIndex = this.selected[1] - 1;
+        if(newIndex >= 0) {
+            this.onItemSelected(this.files[newIndex], newIndex);
+        }
+    }
+
+    @HostListener('window:keydown.d', ['$event'])
+    previousItem($event) {
+        let newIndex = this.selected[1] + 1;
+        if(newIndex < this.files.length) {
+            this.onItemSelected(this.files[newIndex], newIndex);
+        }
+    }
 }
