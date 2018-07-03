@@ -54,18 +54,18 @@ export class ItemPage extends _DetailPage {
         this.selectedCanvasDirective = directiveName as string;
     }
 
-    @HostListener('window:keydown.l', ['$event'])
+    @HostListener('window:keydown.q', ['$event'])
     hotkeySetCanvasDirectiveLine() {
         this.selectCanvasDirective(this.canvasDirectives.canvas_line);
     }
 
-    @HostListener('window:keydown.r', ['$event'])
+    @HostListener('window:keydown.w', ['$event'])
     hotkeySetCanvasDirectiveRectangle() {
         this.selectCanvasDirective(this.canvasDirectives.canvas_rect);
 
     }
 
-    @HostListener('window:keydown.p', ['$event'])
+    @HostListener('window:keydown.e', ['$event'])
     hotkeySetCanvasDirectivePolygon() {
         this.selectCanvasDirective(this.canvasDirectives.canvas_polygon);
     }
