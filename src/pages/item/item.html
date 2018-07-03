@@ -4,16 +4,54 @@
     </ion-navbar>
 </ion-header>
 
-<ion-content padding>
-    <div class="image-canvas-div">
-        <img class="img-position"
-             src="{{getCurrentImage().src}}"
-             width="{{getCurrentImage().width}}"
-             height="{{getCurrentImage().height}}"/>
-        <canvas class="canvas-position"
-                width="{{getCurrentImage().width}}"
-                height="{{getCurrentImage().height}}"
-                canvas-rect></canvas>
+
+
+<ion-content padding center text-center>
+    <div padding style="border: 1px solid lightgrey">
+        <h2>Tools</h2>
+        <hr>
+        <ion-grid class="button-group">
+            <ion-row>
+                <ion-col>
+                    <button ion-button [ngClass]="{'activated-button': selectedCanvasDirective === canvasDirectives.canvas_line}" block
+                    (click)="selectCanvasDirective(canvasDirectives.canvas_line)"><p class="button-text">Line (L)</p>
+                        <ion-icon name="md-create"></ion-icon></button>
+                </ion-col>
+                <ion-col>
+                    <button ion-button [ngClass]="{'activated-button': selectedCanvasDirective === canvasDirectives.canvas_rect}" color="primary" block
+                            (click)="selectCanvasDirective(canvasDirectives.canvas_rect)"><p class="button-text">Rectangle (R)</p>
+                        <ion-icon name="ios-square"></ion-icon></button>
+                </ion-col>
+                <ion-col>
+                    <button ion-button [ngClass]="{'activated-button': selectedCanvasDirective === canvasDirectives.canvas_polygon}" color="primary" block
+                            (click)="selectCanvasDirective(canvasDirectives.canvas_polygon)"><p class="button-text">Polygon (P)</p>
+                        <ion-icon name="star"></ion-icon></button>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
     </div>
+
+
+    <ion-grid>
+        <ion-row center>
+            <div class="image-canvas-div">
+                <img class="img-position"
+                     src="{{getCurrentImage().src}}"
+                     width="{{getCurrentImage().width}}"
+                     height="{{getCurrentImage().height}}"/>
+                <canvas *ngIf="selectedCanvasDirective === canvasDirectives.canvas_rect"
+                        class="canvas-position"
+                        width="{{getCurrentImage().width}}"
+                        height="{{getCurrentImage().height}}"
+                        canvas-rect></canvas>
+                <canvas *ngIf="selectedCanvasDirective === canvasDirectives.canvas_line"
+                        class="canvas-position"
+                        width="{{getCurrentImage().width}}"
+                        height="{{getCurrentImage().height}}"
+                        canvas-line></canvas>
+            </div>
+        </ion-row>
+    </ion-grid>
+
 </ion-content>
 
