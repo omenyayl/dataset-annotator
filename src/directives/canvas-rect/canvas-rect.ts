@@ -1,6 +1,6 @@
 import {Directive, ElementRef, HostListener} from '@angular/core';
 import { ImageProvider } from "../../providers/image/image";
-import { DirectivesEnum } from "../../enums/DirectivesEnum";
+import { CanvasDirectivesEnum } from "../../enums/canvas-directives-enum";
 
 let element: HTMLCanvasElement;
 let context: CanvasRenderingContext2D;
@@ -12,7 +12,7 @@ let selectedIndex = 0;
 let i = 0;
 
 @Directive({
-		selector: `[${DirectivesEnum.canvas_rect}]` // Attribute selector
+		selector: `[${CanvasDirectivesEnum.canvas_rect}]` // Attribute selector
 })
 export class CanvasRectDirective {
 
