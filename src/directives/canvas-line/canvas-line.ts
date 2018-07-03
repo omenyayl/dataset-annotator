@@ -18,7 +18,12 @@ let start: {
     x: number, y: number;
 };
 let lines: Line[] = [];
+let selectedLine: Line;
 const MIN_LINE_LENGTH = 10;
+const POINT_RADIUS = 4;
+
+const DEFAULT_COLOR = 'red';
+const SELECTED_COLOR = 'green';
 
 
 /**
@@ -70,33 +75,41 @@ export class CanvasLineDirective {
 
     @HostListener('mouseup', ['$event']) onMouseUp(event) {
         isDrawing = false;
-        lines.push({
+        let lineToPush = {
             x1: start.x,
             y1: start.y,
             x2: event.offsetX,
             y2: event.offsetY
-        } as Line);
+        } as Line;
+
+        let length = this.computeLineLength(lineToPush);
+        if (this.computeLineLength(lineToPush) > MIN_LINE_LENGTH){
+            lines.push(lineToPush);
+        }
     }
 
     drawLine(line: Line) {
 
-        if(this.computeLineLength(line) < MIN_LINE_LENGTH){
+        if (this.computeLineLength(line) < MIN_LINE_LENGTH){
             return;
         }
+
+        let isSelected = line === selectedLine;
 
         this.drawCircle(line.x1, line.y1);
         context.beginPath();
         context.moveTo(line.x1, line.y1);
         context.lineTo(line.x2, line.y2);
-        context.strokeStyle = 'red';
+        context.strokeStyle = isSelected ? SELECTED_COLOR : DEFAULT_COLOR;
         context.stroke();
-        this.drawCircle(line.x2, line.y2);
+        this.drawCircle(line.x2, line.y2, isSelected ? SELECTED_COLOR: DEFAULT_COLOR);
+
     }
 
-    drawCircle(x: number, y: number, r: number = 3){
+    drawCircle(x: number, y: number, color = DEFAULT_COLOR){
         context.beginPath();
-        context.arc(x, y, r, 0, 2 * Math.PI);
-        context.fillStyle = 'red';
+        context.fillStyle = color;
+        context.arc(x, y, POINT_RADIUS, 0, 2 * Math.PI);
         context.fill();
         context.stroke();
     }
@@ -113,13 +126,28 @@ export class CanvasLineDirective {
 
     selectNearestLine(offsetX: number, offsetY: number) {
         for(let line of lines){
-            if (this.isNearLine(line)){
-
+            if (this.isNearLine(line, offsetX, offsetY)){
+                selectedLine = line;
+                this.drawLines(lines);
             }
         }
     }
 
-    isNearLine(line: Line): boolean{
-        return false;
+    isNearLine(line: Line, x, y): boolean{
+        let distanceFromPoint1 = this.computeLineLength({
+            x1: line.x1,
+            y1: line.y1,
+            x2: x,
+            y2: y
+        } as Line);
+
+        let distanceFromPoint2 = this.computeLineLength({
+            x1: line.x2,
+            y1: line.y2,
+            x2: x,
+            y2: y
+        } as Line);
+
+        return distanceFromPoint1 <= POINT_RADIUS || distanceFromPoint2 <= POINT_RADIUS;
     }
 }

@@ -1,6 +1,6 @@
 import {Directive, ElementRef, HostListener} from '@angular/core';
-import { ImageProvider } from "../../providers/image/image";
-import { CanvasDirectivesEnum } from "../../enums/canvas-directives-enum";
+import {ImageProvider} from "../../providers/image/image";
+import {CanvasDirectivesEnum} from "../../enums/canvas-directives-enum";
 
 let element: HTMLCanvasElement;
 let context: CanvasRenderingContext2D;
@@ -12,33 +12,35 @@ let selectedIndex = 0;
 let i = 0;
 
 @Directive({
-		selector: `[${CanvasDirectivesEnum.canvas_rect}]` // Attribute selector
+    selector: `[${CanvasDirectivesEnum.canvas_rect}]` // Attribute selector
 })
 export class CanvasRectDirective {
+
+    imageProvider: ImageProvider;
 
     constructor(el: ElementRef, imageProvider: ImageProvider) {
         element = (<HTMLCanvasElement>el.nativeElement);
         context = element.getContext('2d');
-	  	isDrawing = false;
+        isDrawing = false;
 
-	  	boxes = imageProvider.getBoxes();
-	  	//imageProvider.setBoxes(imageProvider.currentImage, boxes);
+        boxes = imageProvider.getBoxes();
+        this.imageProvider = imageProvider;
     }
 
     ngOnInit() {
     }
 
-	drawAllBoxes(): void {
-		i = 0;
-		for (let box of boxes) {
-			if(i == selectedIndex){
-				this.drawBox(box, 'yellow');
-			}else{
-					this.drawBox(box, 'red');
-			}		
-			i ++;
-		}
-	}
+    drawAllBoxes(): void {
+        i = 0;
+        for (let box of boxes) {
+            if (i == selectedIndex) {
+                this.drawBox(box, 'yellow');
+            } else {
+                this.drawBox(box, 'red');
+            }
+            i++;
+        }
+    }
 
 
     drawLine(start, end, color = default_color): void {
@@ -64,15 +66,15 @@ export class CanvasRectDirective {
         isDrawing = true;
     }
 
-	@HostListener('mouseup') onMouseUp() {
-		//curBox.label = null;
-		if(curBox.x2 != -1){
-		  boxes.push(curBox);
-		  imageProvider.addBox(curBox);
-		}
+    @HostListener('mouseup') onMouseUp() {
+        //curBox.label = null;
+        if (curBox.x2 != -1) {
+            boxes.push(curBox);
+            this.imageProvider.addBox(curBox);
+        }
         isDrawing = false;
         context.clearRect(0, 0, element.width, element.height);
-		this.drawAllBoxes();
+        this.drawAllBoxes();
     }
 
     @HostListener('mousemove', ['$event']) onMouseMove(event) {

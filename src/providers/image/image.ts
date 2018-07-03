@@ -8,13 +8,13 @@ const MAX_IMAGE_WIDTH = 500;
 const MAX_IMAGE_HEIGHT = 500;
 
 /**
-  Provider that contains image information and methods
-*/
+ Provider that contains image information and methods
+ */
 @Injectable()
 export class ImageProvider {
 
     public currentImage: ImageObject;
-  	public annotations: Object;
+    public annotations = {};
 
     constructor() {
     }
@@ -48,33 +48,31 @@ export class ImageProvider {
         } as ImageObject;
     }
 
-  	getBoxes(){
-	  let fileName = this.currentImage.src;
-	  if(annotations.hasOwnProperty(fileName)){
-		if(typeof annotations[fileName] === AnnotationObject){
-		  return annotations[fileName].boxes
-		}
-	  }else{
-	  	annotations[fileName] = {
-			boxes : []		  	
-		} as AnnotationObject;
-		return annotations[fileName].boxes
-	  }
-	}
+    getBoxes() {
+        let fileName = this.currentImage.src;
+        if (this.annotations.hasOwnProperty(fileName)) {
+            return this.annotations[fileName].boxes
+        } else {
+            return [];
+        }
+    }
 
-	addBox(box){
-		if(annotations.hasOwnProperty(fileName)){
-			if(annotations.hasOwnProperty(fileName)){
-				annotations[fileName].boxes.push(box);
-			}
-		}
-	}
+    addBox(box) {
+        let fileName = this.currentImage.src;
+        if (this.annotations.hasOwnProperty(fileName)) {
+            this.annotations[fileName].boxes.push(box);
+        } else {
+            this.annotations[fileName] = {
+                boxes: []
+            }
+        }
+    }
 
-	generateSaveData(): Observable<any> {
-		return new Observable<any>((observer) => {
-				observer.next({data: 'testData'});
-			observer.complete();
-		})
-	}
+    generateSaveData(): Observable<any> {
+        return new Observable<any>((observer) => {
+            observer.next({data: 'testData'});
+            observer.complete();
+        })
+    }
 
 }
