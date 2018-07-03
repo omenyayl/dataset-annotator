@@ -1,5 +1,5 @@
 import {Directive, ElementRef, HostListener} from '@angular/core';
-import { ImageProvider } from "../../providers/image/image.ts";
+import { ImageProvider } from "../../providers/image/image";
 import { DirectivesEnum } from "../../enums/DirectivesEnum";
 
 let element: HTMLCanvasElement;
