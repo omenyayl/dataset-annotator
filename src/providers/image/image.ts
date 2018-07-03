@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {ImageObject} from "../../objects/image-object";
-import {Observable} from "rxjs/Observative";
 import * as imageSize from 'image-size';
+import {Observable} from "rxjs/Observable";
 
 const MAX_IMAGE_WIDTH = 500;
 const MAX_IMAGE_HEIGHT = 500;
@@ -47,8 +47,8 @@ export class ImageProvider {
     }
 
 
-	generateSaveData(): Observable<string> {
-		return new Observable<string>((observer) => {
+	generateSaveData(): Observable<any> {
+		return new Observable<any>((observer) => {
 				observer.next({data: 'testData'});
 			observer.complete();
 		})
