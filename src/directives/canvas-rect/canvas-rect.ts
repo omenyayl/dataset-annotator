@@ -1,4 +1,6 @@
 import {Directive, ElementRef, HostListener} from '@angular/core';
+import { ImageProvider } from "../../providers/image/image.ts";
+import { DirectivesEnum } from "../../enums/DirectivesEnum";
 
 let element: HTMLCanvasElement;
 let context: CanvasRenderingContext2D;
@@ -10,11 +12,11 @@ let selectedIndex = 0;
 let i = 0;
 
 @Directive({
-    selector: '[canvas-rect]' // Attribute selector
+		selector: `[${DirectivesEnum.canvas_rect}]` // Attribute selector
 })
 export class CanvasRectDirective {
 
-    constructor(el: ElementRef) {
+    constructor(el: ElementRef, imageProvider: ImageProvider) {
         element = (<HTMLCanvasElement>el.nativeElement);
         context = element.getContext('2d');
         isDrawing = false;
