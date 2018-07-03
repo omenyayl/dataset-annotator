@@ -61,10 +61,20 @@ export class MyApp {
   openDir() {
     console.log(`Opening directory`);
     this.fileProvider.showOpenDialog()
-        .subscribe((value) => {
+	   .subscribe((value) => {
+		  this.fileProvider.selectedFolder = value;
           this.fileProvider.listFiles(value, SUPPORTED_EXTENSIONS)
               .subscribe(()=>{
               })
+        })
+  }
+
+  saveDir() {
+    console.log(`Opening directory for saving`);
+    this.fileProvider.showOpenDialog()
+	   .subscribe((value) => {
+		  this.fileProvider.selectedSaveFolder = value;
+		  console.log(`Saving in ${this.fileProvider.selectedSaveFolder}`);
         })
   }
 

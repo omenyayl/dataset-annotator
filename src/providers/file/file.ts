@@ -13,6 +13,7 @@ let {dialog} = remote;
 export class FileProvider {
 
     selectedFolder: string; // The chosen directory
+    selectedSaveFolder: string; // The chosen directory for saving annotations
 
     filesChange: Subject<string[]> = new Subject<string[]>(); // Subject containing a list of files found
     filesLoading: Subject<boolean> = new Subject<boolean>(); // Indicates whether the listFiles() operation is ongoing
@@ -39,9 +40,6 @@ export class FileProvider {
                 observer.complete();
             })
         }).pipe(
-            tap((value) => {
-                this.selectedFolder = value;
-            }),
             catchError(this.handleError('showOpenDialog()', ''))
         )
 
