@@ -19,7 +19,10 @@ export class CanvasRectDirective {
     constructor(el: ElementRef, imageProvider: ImageProvider) {
         element = (<HTMLCanvasElement>el.nativeElement);
         context = element.getContext('2d');
-        isDrawing = false;
+	  	isDrawing = false;
+
+	  	boxes = imageProvider.getBoxes();
+	  	//imageProvider.setBoxes(imageProvider.currentImage, boxes);
     }
 
     ngOnInit() {
@@ -64,7 +67,8 @@ export class CanvasRectDirective {
 	@HostListener('mouseup') onMouseUp() {
 		//curBox.label = null;
 		if(curBox.x2 != -1){
-			boxes.push(curBox);
+		  boxes.push(curBox);
+		  imageProvider.addBox(curBox);
 		}
         isDrawing = false;
         context.clearRect(0, 0, element.width, element.height);

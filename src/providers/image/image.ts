@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {ImageObject} from "../../objects/image-object";
-import {Observable} from "rxjs/Observative";
+import {Observable} from "rxjs/Observable";
+import {AnnotationObject} from "../../objects/annotation-object"
 import * as imageSize from 'image-size';
 
 const MAX_IMAGE_WIDTH = 500;
@@ -13,6 +14,7 @@ const MAX_IMAGE_HEIGHT = 500;
 export class ImageProvider {
 
     public currentImage: ImageObject;
+  	public annotations: Object;
 
     constructor() {
     }
@@ -46,6 +48,27 @@ export class ImageProvider {
         } as ImageObject;
     }
 
+  	getBoxes(){
+	  let fileName = this.currentImage.src;
+	  if(annotations.hasOwnProperty(fileName)){
+		if(typeof annotations[fileName] === AnnotationObject){
+		  return annotations[fileName].boxes
+		}
+	  }else{
+	  	annotations[fileName] = {
+			boxes : []		  	
+		} as AnnotationObject;
+		return annotations[fileName].boxes
+	  }
+	}
+
+	addBox(box){
+		if(annotations.hasOwnProperty(fileName)){
+			if(annotations.hasOwnProperty(fileName)){
+				annotations[fileName].boxes.push(box);
+			}
+		}
+	}
 
 	generateSaveData(): Observable<string> {
 		return new Observable<string>((observer) => {
