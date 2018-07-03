@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {ImageObject} from "../../objects/image-object";
 import * as imageSize from 'image-size';
 import {Observable} from "rxjs/Observable";
+import {AnnotationObject} from "../../objects/annotation-object";
 
 const MAX_IMAGE_WIDTH = 500;
 const MAX_IMAGE_HEIGHT = 500;
