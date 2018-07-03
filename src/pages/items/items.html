@@ -13,7 +13,7 @@
   <ion-spinner padding class="center large-spinner" *ngIf="filesLoading$ | async"></ion-spinner>
   <ion-list>
     <button ion-item [class.highlight]="file == selected[0]"
-      *ngFor="let file of files; let i = index" (click)="onItemSelected(file, i)">
+      *ngFor="let file of files; let i = index" [id]="i" (click)="onItemSelected(file, i)">
       <h2>
         {{ file }}
       </h2>

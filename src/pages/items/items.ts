@@ -1,8 +1,9 @@
-import {Component, HostListener} from '@angular/core';
+import {Component, HostListener, ViewChild} from '@angular/core';
 import {
     IonicPage,
     NavController,
-    NavParams
+    NavParams,
+    Content
 } from 'ionic-angular';
 import {NavProxyService} from '../../providers/nav-proxy/nav-proxy';
 import {
@@ -23,6 +24,7 @@ import {Observable} from "rxjs/Observable";
  */
 export class ItemsPage extends _MasterPage {
 
+    @ViewChild(Content) content: Content;
     files: string[];
     filesLoading$: Observable<boolean>;
     selected: [string, number];
@@ -57,18 +59,24 @@ export class ItemsPage extends _MasterPage {
     }
 
     @HostListener('window:keydown.a', ['$event'])
-    nextItem($event) {
+    previousItem($event) {
         let newIndex = this.selected[1] - 1;
         if(newIndex >= 0) {
             this.onItemSelected(this.files[newIndex], newIndex);
+
+            let yOffset = document.getElementById(`${newIndex}`).offsetTop;
+            this.content.scrollTo(0, yOffset, 1);
         }
     }
 
     @HostListener('window:keydown.d', ['$event'])
-    previousItem($event) {
+    nextItem($event) {
         let newIndex = this.selected[1] + 1;
         if(newIndex < this.files.length) {
             this.onItemSelected(this.files[newIndex], newIndex);
+
+            let yOffset = document.getElementById(`${newIndex}`).offsetTop;
+            this.content.scrollTo(0, yOffset, 1);
         }
     }
 }
