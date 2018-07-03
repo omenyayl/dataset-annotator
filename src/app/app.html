@@ -8,12 +8,17 @@
 <ion-split-pane when="(min-width: 1px)" (ionChange)="navProxy.onSplitPaneChanged($event._visible);">
   <ion-nav [root]="masterPage" #masterNav></ion-nav>
   <ion-nav [root]="detailPage" #detailNav main></ion-nav>
-  <ion-fab bottom right padding>
-    <button ion-fab color="primary" (click)="openDir()"><ion-icon name="folder"></ion-icon></button>
-  </ion-fab>
-  <ion-fab bottom left padding>
-		  <button ion-fab color="secondary" (click)="saveDir()">
-				  <ion-icon name="arrow-dropdown-circle"></ion-icon>
-		  </button>
-  </ion-fab>
+
+
+    <ion-fab bottom right padding>
+        <button ion-fab><ion-icon name="add"></ion-icon></button>
+        <ion-fab-list side="top">
+            <button ion-fab color="secondary" (click)="openDir()"><ion-icon name="folder"></ion-icon></button>
+            <button ion-fab color="secondary" (click)="saveDir()">
+                <ion-icon name="arrow-dropdown-circle"></ion-icon>
+            </button>
+        </ion-fab-list>
+    </ion-fab>
+
+
 </ion-split-pane>
