@@ -75,7 +75,12 @@ export class MyApp {
 	   .subscribe((value) => {
 		  this.fileProvider.selectedSaveFolder = value;
 		  console.log(`Saving in ${this.fileProvider.selectedSaveFolder}`);
+			//const data = this.imageProvider.generateData();
+			//this.fileProvider.saveData(saveData);
         })
   }
 
+  saveFile() {
+	console.log(`You clicked the save button`);
+  }
 }
