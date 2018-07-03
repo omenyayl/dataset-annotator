@@ -9,17 +9,6 @@ class Line {
     y2: number
 }
 
-
-let element: HTMLCanvasElement;
-let context: CanvasRenderingContext2D;
-
-let isDrawing: boolean;
-let lastMouse: { x: number, y: number };
-let start: {
-    x: number, y: number;
-};
-let lines: Line[] = [];
-let selectedLine: Line;
 const MIN_LINE_LENGTH = 10;
 const POINT_RADIUS = 7;
 
@@ -35,14 +24,21 @@ const SELECTED_COLOR = 'yellow';
 })
 export class CanvasLineDirective {
     renderer: Renderer2;
-
+    private lines: Line[] = [];
+    private selectedLine: Line;
+    private readonly element: HTMLCanvasElement;
+    private context: CanvasRenderingContext2D;
+    private isDrawing: boolean;
+    private start: {
+        x: number, y: number;
+    };
+    
     constructor(el: ElementRef,
                 imageProvider: ImageProvider,
                 renderer: Renderer2) {
-        element = (<HTMLCanvasElement>el.nativeElement);
-        context = element.getContext('2d');
-        isDrawing = false;
-        lastMouse = {x: 0, y: 0};
+        this.element = (<HTMLCanvasElement>el.nativeElement);
+        this.context = this.element.getContext('2d');
+        this.isDrawing = false;
         this.renderer = renderer;
         console.log('Constructor called from directive');
     }
@@ -55,103 +51,103 @@ export class CanvasLineDirective {
     }
 
     @HostListener('mousedown', ['$event']) onMouseDown(event) {
-        start = {
+        this.start = {
             x: event.offsetX,
             y: event.offsetY
         };
 
-        isDrawing = true;
+        this.isDrawing = true;
     }
 
     @HostListener('mousemove', ['$event']) onMouseMove(event) {
-        if (isDrawing) {
+        if (this.isDrawing) {
 
-            context.clearRect(0, 0, element.width, element.height);
+            this.context.clearRect(0, 0, this.element.width, this.element.height);
 
-            this.drawLines(lines.concat([{
-                x1: start.x,
-                y1: start.y,
+            this.renderLines(this.lines.concat([{
+                x1: this.start.x,
+                y1: this.start.y,
                 x2: event.offsetX,
                 y2: event.offsetY
             } as Line]));
         }
 
         if (this.isHoveringOnLine(event.offsetX, event.offsetY)){
-            this.renderer.setStyle(element, 'cursor', 'pointer');
+            this.renderer.setStyle(this.element, 'cursor', 'pointer');
         } else {
-            this.renderer.setStyle(element, 'cursor', 'default');
+            this.renderer.setStyle(this.element, 'cursor', 'default');
         }
 
     }
 
     @HostListener('mouseup', ['$event']) onMouseUp(event) {
-        isDrawing = false;
+        this.isDrawing = false;
         let lineToPush = {
-            x1: start.x,
-            y1: start.y,
+            x1: this.start.x,
+            y1: this.start.y,
             x2: event.offsetX,
             y2: event.offsetY
         } as Line;
 
-        if (this.computeLineLength(lineToPush) > MIN_LINE_LENGTH){
-            lines.push(lineToPush);
+        if (CanvasLineDirective.computeLineLength(lineToPush) > MIN_LINE_LENGTH){
+            this.lines.push(lineToPush);
         }
     }
 
     drawLine(line: Line) {
 
-        if (this.computeLineLength(line) < MIN_LINE_LENGTH){
+        if (CanvasLineDirective.computeLineLength(line) < MIN_LINE_LENGTH){
             return;
         }
 
-        let color = line === selectedLine ? SELECTED_COLOR : DEFAULT_COLOR;
+        let color = line === this.selectedLine ? SELECTED_COLOR : DEFAULT_COLOR;
 
         this.drawCircle(line.x1, line.y1, color);
-        context.beginPath();
-        context.moveTo(line.x1, line.y1);
-        context.lineTo(line.x2, line.y2);
-        context.strokeStyle = color;
-        context.stroke();
+        this.context.beginPath();
+        this.context.moveTo(line.x1, line.y1);
+        this.context.lineTo(line.x2, line.y2);
+        this.context.strokeStyle = color;
+        this.context.stroke();
         this.drawCircle(line.x2, line.y2, color);
 
     }
 
     drawCircle(x: number, y: number, color = DEFAULT_COLOR){
-        context.beginPath();
-        context.fillStyle = color;
-        context.arc(x, y, POINT_RADIUS, 0, 2 * Math.PI);
-        context.fill();
-        context.stroke();
+        this.context.beginPath();
+        this.context.fillStyle = color;
+        this.context.arc(x, y, POINT_RADIUS, 0, 2 * Math.PI);
+        this.context.fill();
+        this.context.stroke();
     }
 
-    computeLineLength(line: Line){
+    static computeLineLength(line: Line){
         return Math.sqrt(Math.pow(line.x2 - line.x1, 2) + Math.pow(line.y2 - line.y1, 2));
     }
 
-    drawLines(lines: Line[]){
+    renderLines(lines: Line[]){
         for(let line of lines){
             this.drawLine(line);
         }
     }
 
     selectNearestLine(offsetX: number, offsetY: number) {
-        for(let line of lines){
-            if (this.isNearLine(line, offsetX, offsetY)){
-                selectedLine = line;
-                this.drawLines(lines);
+        for(let line of this.lines){
+            if (CanvasLineDirective.isNearLine(line, offsetX, offsetY)){
+                this.selectedLine = line;
+                this.renderLines(this.lines);
             }
         }
     }
 
-    isNearLine(line: Line, x, y): boolean{
-        let distanceFromPoint1 = this.computeLineLength({
+    static isNearLine(line: Line, x, y): boolean{
+        let distanceFromPoint1 = CanvasLineDirective.computeLineLength({
             x1: line.x1,
             y1: line.y1,
             x2: x,
             y2: y
         } as Line);
 
-        let distanceFromPoint2 = this.computeLineLength({
+        let distanceFromPoint2 = CanvasLineDirective.computeLineLength({
             x1: line.x2,
             y1: line.y2,
             x2: x,
@@ -163,8 +159,8 @@ export class CanvasLineDirective {
 
     isHoveringOnLine(x, y): boolean {
         let hoveringOnLine = false;
-        for(let line of lines){
-            if (this.isNearLine(line, x, y)){
+        for(let line of this.lines){
+            if (CanvasLineDirective.isNearLine(line, x, y)){
                 hoveringOnLine = true;
             }
         }
