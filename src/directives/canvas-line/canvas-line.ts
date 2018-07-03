@@ -1,4 +1,4 @@
-import {Directive, ElementRef, HostListener} from '@angular/core';
+import {Directive, ElementRef, HostListener, Renderer2} from '@angular/core';
 import { ImageProvider } from "../../providers/image/image";
 import { CanvasDirectivesEnum } from "../../enums/canvas-directives-enum";
 
@@ -12,6 +12,7 @@ class Line {
 
 let element: HTMLCanvasElement;
 let context: CanvasRenderingContext2D;
+
 let isDrawing: boolean;
 let lastMouse: { x: number, y: number };
 let start: {
@@ -20,10 +21,10 @@ let start: {
 let lines: Line[] = [];
 let selectedLine: Line;
 const MIN_LINE_LENGTH = 10;
-const POINT_RADIUS = 4;
+const POINT_RADIUS = 7;
 
 const DEFAULT_COLOR = 'red';
-const SELECTED_COLOR = 'green';
+const SELECTED_COLOR = 'yellow';
 
 
 /**
@@ -33,13 +34,16 @@ const SELECTED_COLOR = 'green';
     selector: `[${CanvasDirectivesEnum.canvas_line}]`
 })
 export class CanvasLineDirective {
+    renderer: Renderer2;
 
     constructor(el: ElementRef,
-                imageProvider: ImageProvider) {
+                imageProvider: ImageProvider,
+                renderer: Renderer2) {
         element = (<HTMLCanvasElement>el.nativeElement);
         context = element.getContext('2d');
         isDrawing = false;
         lastMouse = {x: 0, y: 0};
+        this.renderer = renderer;
         console.log('Constructor called from directive');
     }
 
@@ -71,6 +75,13 @@ export class CanvasLineDirective {
                 y2: event.offsetY
             } as Line]));
         }
+
+        if (this.isHoveringOnLine(event.offsetX, event.offsetY)){
+            this.renderer.setStyle(element, 'cursor', 'pointer');
+        } else {
+            this.renderer.setStyle(element, 'cursor', 'default');
+        }
+
     }
 
     @HostListener('mouseup', ['$event']) onMouseUp(event) {
@@ -82,7 +93,6 @@ export class CanvasLineDirective {
             y2: event.offsetY
         } as Line;
 
-        let length = this.computeLineLength(lineToPush);
         if (this.computeLineLength(lineToPush) > MIN_LINE_LENGTH){
             lines.push(lineToPush);
         }
@@ -94,15 +104,15 @@ export class CanvasLineDirective {
             return;
         }
 
-        let isSelected = line === selectedLine;
+        let color = line === selectedLine ? SELECTED_COLOR : DEFAULT_COLOR;
 
-        this.drawCircle(line.x1, line.y1);
+        this.drawCircle(line.x1, line.y1, color);
         context.beginPath();
         context.moveTo(line.x1, line.y1);
         context.lineTo(line.x2, line.y2);
-        context.strokeStyle = isSelected ? SELECTED_COLOR : DEFAULT_COLOR;
+        context.strokeStyle = color;
         context.stroke();
-        this.drawCircle(line.x2, line.y2, isSelected ? SELECTED_COLOR: DEFAULT_COLOR);
+        this.drawCircle(line.x2, line.y2, color);
 
     }
 
@@ -149,5 +159,15 @@ export class CanvasLineDirective {
         } as Line);
 
         return distanceFromPoint1 <= POINT_RADIUS || distanceFromPoint2 <= POINT_RADIUS;
+    }
+
+    isHoveringOnLine(x, y): boolean {
+        let hoveringOnLine = false;
+        for(let line of lines){
+            if (this.isNearLine(line, x, y)){
+                hoveringOnLine = true;
+            }
+        }
+        return hoveringOnLine;
     }
 }
