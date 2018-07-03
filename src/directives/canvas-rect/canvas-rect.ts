@@ -21,6 +21,7 @@ export class CanvasRectDirective {
         context = element.getContext('2d');
 	  	isDrawing = false;
 
+	  	console.log("Getting new boxes in constructor");
 	  	boxes = imageProvider.getBoxes();
 	  	//imageProvider.setBoxes(imageProvider.currentImage, boxes);
     }

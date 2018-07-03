@@ -48,24 +48,25 @@ export class ImageProvider {
         } as ImageObject;
     }
 
-  	getBoxes(){
+  	getBoxes() : void {
 	  let fileName = this.currentImage.src;
-	  if(annotations.hasOwnProperty(fileName)){
-		if(typeof annotations[fileName] === AnnotationObject){
-		  return annotations[fileName].boxes
+	  console.log(`Getting boxes from ${fileName}`);
+	  if(this.annotations.hasOwnProperty(fileName)){
+		if(typeof this.annotations[fileName] === AnnotationObject){
+		  return this.annotations[fileName].boxes
 		}
 	  }else{
-	  	annotations[fileName] = {
+	  	this.annotations[fileName] = {
 			boxes : []		  	
 		} as AnnotationObject;
-		return annotations[fileName].boxes
+		return this.annotations[fileName].boxes
 	  }
 	}
 
-	addBox(box){
-		if(annotations.hasOwnProperty(fileName)){
-			if(annotations.hasOwnProperty(fileName)){
-				annotations[fileName].boxes.push(box);
+	addBox(box) : void {
+		if(this.annotations.hasOwnProperty(fileName)){
+			if(this.annotations.hasOwnProperty(fileName)){
+				this.annotations[fileName].boxes.push(box);
 			}
 		}
 	}
