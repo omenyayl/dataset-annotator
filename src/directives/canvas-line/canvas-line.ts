@@ -1,5 +1,6 @@
 import {Directive, ElementRef, HostListener} from '@angular/core';
 import { ImageProvider } from "../../providers/image/image";
+import { DirectivesEnum } from "../../enums/DirectivesEnum";
 
 let element: HTMLCanvasElement;
 let context: CanvasRenderingContext2D;
@@ -11,7 +12,7 @@ let lastMouse: { x: number, y: number };
  * Directive for drawing elements on the HTML5 Canvas
  */
 @Directive({
-    selector: '[canvas-line]'
+    selector: `[${DirectivesEnum.canvas_line}]`
 })
 export class CanvasLineDirective {
 
