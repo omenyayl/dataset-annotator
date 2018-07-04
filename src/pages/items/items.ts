@@ -40,7 +40,7 @@ export class ItemsPage extends _MasterPage {
         this.filesLoading$ = this.fileProvider.filesLoading.pipe();
         this.fileProvider.filesChange.pipe().subscribe((files) => {
             this.files = files;
-        })
+        });
         this.selected = [null, -1];
     }
 
@@ -54,7 +54,6 @@ export class ItemsPage extends _MasterPage {
         //     this.navCtrl.push(...)
         // Use our proxy:
         this.selected = [item, index];
-        console.log(`file name: ${this.selected[0]} index: ${this.selected[1]}`);
         this.navProxy.pushDetail(ItemPage, item);
     }
 

@@ -45,7 +45,6 @@ export class ItemPage extends _DetailPage {
     getImageSrc(): string {
         let imgPath = path.join(this.fileProvider.selectedFolder, this.item);
         if (platform == 'win32'){
-            console.log(`file:///${imgPath}`);
             return `file:///${imgPath}`;
         } else {
             return imgPath;
