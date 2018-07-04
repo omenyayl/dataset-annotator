@@ -75,3 +75,6 @@ dist/mac/dataset-annotator.app/Contents/Resources/app/electron/
 dist/mac/dataset-annotator.app/Contents/Resources/app/package.json
 dist/mac/dataset-annotator.app/Contents/Resources/electron.asar
 dist/mac/dataset-annotator.app/Contents/Resources/electron.icns
+/resources/jbootx-1.1.0-release/
+/resources/SceneBuilder-10.0.0.dmg
+/resources/jbootx-1.1.0-release.zip
