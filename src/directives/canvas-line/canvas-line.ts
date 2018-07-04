@@ -1,13 +1,7 @@
 import {Directive, ElementRef, HostListener, Renderer2} from '@angular/core';
 import { ImageProvider } from "../../providers/image/image";
 import { CanvasDirectivesEnum } from "../../enums/canvas-directives-enum";
-
-class Line {
-    x1: number;
-    y1: number;
-    x2: number;
-    y2: number
-}
+import { Line } from "../../objects/line";
 
 const MIN_LINE_LENGTH = 10;
 const POINT_RADIUS = 7;
@@ -24,7 +18,6 @@ const SELECTED_COLOR = 'yellow';
 })
 export class CanvasLineDirective {
     renderer: Renderer2;
-    private lines: Line[] = [];
     private selectedLine: Line;
     private readonly element: HTMLCanvasElement;
     private context: CanvasRenderingContext2D;
@@ -32,6 +25,8 @@ export class CanvasLineDirective {
     private start: {
         x: number, y: number;
     };
+    private imageProvider: ImageProvider;
+    private lines: Line[];
     
     constructor(el: ElementRef,
                 imageProvider: ImageProvider,
@@ -40,10 +35,13 @@ export class CanvasLineDirective {
         this.context = this.element.getContext('2d');
         this.isDrawing = false;
         this.renderer = renderer;
-        console.log('Constructor called from directive');
+        this.imageProvider = imageProvider;
+
+        this.lines = this.getLines();
     }
 
-    ngOnInit() {
+    ngAfterViewInit() {
+        this.renderLines(this.lines);
     }
 
     @HostListener('click', ['$event']) onMouseClick(event) {
@@ -91,6 +89,7 @@ export class CanvasLineDirective {
 
         if (CanvasLineDirective.computeLineLength(lineToPush) > MIN_LINE_LENGTH){
             this.lines.push(lineToPush);
+            this.addLine(lineToPush);
         }
     }
 
@@ -165,5 +164,31 @@ export class CanvasLineDirective {
             }
         }
         return hoveringOnLine;
+    }
+
+    getLines() {
+        let currentImage = this.imageProvider.currentImage;
+        if (currentImage && this.imageProvider.annotations.hasOwnProperty(currentImage.src) &&
+        this.imageProvider.annotations[currentImage.src].hasOwnProperty('lines')) {
+            return this.imageProvider.annotations[currentImage.src].lines
+        } else {
+            return [];
+        }
+    }
+
+    addLine(line) {
+        let currentImage = this.imageProvider.currentImage;
+        if (currentImage && this.imageProvider.annotations.hasOwnProperty(currentImage.src) &&
+            this.imageProvider.annotations[currentImage.src].hasOwnProperty('lines')) {
+            this.imageProvider.annotations[currentImage.src].lines.push(line);
+        }
+        else if (currentImage && this.imageProvider.annotations.hasOwnProperty(currentImage.src)) {
+            this.imageProvider.annotations[currentImage.src].lines = [line];
+        }
+        else if (currentImage) {
+            this.imageProvider.annotations[currentImage.src] = {
+                lines: [line]
+            }
+        }
     }
 }

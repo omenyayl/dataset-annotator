@@ -3,6 +3,7 @@ import {ImageObject} from "../../objects/image-object";
 import * as imageSize from 'image-size';
 import {Observable} from "rxjs/Observable";
 import {AnnotationObject} from "../../objects/annotation-object";
+import {CanvasDirectivesEnum} from "../../enums/canvas-directives-enum";
 
 const MAX_IMAGE_WIDTH = 500;
 const MAX_IMAGE_HEIGHT = 500;
@@ -14,6 +15,7 @@ const MAX_IMAGE_HEIGHT = 500;
 export class ImageProvider {
 
     public currentImage: ImageObject;
+    public selectedCanvasDirective: CanvasDirectivesEnum;
     public annotations = {};
 
     constructor() {
@@ -48,25 +50,7 @@ export class ImageProvider {
         } as ImageObject;
     }
 
-    getBoxes() {
-        let fileName = this.currentImage.src;
-        if (this.annotations.hasOwnProperty(fileName)) {
-            return this.annotations[fileName].boxes
-        } else {
-            return [];
-        }
-    }
 
-    addBox(box) {
-        let fileName = this.currentImage.src;
-        if (this.annotations.hasOwnProperty(fileName)) {
-            this.annotations[fileName].boxes.push(box);
-        } else {
-            this.annotations[fileName] = {
-                boxes: []
-            }
-        }
-    }
 
     generateSaveData(): Observable<any> {
         return new Observable<any>((observer) => {

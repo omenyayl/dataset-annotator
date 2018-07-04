@@ -1,4 +1,4 @@
-import {Component, HostListener} from '@angular/core';
+import {Component, HostListener, NgZone} from '@angular/core';
 import {IonicPage, NavController, NavParams} from 'ionic-angular';
 import {_DetailPage} from '../_DetailPage';
 import {FileProvider} from "../../providers/file/file";
@@ -22,12 +22,12 @@ export class ItemPage extends _DetailPage {
 
     item: string = null;
     canvasDirectives = CanvasDirectivesEnum;
-    selectedCanvasDirective: string;
 
     constructor(public navCtrl: NavController,
                 public navParams: NavParams,
                 private fileProvider: FileProvider,
-                private imageProvider: ImageProvider) {
+                private imageProvider: ImageProvider,
+                private ngZone: NgZone) {
         super();
         this.item = navParams.data;
 
@@ -35,7 +35,9 @@ export class ItemPage extends _DetailPage {
         this.imageProvider.initImage(currentImagePath as string);
 
         // Setting default directive for the canvas element
-        this.selectedCanvasDirective = this.canvasDirectives.canvas_rect;
+        if (!imageProvider.selectedCanvasDirective) {
+            this.selectCanvasDirective(CanvasDirectivesEnum.canvas_line);
+        }
     }
 
     /**
@@ -57,7 +59,13 @@ export class ItemPage extends _DetailPage {
     }
 
     selectCanvasDirective(directiveName: CanvasDirectivesEnum){
-        this.selectedCanvasDirective = directiveName as string;
+        this.ngZone.run(() => {
+            this.imageProvider.selectedCanvasDirective = directiveName;
+        });
+    }
+
+    getSelectedCanvasDirective(): CanvasDirectivesEnum {
+        return this.imageProvider.selectedCanvasDirective;
     }
 
     @HostListener('window:keydown.q', ['$event'])

@@ -22,12 +22,13 @@ export class CanvasRectDirective {
         element = (<HTMLCanvasElement>el.nativeElement);
         context = element.getContext('2d');
         isDrawing = false;
-
-        boxes = imageProvider.getBoxes();
         this.imageProvider = imageProvider;
+
+        boxes = this.getBoxes();
     }
 
-    ngOnInit() {
+    ngAfterViewInit() {
+        this.drawAllBoxes();
     }
 
     drawAllBoxes(): void {
@@ -60,7 +61,6 @@ export class CanvasRectDirective {
     }
 
     @HostListener('mousedown', ['$event']) onMouseDown(event) {
-        console.log("mousedown");
         curBox = {x1: event.offsetX, y1: event.offsetY, x2: -1, y2: -1};
         context.beginPath();
         isDrawing = true;
@@ -70,7 +70,7 @@ export class CanvasRectDirective {
         //curBox.label = null;
         if (curBox.x2 != -1) {
             boxes.push(curBox);
-            this.imageProvider.addBox(curBox);
+            this.addBox(curBox);
         }
         isDrawing = false;
         context.clearRect(0, 0, element.width, element.height);
@@ -95,6 +95,32 @@ export class CanvasRectDirective {
             context.stroke();
 
             this.drawBox(curBox, 'black');
+        }
+    }
+
+    getBoxes() {
+        let currentImage = this.imageProvider.currentImage;
+        if (currentImage && this.imageProvider.annotations.hasOwnProperty(currentImage.src)  &&
+            this.imageProvider.annotations[currentImage.src].hasOwnProperty('boxes')) {
+            return this.imageProvider.annotations[currentImage.src].boxes
+        } else {
+            return [];
+        }
+    }
+
+    addBox(box) {
+        let currentImage = this.imageProvider.currentImage;
+        if (currentImage && this.imageProvider.annotations.hasOwnProperty(currentImage.src) &&
+            this.imageProvider.annotations[currentImage.src].hasOwnProperty('boxes')) {
+            this.imageProvider.annotations[currentImage.src].boxes.push(box);
+        }
+        else if (currentImage && this.imageProvider.annotations.hasOwnProperty(currentImage.src)) {
+            this.imageProvider.annotations[currentImage.src].boxes = [box];
+        }
+        else if (currentImage) {
+            this.imageProvider.annotations[currentImage.src] = {
+                boxes: [box]
+            }
         }
     }
 }
