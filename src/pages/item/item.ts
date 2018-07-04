@@ -6,6 +6,7 @@ import * as path from 'path';
 import {ImageObject} from '../../objects/image-object';
 import {ImageProvider} from "../../providers/image/image";
 import { CanvasDirectivesEnum } from "../../enums/canvas-directives-enum";
+import {platform} from 'process';
 
 
 @IonicPage()
@@ -30,7 +31,7 @@ export class ItemPage extends _DetailPage {
         super();
         this.item = navParams.data;
 
-        const currentImagePath = this.getImageSrc();
+        const currentImagePath = path.join(fileProvider.selectedFolder, this.item);
         this.imageProvider.initImage(currentImagePath as string);
 
         // Setting default directive for the canvas element
@@ -42,7 +43,13 @@ export class ItemPage extends _DetailPage {
      * @returns {string}
      */
     getImageSrc(): string {
-        return path.join(this.fileProvider.selectedFolder, this.item);
+        let imgPath = path.join(this.fileProvider.selectedFolder, this.item);
+        if (platform == 'win32'){
+            console.log(`file:///${imgPath}`);
+            return `file:///${imgPath}`;
+        } else {
+            return imgPath;
+        }
     }
 
 

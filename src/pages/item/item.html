@@ -36,7 +36,7 @@
         <ion-row center>
             <div class="image-canvas-div">
                 <img class="img-position"
-                     src="{{getCurrentImage().src}}"
+                     src="{{getImageSrc()}}"
                      width="{{getCurrentImage().width}}"
                      height="{{getCurrentImage().height}}"/>
                 <canvas *ngIf="selectedCanvasDirective === canvasDirectives.canvas_rect"
