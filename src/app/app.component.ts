@@ -1,11 +1,12 @@
 import { Component, ViewChild } from '@angular/core';
-import { Platform, Nav } from 'ionic-angular';
+import { Platform, Nav, MenuController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { NavProxyService } from '../providers/nav-proxy/nav-proxy';
 import { ItemsPage } from '../pages/items/items';
 import { PlaceholderPage } from '../pages/placeholder/placeholder';
 import { FileProvider } from "../providers/file/file";
+import { HotkeysPage } from '../pages/hotkeys/hotkeys';
 
 const SUPPORTED_EXTENSIONS = [
     '.jpg',
@@ -34,7 +35,8 @@ export class MyApp {
     statusBar: StatusBar,
     splashScreen: SplashScreen,
     private navProxy: NavProxyService,
-    private fileProvider: FileProvider) {
+    private fileProvider: FileProvider,
+    private menuCtrl: MenuController) {
 
     platform.ready().then(() => {
 
@@ -68,4 +70,9 @@ export class MyApp {
         })
   }
 
+  openHotkeysForm() {
+    console.log("open keybindings form");
+    this.menuCtrl.close();
+    this.navProxy.pushMaster(HotkeysPage, null);
+  }
 }

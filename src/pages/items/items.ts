@@ -11,6 +11,7 @@ import {
 } from '../item/item';
 import {_MasterPage} from "../_MasterPage";
 import {FileProvider} from "../../providers/file/file";
+import {HotkeyProvider} from "../../providers/hotkeys/hotkeys";
 import {Observable} from "rxjs/Observable";
 
 @IonicPage()
@@ -32,7 +33,8 @@ export class ItemsPage extends _MasterPage {
     constructor(public navCtrl: NavController,
                 public navParams: NavParams,
                 private navProxy: NavProxyService,
-                private fileProvider: FileProvider) {
+                private fileProvider: FileProvider,
+                private hotkeyProvider: HotkeyProvider) {
         super();
     }
 
@@ -58,8 +60,17 @@ export class ItemsPage extends _MasterPage {
         this.navProxy.pushDetail(ItemPage, item);
     }
 
-    @HostListener('window:keydown.a', ['$event'])
-    previousItem($event) {
+    @HostListener('window:keydown', ['$event'])
+    doAction($event) {
+        if($event.key === this.hotkeyProvider.hotkeys.prevImage) {
+            this.previousItem();
+        }
+        else if($event.key === this.hotkeyProvider.hotkeys.nextImage) {
+            this.nextItem();
+        }
+    }
+
+    previousItem() {
         let newIndex = this.selected[1] - 1;
         if(newIndex >= 0) {
             this.onItemSelected(this.files[newIndex], newIndex);
@@ -69,8 +80,7 @@ export class ItemsPage extends _MasterPage {
         }
     }
 
-    @HostListener('window:keydown.d', ['$event'])
-    nextItem($event) {
+    nextItem() {
         let newIndex = this.selected[1] + 1;
         if(newIndex < this.files.length) {
             this.onItemSelected(this.files[newIndex], newIndex);
