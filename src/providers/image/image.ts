@@ -49,29 +49,6 @@ export class ImageProvider {
         } as ImageObject;
     }
 
-  	getBoxes() : void {
-	  let fileName = this.currentImage.src;
-	  console.log(`Getting boxes from ${fileName}`);
-	  if(this.annotations.hasOwnProperty(fileName)){
-		if(typeof this.annotations[fileName] === AnnotationObject){
-		  return this.annotations[fileName].boxes
-		}
-	  }else{
-	  	this.annotations[fileName] = {
-			boxes : []		  	
-		} as AnnotationObject;
-		return this.annotations[fileName].boxes
-	  }
-	}
-
-	addBox(box) : void {
-		if(this.annotations.hasOwnProperty(fileName)){
-			if(this.annotations.hasOwnProperty(fileName)){
-				this.annotations[fileName].boxes.push(box);
-			}
-		}
-	}
-
 	generateSaveData(): Observable<any> {
 		return new Observable<any>((observer) => {
 		  observer.next({'testFile': 'testData', 'frame_05420': '[{type: \'box\'}]'});
