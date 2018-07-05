@@ -17,7 +17,7 @@ const SELECTED_COLOR = 'yellow';
 
 export class LineDrawer implements Drawable{
     private context: CanvasRenderingContext2D;
-    private lines: Line[] = [];
+    private readonly lines: Line[] = [];
     private selectedLine: Line;
     private imageProvider: ImageProvider;
 
@@ -29,12 +29,12 @@ export class LineDrawer implements Drawable{
     }
 
     saveFromCoordinates(start: CoordinatesObject, end: CoordinatesObject) {
-        let line = this.getLineFromCoordinates(start, end);
+        let line = LineDrawer.getLineFromCoordinates(start, end);
         this.saveLine(line)
     }
 
     drawFromCoordinates(start: CoordinatesObject, end: CoordinatesObject){
-        let line = this.getLineFromCoordinates(start, end);
+        let line = LineDrawer.getLineFromCoordinates(start, end);
         this.drawLine(line);
     }
 
@@ -84,33 +84,33 @@ export class LineDrawer implements Drawable{
         }
     }
 
-    // static isNearLine(line: Line, x, y): boolean{
-    //     let distanceFromPoint1 = LineDrawer.computeLineLength({
-    //         x1: line.x1,
-    //         y1: line.y1,
-    //         x2: x,
-    //         y2: y
-    //     } as Line);
-    //
-    //     let distanceFromPoint2 = LineDrawer.computeLineLength({
-    //         x1: line.x2,
-    //         y1: line.y2,
-    //         x2: x,
-    //         y2: y
-    //     } as Line);
-    //
-    //     return distanceFromPoint1 <= POINT_RADIUS || distanceFromPoint2 <= POINT_RADIUS;
-    // }
-    //
-    // isHoveringOnLine(x, y): boolean {
-    //     let hoveringOnLine = false;
-    //     for(let line of this.lines){
-    //         if (LineDrawer.isNearLine(line, x, y)){
-    //             hoveringOnLine = true;
-    //         }
-    //     }
-    //     return hoveringOnLine;
-    // }
+    static isNearCoordinates(line: Line, coordinates: CoordinatesObject): boolean{
+        let distanceFromPoint1 = LineDrawer.computeLineLength({
+            x1: line.x1,
+            y1: line.y1,
+            x2: coordinates.x,
+            y2: coordinates.y
+        } as Line);
+
+        let distanceFromPoint2 = LineDrawer.computeLineLength({
+            x1: line.x2,
+            y1: line.y2,
+            x2: coordinates.x,
+            y2: coordinates.y
+        } as Line);
+
+        return distanceFromPoint1 <= POINT_RADIUS || distanceFromPoint2 <= POINT_RADIUS;
+    }
+
+    isHovering(coordinates: CoordinatesObject): boolean {
+        let hoveringOnLine = false;
+        for(let line of this.lines){
+            if (LineDrawer.isNearCoordinates(line, coordinates)){
+                hoveringOnLine = true;
+            }
+        }
+        return hoveringOnLine;
+    }
 
 
     getLines() {
@@ -141,7 +141,7 @@ export class LineDrawer implements Drawable{
         }
     }
 
-    getLineFromCoordinates(start: CoordinatesObject, end: CoordinatesObject): Line {
+    static getLineFromCoordinates(start: CoordinatesObject, end: CoordinatesObject): Line {
         return {
             x1: start.x,
             y1: start.y,
@@ -149,4 +149,5 @@ export class LineDrawer implements Drawable{
             y2: end.y
         } as Line
     }
+
 }

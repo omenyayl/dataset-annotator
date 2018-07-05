@@ -105,5 +105,8 @@ export class RectangleDrawer implements Drawable{
         this.drawBox(newBox);
     }
 
+    isHovering(coordinates: CoordinatesObject){
+        throw new Error("RectangleDrawer.isHovering is NOT IMPLEMENTED");
+    }
 
 }

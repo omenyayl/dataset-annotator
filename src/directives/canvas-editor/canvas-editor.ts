@@ -20,6 +20,7 @@ export class CanvasEditorDirective {
     private imageProvider: ImageProvider;
     private isDrawing: boolean;
     private start: CoordinatesObject;
+    private renderer: Renderer2;
 
 
     constructor(el: ElementRef,
@@ -31,6 +32,7 @@ export class CanvasEditorDirective {
         this.rectangleDrawer = new RectangleDrawer(this.context, imageProvider);
         this.imageProvider = imageProvider;
         this.isDrawing = false;
+        this.renderer = renderer;
     }
 
     render() {
@@ -58,6 +60,17 @@ export class CanvasEditorDirective {
     }
 
     @HostListener('mousemove', ['$event']) onMouseMove(event) {
+
+        let hovering = false;
+        hovering = this.lineDrawer.isHovering({x: event.offsetX, y: event.offsetY});
+
+        if (hovering) {
+            this.renderer.setStyle(this.element, 'cursor', 'pointer');
+        } else {
+            this.renderer.setStyle(this.element, 'cursor', 'default');
+        }
+
+
         if (this.isDrawing) {
 
             let mouseCoordinates = {x: event.offsetX, y: event.offsetY} as CoordinatesObject;
