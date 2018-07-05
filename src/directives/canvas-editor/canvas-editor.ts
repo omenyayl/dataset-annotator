@@ -3,6 +3,7 @@ import { LineDrawer } from "../../drawers/line-drawer";
 import {CanvasDirectivesEnum} from "../../enums/canvas-directives-enum";
 import {RectangleDrawer} from "../../drawers/rectangle-drawer";
 import {ImageProvider} from "../../providers/image/image";
+import { CoordinatesObject } from "../../objects/CoordinatesObject";
 
 /**
  * Directive for drawing elements on the HTML5 Canvas
@@ -17,62 +18,77 @@ export class CanvasEditorDirective {
     private context: CanvasRenderingContext2D;
     private element: HTMLCanvasElement;
     private imageProvider: ImageProvider;
+    private isDrawing: boolean;
+    private start: CoordinatesObject;
+
 
     constructor(el: ElementRef,
                 imageProvider: ImageProvider,
                 renderer: Renderer2) {
         this.element = (<HTMLCanvasElement>el.nativeElement);
         this.context = this.element.getContext('2d');
-        this.lineDrawer = new LineDrawer(this.context, this.element, renderer, imageProvider);
-        this.rectangleDrawer = new RectangleDrawer(this.context, this.element, imageProvider);
+        this.lineDrawer = new LineDrawer(this.context, imageProvider);
+        this.rectangleDrawer = new RectangleDrawer(this.context, imageProvider);
         this.imageProvider = imageProvider;
-        console.log(imageProvider.selectedCanvasDirective);
+        this.isDrawing = false;
+    }
+
+    render() {
+        this.context.clearRect(0, 0, this.element.width, this.element.height);
+        this.lineDrawer.render();
+        this.rectangleDrawer.render();
     }
 
     ngAfterViewInit() {
-        this.lineDrawer.renderLines();
-        this.rectangleDrawer.drawAllBoxes();
+        this.render();
     }
 
     @HostListener('click', ['$event']) onMouseClick(event) {
-        switch(this.imageProvider.selectedCanvasDirective){
-            case CanvasDirectivesEnum.canvas_line:
-                this.lineDrawer.onMouseClick(event);
-        }
+
     }
 
     @HostListener('mousedown', ['$event']) onMouseDown(event) {
-        switch(this.imageProvider.selectedCanvasDirective){
-            case CanvasDirectivesEnum.canvas_line:
-                this.lineDrawer.onMouseDown(event);
-                break;
-            case CanvasDirectivesEnum.canvas_rect:
-                this.rectangleDrawer.onMouseDown(event);
-        }
+
+        this.start = {
+            x: event.offsetX,
+            y: event.offsetY
+        };
+
+        this.isDrawing = true;
     }
 
     @HostListener('mousemove', ['$event']) onMouseMove(event) {
-        this.context.clearRect(0, 0, this.element.width, this.element.height);
-        this.lineDrawer.renderLines();
-        this.rectangleDrawer.drawAllBoxes();
+        if (this.isDrawing) {
 
-        switch(this.imageProvider.selectedCanvasDirective){
-            case CanvasDirectivesEnum.canvas_line:
-                this.lineDrawer.onMouseMove(event);
-                break;
-            case CanvasDirectivesEnum.canvas_rect:
-                this.rectangleDrawer.onMouseMove(event);
+            let mouseCoordinates = {x: event.offsetX, y: event.offsetY} as CoordinatesObject;
+            this.render();
+
+            switch (this.imageProvider.selectedCanvasDirective){
+                case CanvasDirectivesEnum.canvas_line:
+                    this.lineDrawer.drawFromCoordinates(this.start, mouseCoordinates);
+                    break;
+                case CanvasDirectivesEnum.canvas_rect:
+                    this.rectangleDrawer.drawFromCoordinates(this.start, mouseCoordinates);
+                    break;
+            }
+
         }
     }
 
     @HostListener('mouseup', ['$event']) onMouseUp(event) {
-        switch(this.imageProvider.selectedCanvasDirective){
+        this.isDrawing = false;
+
+        let mouseCoordinates = {x: event.offsetX, y: event.offsetY} as CoordinatesObject;
+
+        switch (this.imageProvider.selectedCanvasDirective){
             case CanvasDirectivesEnum.canvas_line:
-                this.lineDrawer.onMouseUp(event);
+                this.lineDrawer.saveFromCoordinates(this.start, mouseCoordinates);
                 break;
             case CanvasDirectivesEnum.canvas_rect:
-                this.rectangleDrawer.onMouseUp();
+                this.rectangleDrawer.saveFromCoordinates(this.start, mouseCoordinates);
+                break;
         }
+
     }
 
 }

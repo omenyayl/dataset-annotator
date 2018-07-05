@@ -1,5 +1,6 @@
-import {Renderer2} from '@angular/core';
 import {ImageProvider} from "../providers/image/image";
+import {CoordinatesObject} from "../objects/CoordinatesObject";
+import {Drawable} from "../interfaces/drawable";
 
 class Line {
     x1: number;
@@ -14,82 +15,38 @@ const POINT_RADIUS = 7;
 const DEFAULT_COLOR = 'red';
 const SELECTED_COLOR = 'yellow';
 
-export class LineDrawer {
+export class LineDrawer implements Drawable{
     private context: CanvasRenderingContext2D;
-    private element: HTMLCanvasElement;
-    private renderer: Renderer2;
     private lines: Line[] = [];
     private selectedLine: Line;
-    private isDrawing: boolean;
-    private start: {
-        x: number, y: number;
-    };
     private imageProvider: ImageProvider;
 
     constructor(context: CanvasRenderingContext2D,
-                element: HTMLCanvasElement,
-                renderer: Renderer2,
                 imageProvider: ImageProvider) {
         this.context = context;
-        this.element = element;
-        this.renderer = renderer;
         this.imageProvider = imageProvider;
-
         this.lines = this.getLines();
     }
 
-    onMouseClick(event) {
-        this.selectNearestLine(event.offsetX, event.offsetY);
+    saveFromCoordinates(start: CoordinatesObject, end: CoordinatesObject) {
+        let line = this.getLineFromCoordinates(start, end);
+        this.saveLine(line)
     }
 
-    onMouseDown(event) {
-        this.start = {
-            x: event.offsetX,
-            y: event.offsetY
-        };
-
-        this.isDrawing = true;
+    drawFromCoordinates(start: CoordinatesObject, end: CoordinatesObject){
+        let line = this.getLineFromCoordinates(start, end);
+        this.drawLine(line);
     }
 
-    onMouseMove(event) {
-        if (this.isDrawing) {
-
-            this.drawLine({
-                x1: this.start.x,
-                y1: this.start.y,
-                x2: event.offsetX,
-                y2: event.offsetY
-            } as Line)
-
+    saveLine(line: Line){
+        if (LineDrawer.computeLineLength(line) > MIN_LINE_LENGTH){
+            this.lines.push(line);
+            this.addLine(line);
+            this.drawLine(line);
         }
-
-        if (this.isHoveringOnLine(event.offsetX, event.offsetY)){
-            this.renderer.setStyle(this.element, 'cursor', 'pointer');
-        } else {
-            this.renderer.setStyle(this.element, 'cursor', 'default');
-        }
-
     }
 
-    onMouseUp(event) {
-        this.isDrawing = false;
-        let lineToPush = {
-            x1: this.start.x,
-            y1: this.start.y,
-            x2: event.offsetX,
-            y2: event.offsetY
-        } as Line;
-
-        if (LineDrawer.computeLineLength(lineToPush) > MIN_LINE_LENGTH){
-            this.lines.push(lineToPush);
-            this.addLine(lineToPush);
-        }
-
-        this.renderLines(this.lines);
-    }
-
-    drawLine(line: Line) {
-
+    drawLine(line: Line){
         if (LineDrawer.computeLineLength(line) < MIN_LINE_LENGTH){
             return;
         }
@@ -103,7 +60,6 @@ export class LineDrawer {
         this.context.strokeStyle = color;
         this.context.stroke();
         this.drawCircle(line.x2, line.y2, color);
-
     }
 
     drawCircle(x: number, y: number, color = DEFAULT_COLOR){
@@ -118,48 +74,43 @@ export class LineDrawer {
         return Math.sqrt(Math.pow(line.x2 - line.x1, 2) + Math.pow(line.y2 - line.y1, 2));
     }
 
-    renderLines(lines: Line[] = this.lines){
+    render(){
+        this.renderLines(this.lines);
+    }
+
+    renderLines(lines: Line[]){
         for(let line of lines){
             this.drawLine(line);
         }
     }
 
-    selectNearestLine(offsetX: number, offsetY: number) {
-        for(let line of this.lines){
-            if (LineDrawer.isNearLine(line, offsetX, offsetY)){
-                this.selectedLine = line;
-                this.renderLines(this.lines);
-            }
-        }
-    }
-
-    static isNearLine(line: Line, x, y): boolean{
-        let distanceFromPoint1 = LineDrawer.computeLineLength({
-            x1: line.x1,
-            y1: line.y1,
-            x2: x,
-            y2: y
-        } as Line);
-
-        let distanceFromPoint2 = LineDrawer.computeLineLength({
-            x1: line.x2,
-            y1: line.y2,
-            x2: x,
-            y2: y
-        } as Line);
-
-        return distanceFromPoint1 <= POINT_RADIUS || distanceFromPoint2 <= POINT_RADIUS;
-    }
-
-    isHoveringOnLine(x, y): boolean {
-        let hoveringOnLine = false;
-        for(let line of this.lines){
-            if (LineDrawer.isNearLine(line, x, y)){
-                hoveringOnLine = true;
-            }
-        }
-        return hoveringOnLine;
-    }
+    // static isNearLine(line: Line, x, y): boolean{
+    //     let distanceFromPoint1 = LineDrawer.computeLineLength({
+    //         x1: line.x1,
+    //         y1: line.y1,
+    //         x2: x,
+    //         y2: y
+    //     } as Line);
+    //
+    //     let distanceFromPoint2 = LineDrawer.computeLineLength({
+    //         x1: line.x2,
+    //         y1: line.y2,
+    //         x2: x,
+    //         y2: y
+    //     } as Line);
+    //
+    //     return distanceFromPoint1 <= POINT_RADIUS || distanceFromPoint2 <= POINT_RADIUS;
+    // }
+    //
+    // isHoveringOnLine(x, y): boolean {
+    //     let hoveringOnLine = false;
+    //     for(let line of this.lines){
+    //         if (LineDrawer.isNearLine(line, x, y)){
+    //             hoveringOnLine = true;
+    //         }
+    //     }
+    //     return hoveringOnLine;
+    // }
 
 
     getLines() {
@@ -172,7 +123,9 @@ export class LineDrawer {
         }
     }
 
-    addLine(line) {
+    addLine(line: Line) {
+
+
         let currentImage = this.imageProvider.currentImage;
         if (currentImage && this.imageProvider.annotations.hasOwnProperty(currentImage.src) &&
             this.imageProvider.annotations[currentImage.src].hasOwnProperty('lines')) {
@@ -186,5 +139,14 @@ export class LineDrawer {
                 lines: [line]
             }
         }
+    }
+
+    getLineFromCoordinates(start: CoordinatesObject, end: CoordinatesObject): Line {
+        return {
+            x1: start.x,
+            y1: start.y,
+            x2: end.x,
+            y2: end.y
+        } as Line
     }
 }

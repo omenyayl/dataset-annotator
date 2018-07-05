@@ -1,4 +1,6 @@
 import {ImageProvider} from "../providers/image/image";
+import {Drawable} from "../interfaces/drawable";
+import {CoordinatesObject} from "../objects/CoordinatesObject";
 
 class Box {
     x1: number;
@@ -9,56 +11,18 @@ class Box {
 
 const DEFAULT_COLOR = 'red';
 
-export class RectangleDrawer {
+export class RectangleDrawer implements Drawable{
     private context: CanvasRenderingContext2D;
-    private element: HTMLCanvasElement;
-    private isDrawing: boolean;
-    private curBox: Box;
     private boxes: Box[];
     private imageProvider: ImageProvider;
     private selectedBox: Box;
 
     constructor(context: CanvasRenderingContext2D,
-                element: HTMLCanvasElement,
                 imageProvider: ImageProvider) {
         this.context = context;
-        this.element = element;
         this.imageProvider = imageProvider;
-        this.isDrawing = false;
         this.boxes = this.getBoxes();
         this.imageProvider = imageProvider;
-    }
-
-    onMouseDown(event) {
-        this.curBox = {x1: event.offsetX, y1: event.offsetY, x2: -1, y2: -1} as Box;
-        this.context.beginPath();
-        this.isDrawing = true;
-    }
-
-    onMouseMove(event) {
-        if(this.isDrawing){
-            this.curBox.x2 = event.offsetX;
-            this.curBox.y2 = event.offsetY;
-
-            // this.context.clearRect(0, 0, this.element.width, this.element.height);
-
-            // for (let box of this.boxes) {
-            //     this.drawBox(box, 'red');
-            // }
-
-            this.drawBox(this.curBox, 'white');
-        }
-
-    }
-
-    onMouseUp() {
-        //curBox.label = null;
-        if (this.curBox.x2 != -1) {
-            this.boxes.push(this.curBox);
-            this.addBox(this.curBox);
-        }
-        this.isDrawing = false;
-        this.drawAllBoxes();
     }
 
     drawLine(start, end, color = DEFAULT_COLOR): void {
@@ -111,6 +75,34 @@ export class RectangleDrawer {
                 boxes: [box]
             }
         }
+    }
+
+    drawFromCoordinates(...coordinates: CoordinatesObject[]) {
+        if (coordinates.length < 2) {
+            throw new RangeError(`RectangleDrawer.drawFromCoordinates expected 2 coordinates, but only received ${coordinates.length}`);
+        }
+        this.drawBox({
+            x1: coordinates[0].x,
+            y1: coordinates[0].y,
+            x2: coordinates[1].x,
+            y2: coordinates[1].y
+        });
+    }
+
+    render() {
+        this.drawAllBoxes();
+    }
+
+    saveFromCoordinates(...coordinates: CoordinatesObject[]) {
+        let newBox = {
+            x1: coordinates[0].x,
+            y1: coordinates[0].y,
+            x2: coordinates[1].x,
+            y2: coordinates[1].y
+        };
+        this.boxes.push(newBox);
+        this.addBox(newBox);
+        this.drawBox(newBox);
     }
 
 
