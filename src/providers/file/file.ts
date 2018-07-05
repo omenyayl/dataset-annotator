@@ -106,14 +106,16 @@ export class FileProvider {
 		return new Observable<any>((observer) => {
 		  	console.log(`${data}`);
 		  	for(var imageFile in data){
-				if(data.hasOwnProperty(imageFile)){
+			  	if(data.hasOwnProperty(imageFile)){
+				  	let _imageFile = path.basename(imageFile);
+					let outputName = _imageFile.replace(path.extname(_imageFile), ".json");
+				  	let _data = JSON.stringify(data[imageFile], null, 4);
 				  	console.log('saveFiles is going to save ');
-					console.log(imageFile);
-		  			fs.writeFile(this.selectedSaveFolder + '/' + imageFile + '.json', data[imageFile], 'utf8', (err) => {
+					console.log(_imageFile);
+		  			fs.writeFile(this.selectedSaveFolder + '/' + outputName, _data, 'utf8', (err) => {
 						if(err){
 							throw err;
 						}
-						console.log('Dummy save file test.json created successfully');
 					});
 				}
 			}
