@@ -17,12 +17,12 @@
   <form [formGroup]="hotkeys" (ngSubmit)="logForm()">
     <ion-item>
       <ion-label stacked>Next image</ion-label>
-      <ion-input type="text" formControlName="nextImage"></ion-input>
+      <ion-input type="text" formControlName="nextImage" maxlength="1"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label stacked>Previous image</ion-label>
-      <ion-input type="text" formControlName="prevImage"></ion-input>
+      <ion-input type="text" formControlName="prevImage" maxlength="1"></ion-input>
     </ion-item>
-    <button ion-button type="submit">Update</button>
+    <button ion-button type="submit" margin>Update</button>
   </form>
 </ion-content>
