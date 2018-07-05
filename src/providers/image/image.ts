@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import {ImageObject} from "../../objects/image-object";
 import * as imageSize from 'image-size';
 import {Observable} from "rxjs/Observable";
-import {AnnotationObject} from "../../objects/annotation-object";
 import {CanvasDirectivesEnum} from "../../enums/canvas-directives-enum";
 
 const MAX_IMAGE_WIDTH = 500;
@@ -15,8 +14,8 @@ const MAX_IMAGE_HEIGHT = 500;
 export class ImageProvider {
 
     public currentImage: ImageObject;
-    public selectedCanvasDirective: CanvasDirectivesEnum;
     public annotations = {};
+    public selectedCanvasDirective: CanvasDirectivesEnum;
 
     constructor() {
     }
@@ -50,13 +49,13 @@ export class ImageProvider {
         } as ImageObject;
     }
 
-
-
     generateSaveData(): Observable<any> {
         return new Observable<any>((observer) => {
             observer.next({data: 'testData'});
             observer.complete();
         })
     }
+
+
 
 }

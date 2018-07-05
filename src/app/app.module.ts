@@ -10,9 +10,8 @@ import {NavProxyService} from '../providers/nav-proxy/nav-proxy';
 import {ItemsPage} from "../pages/items/items";
 import {ItemPage} from "../pages/item/item";
 import {PlaceholderPage} from "../pages/placeholder/placeholder";
-import {CanvasLineDirective} from "../directives/canvas-line/canvas-line";
 import {ImageProvider} from '../providers/image/image';
-import {CanvasRectDirective} from "../directives/canvas-rect/canvas-rect";
+import {CanvasEditorDirective} from "../directives/canvas-editor/canvas-editor";
 
 @NgModule({
     declarations: [
@@ -20,8 +19,7 @@ import {CanvasRectDirective} from "../directives/canvas-rect/canvas-rect";
         ItemsPage,
         ItemPage,
         PlaceholderPage,
-        CanvasLineDirective,
-        CanvasRectDirective
+        CanvasEditorDirective
     ],
     imports: [
         BrowserModule,

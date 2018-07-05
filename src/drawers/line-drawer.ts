@@ -1,7 +1,12 @@
-import {Directive, ElementRef, HostListener, Renderer2} from '@angular/core';
-import { ImageProvider } from "../../providers/image/image";
-import { CanvasDirectivesEnum } from "../../enums/canvas-directives-enum";
-import { Line } from "../../objects/line";
+import {Renderer2} from '@angular/core';
+import {ImageProvider} from "../providers/image/image";
+
+class Line {
+    x1: number;
+    y1: number;
+    x2: number;
+    y2: number
+}
 
 const MIN_LINE_LENGTH = 10;
 const POINT_RADIUS = 7;
@@ -9,46 +14,35 @@ const POINT_RADIUS = 7;
 const DEFAULT_COLOR = 'red';
 const SELECTED_COLOR = 'yellow';
 
-
-/**
- * Directive for drawing elements on the HTML5 Canvas
- */
-@Directive({
-    selector: `[${CanvasDirectivesEnum.canvas_line}]`
-})
-export class CanvasLineDirective {
-    renderer: Renderer2;
-    private selectedLine: Line;
-    private readonly element: HTMLCanvasElement;
+export class LineDrawer {
     private context: CanvasRenderingContext2D;
+    private element: HTMLCanvasElement;
+    private renderer: Renderer2;
+    private lines: Line[] = [];
+    private selectedLine: Line;
     private isDrawing: boolean;
     private start: {
         x: number, y: number;
     };
     private imageProvider: ImageProvider;
-    private lines: Line[];
-    
-    constructor(el: ElementRef,
-                imageProvider: ImageProvider,
-                renderer: Renderer2) {
-        this.element = (<HTMLCanvasElement>el.nativeElement);
-        this.context = this.element.getContext('2d');
-        this.isDrawing = false;
+
+    constructor(context: CanvasRenderingContext2D,
+                element: HTMLCanvasElement,
+                renderer: Renderer2,
+                imageProvider: ImageProvider) {
+        this.context = context;
+        this.element = element;
         this.renderer = renderer;
         this.imageProvider = imageProvider;
 
         this.lines = this.getLines();
     }
 
-    ngAfterViewInit() {
-        this.renderLines(this.lines);
-    }
-
-    @HostListener('click', ['$event']) onMouseClick(event) {
+    onMouseClick(event) {
         this.selectNearestLine(event.offsetX, event.offsetY);
     }
 
-    @HostListener('mousedown', ['$event']) onMouseDown(event) {
+    onMouseDown(event) {
         this.start = {
             x: event.offsetX,
             y: event.offsetY
@@ -57,17 +51,16 @@ export class CanvasLineDirective {
         this.isDrawing = true;
     }
 
-    @HostListener('mousemove', ['$event']) onMouseMove(event) {
+    onMouseMove(event) {
         if (this.isDrawing) {
 
-            this.context.clearRect(0, 0, this.element.width, this.element.height);
-
-            this.renderLines(this.lines.concat([{
+            this.drawLine({
                 x1: this.start.x,
                 y1: this.start.y,
                 x2: event.offsetX,
                 y2: event.offsetY
-            } as Line]));
+            } as Line)
+
         }
 
         if (this.isHoveringOnLine(event.offsetX, event.offsetY)){
@@ -78,7 +71,7 @@ export class CanvasLineDirective {
 
     }
 
-    @HostListener('mouseup', ['$event']) onMouseUp(event) {
+    onMouseUp(event) {
         this.isDrawing = false;
         let lineToPush = {
             x1: this.start.x,
@@ -87,15 +80,17 @@ export class CanvasLineDirective {
             y2: event.offsetY
         } as Line;
 
-        if (CanvasLineDirective.computeLineLength(lineToPush) > MIN_LINE_LENGTH){
+        if (LineDrawer.computeLineLength(lineToPush) > MIN_LINE_LENGTH){
             this.lines.push(lineToPush);
             this.addLine(lineToPush);
         }
+
+        this.renderLines(this.lines);
     }
 
     drawLine(line: Line) {
 
-        if (CanvasLineDirective.computeLineLength(line) < MIN_LINE_LENGTH){
+        if (LineDrawer.computeLineLength(line) < MIN_LINE_LENGTH){
             return;
         }
 
@@ -123,7 +118,7 @@ export class CanvasLineDirective {
         return Math.sqrt(Math.pow(line.x2 - line.x1, 2) + Math.pow(line.y2 - line.y1, 2));
     }
 
-    renderLines(lines: Line[]){
+    renderLines(lines: Line[] = this.lines){
         for(let line of lines){
             this.drawLine(line);
         }
@@ -131,7 +126,7 @@ export class CanvasLineDirective {
 
     selectNearestLine(offsetX: number, offsetY: number) {
         for(let line of this.lines){
-            if (CanvasLineDirective.isNearLine(line, offsetX, offsetY)){
+            if (LineDrawer.isNearLine(line, offsetX, offsetY)){
                 this.selectedLine = line;
                 this.renderLines(this.lines);
             }
@@ -139,14 +134,14 @@ export class CanvasLineDirective {
     }
 
     static isNearLine(line: Line, x, y): boolean{
-        let distanceFromPoint1 = CanvasLineDirective.computeLineLength({
+        let distanceFromPoint1 = LineDrawer.computeLineLength({
             x1: line.x1,
             y1: line.y1,
             x2: x,
             y2: y
         } as Line);
 
-        let distanceFromPoint2 = CanvasLineDirective.computeLineLength({
+        let distanceFromPoint2 = LineDrawer.computeLineLength({
             x1: line.x2,
             y1: line.y2,
             x2: x,
@@ -159,17 +154,18 @@ export class CanvasLineDirective {
     isHoveringOnLine(x, y): boolean {
         let hoveringOnLine = false;
         for(let line of this.lines){
-            if (CanvasLineDirective.isNearLine(line, x, y)){
+            if (LineDrawer.isNearLine(line, x, y)){
                 hoveringOnLine = true;
             }
         }
         return hoveringOnLine;
     }
 
+
     getLines() {
         let currentImage = this.imageProvider.currentImage;
         if (currentImage && this.imageProvider.annotations.hasOwnProperty(currentImage.src) &&
-        this.imageProvider.annotations[currentImage.src].hasOwnProperty('lines')) {
+            this.imageProvider.annotations[currentImage.src].hasOwnProperty('lines')) {
             return this.imageProvider.annotations[currentImage.src].lines
         } else {
             return [];

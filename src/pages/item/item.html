@@ -37,18 +37,14 @@
             <div class="image-canvas-div">
                 <img class="img-position"
                      src="{{getImageSrc()}}"
+                     [src]="sanitizer.bypassSecurityTrustResourceUrl(getImageSrc())"
                      width="{{getCurrentImage().width}}"
                      height="{{getCurrentImage().height}}"/>
-                <canvas *ngIf="getSelectedCanvasDirective() === canvasDirectives.canvas_rect"
+                <canvas
                         class="canvas-position"
                         width="{{getCurrentImage().width}}"
                         height="{{getCurrentImage().height}}"
-                        canvas-rect></canvas>
-                <canvas *ngIf="getSelectedCanvasDirective() === canvasDirectives.canvas_line"
-                        class="canvas-position"
-                        width="{{getCurrentImage().width}}"
-                        height="{{getCurrentImage().height}}"
-                        canvas-line></canvas>
+                        canvas-editor></canvas>
             </div>
         </ion-row>
     </ion-grid>

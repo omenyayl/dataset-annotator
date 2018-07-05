@@ -1,8 +1,10 @@
 import { NgModule } from '@angular/core';
-import { CanvasLineDirective } from './canvas-line/canvas-line';
+import { CanvasEditorDirective } from './canvas-editor/canvas-editor';
 @NgModule({
-	declarations: [CanvasLineDirective],
+	declarations: [,
+    CanvasEditorDirective],
 	imports: [],
-	exports: [CanvasLineDirective]
+	exports: [,
+    CanvasEditorDirective]
 })
 export class DirectivesModule {}
