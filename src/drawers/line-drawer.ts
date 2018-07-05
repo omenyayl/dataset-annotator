@@ -10,7 +10,7 @@ class Line {
 }
 
 const MIN_LINE_LENGTH = 10;
-const POINT_RADIUS = 7;
+const POINT_RADIUS = 5;
 
 const DEFAULT_COLOR = 'red';
 const SELECTED_COLOR = 'yellow';
