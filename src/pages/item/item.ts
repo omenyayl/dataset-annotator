@@ -33,7 +33,12 @@ export class ItemPage extends _DetailPage {
         this.item = navParams.data;
 
         const currentImagePath = path.join(fileProvider.selectedFolder, this.item);
-        this.imageProvider.selectedCanvasDirective = this.canvasDirectives.canvas_line;
+
+        // Setting default tool
+        if (! this.imageProvider.selectedCanvasDirective) {
+            this.imageProvider.selectedCanvasDirective = this.canvasDirectives.canvas_line;
+        }
+
         this.imageProvider.initImage(currentImagePath as string);
     }
 
