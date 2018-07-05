@@ -97,6 +97,29 @@ export class FileProvider {
 
     }
 
+	/**
+	 * Handle saving of data from annotator
+	 * Data is to be taken from the data defining directive(s)
+	 * @param data - The data to be saved
+	 */
+	saveFiles(data: Object): Observable<any> {
+		return new Observable<any>((observer) => {
+		  	console.log(`${data}`);
+		  	for(var imageFile in data){
+				if(data.hasOwnProperty(imageFile)){
+				  	console.log('saveFiles is going to save ');
+					console.log(imageFile);
+		  			fs.writeFile(this.selectedSaveFolder + '/' + imageFile + '.json', data[imageFile], 'utf8', (err) => {
+						if(err){
+							throw err;
+						}
+						console.log('Dummy save file test.json created successfully');
+					});
+				}
+			}
+		})
+  	}
+
     /**
      * Handle an operation that failed.
      * Let the app continue.

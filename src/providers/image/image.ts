@@ -73,7 +73,7 @@ export class ImageProvider {
 
 	generateSaveData(): Observable<any> {
 		return new Observable<any>((observer) => {
-				observer.next({data: 'testData'});
+		  observer.next({'testFile': 'testData', 'frame_05420': '[{type: \'box\'}]'});
 			observer.complete();
 		})
 	}
