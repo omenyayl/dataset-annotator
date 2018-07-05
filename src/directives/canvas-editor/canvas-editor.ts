@@ -15,8 +15,8 @@ export class CanvasEditorDirective {
     private lineDrawer: LineDrawer;
     private rectangleDrawer: RectangleDrawer;
 
-    private context: CanvasRenderingContext2D;
-    private element: HTMLCanvasElement;
+    private readonly context: CanvasRenderingContext2D;
+    private readonly element: HTMLCanvasElement;
     private imageProvider: ImageProvider;
     private isDrawing: boolean;
     private start: CoordinatesObject;
@@ -46,23 +46,36 @@ export class CanvasEditorDirective {
     }
 
     @HostListener('click', ['$event']) onMouseClick(event) {
+        if (this.isDrawing === false) {
+            this.start = {
+                x: event.offsetX,
+                y: event.offsetY
+            };
+        } else {
 
+            let mouseCoordinates = {x: event.offsetX, y: event.offsetY} as CoordinatesObject;
+
+            switch (this.imageProvider.selectedCanvasDirective){
+                case CanvasDirectivesEnum.canvas_line:
+                    this.lineDrawer.saveFromCoordinates(this.start, mouseCoordinates);
+                    break;
+                case CanvasDirectivesEnum.canvas_rect:
+                    this.rectangleDrawer.saveFromCoordinates(this.start, mouseCoordinates);
+                    break;
+            }
+        }
+        this.isDrawing = ! this.isDrawing;
     }
 
     @HostListener('mousedown', ['$event']) onMouseDown(event) {
 
-        this.start = {
-            x: event.offsetX,
-            y: event.offsetY
-        };
-
-        this.isDrawing = true;
     }
 
     @HostListener('mousemove', ['$event']) onMouseMove(event) {
 
-        let hovering = false;
-        hovering = this.lineDrawer.isHovering({x: event.offsetX, y: event.offsetY});
+        let hovering =
+            this.lineDrawer.isHovering({x: event.offsetX, y: event.offsetY}) ||
+            this.rectangleDrawer.isHovering({x: event.offsetX, y: event.offsetY});
 
         if (hovering) {
             this.renderer.setStyle(this.element, 'cursor', 'pointer');
@@ -89,18 +102,6 @@ export class CanvasEditorDirective {
     }
 
     @HostListener('mouseup', ['$event']) onMouseUp(event) {
-        this.isDrawing = false;
-
-        let mouseCoordinates = {x: event.offsetX, y: event.offsetY} as CoordinatesObject;
-
-        switch (this.imageProvider.selectedCanvasDirective){
-            case CanvasDirectivesEnum.canvas_line:
-                this.lineDrawer.saveFromCoordinates(this.start, mouseCoordinates);
-                break;
-            case CanvasDirectivesEnum.canvas_rect:
-                this.rectangleDrawer.saveFromCoordinates(this.start, mouseCoordinates);
-                break;
-        }
 
     }
 
