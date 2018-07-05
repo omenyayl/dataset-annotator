@@ -6,6 +6,8 @@ import * as path from 'path';
 import {ImageObject} from '../../objects/image-object';
 import {ImageProvider} from "../../providers/image/image";
 import { CanvasDirectivesEnum } from "../../enums/canvas-directives-enum";
+import {platform} from 'process';
+import { DomSanitizer } from "@angular/platform-browser";
 
 
 @IonicPage()
@@ -21,20 +23,18 @@ export class ItemPage extends _DetailPage {
 
     item: string = null;
     canvasDirectives = CanvasDirectivesEnum;
-    selectedCanvasDirective: string;
 
     constructor(public navCtrl: NavController,
                 public navParams: NavParams,
                 private fileProvider: FileProvider,
-                private imageProvider: ImageProvider) {
+                private imageProvider: ImageProvider,
+                private sanitizer: DomSanitizer) {
         super();
         this.item = navParams.data;
 
-        const currentImagePath = this.getImageSrc();
+        const currentImagePath = path.join(fileProvider.selectedFolder, this.item);
+        this.imageProvider.selectedCanvasDirective = this.canvasDirectives.canvas_line;
         this.imageProvider.initImage(currentImagePath as string);
-
-        // Setting default directive for the canvas element
-        this.selectedCanvasDirective = this.canvasDirectives.canvas_rect;
     }
 
     /**
@@ -42,16 +42,24 @@ export class ItemPage extends _DetailPage {
      * @returns {string}
      */
     getImageSrc(): string {
-        return path.join(this.fileProvider.selectedFolder, this.item);
+        let imgPath = path.join(this.fileProvider.selectedFolder, this.item);
+        if (platform == 'win32'){
+            return `file:///${imgPath}`;
+        } else {
+            return imgPath;
+        }
     }
 
+    getSelectedCanvasDirective(): string {
+        return this.imageProvider.selectedCanvasDirective;
+    }
 
     getCurrentImage(): ImageObject {
         return this.imageProvider.currentImage;
     }
 
     selectCanvasDirective(directiveName: CanvasDirectivesEnum){
-        this.selectedCanvasDirective = directiveName as string;
+        this.imageProvider.selectedCanvasDirective = directiveName;
     }
 
     @HostListener('window:keydown.q', ['$event'])
