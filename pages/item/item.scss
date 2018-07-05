@@ -1,0 +1,37 @@
+page-item {
+
+}
+
+.image-full {
+  width: auto !important;
+  height: 100%;
+}
+
+.image-canvas-div {
+  display:inline-block;
+  margin: 0 auto;
+  background: black;
+  position:relative;
+  border:5px solid black;
+  border-radius: 10px;
+  box-shadow: 0 5px 50px #333
+}
+
+.canvas-position {
+  position:relative;
+  z-index:20;
+}
+
+.img-position {
+  position:absolute;
+  z-index:1;
+}
+
+.button-text {
+  padding: 10px;
+}
+
+
+.activated-button {
+  background: #f3ab01;
+}
