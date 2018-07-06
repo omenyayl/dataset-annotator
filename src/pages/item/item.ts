@@ -74,11 +74,13 @@ export class ItemPage extends _DetailPage {
 	 * and puts them in: dummy
 	 */
   	getCurrentAnnotations(){
+		let allAnnotations = [];
 		console.log("getting annotations...");
 		let currentImage = this.imageProvider.currentImage;
 	  	if(currentImage && this.imageProvider.annotations.hasOwnProperty(currentImage.src) && this.imageProvider.annotations[currentImage.src].hasOwnProperty('boxes')){
 			console.log(this.imageProvider.annotations[currentImage.src].boxes);
-			return this.imageProvider.annotations[currentImage.src].boxes
+			allAnnotations = this.imageProvider.annotations[currentImage.src].boxes
+			return allAnnotations;
 		}else{
 		  	this.imageProvider.annotations[currentImage.src] = new AnnotationObject;
 			console.log(this.imageProvider.annotations[currentImage.src].boxes);
