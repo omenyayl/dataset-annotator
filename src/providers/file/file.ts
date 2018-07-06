@@ -6,6 +6,7 @@ import {of} from "rxjs/observable/of";
 import * as fs from 'fs';
 import * as path from 'path';
 import {Subject} from "rxjs/Subject";
+import {observableToBeFn} from "rxjs/testing/TestScheduler";
 
 let {dialog} = remote;
 
@@ -104,22 +105,30 @@ export class FileProvider {
 	 */
 	saveFiles(data: Object): Observable<any> {
 		return new Observable<any>((observer) => {
-		  	console.log(`${data}`);
-		  	for(var imageFile in data){
+		    console.log('saving the following: ');
+		  	console.log(data);
+		  	for(let imageFile in data){
 			  	if(data.hasOwnProperty(imageFile)){
 				  	let _imageFile = path.basename(imageFile);
 					let outputName = _imageFile.replace(path.extname(_imageFile), ".json");
 				  	let _data = JSON.stringify(data[imageFile], null, 4);
 				  	console.log('saveFiles is going to save ');
 					console.log(_imageFile);
-		  			fs.writeFile(this.selectedSaveFolder + '/' + outputName, _data, 'utf8', (err) => {
+
+					// You can't simply concatenate two paths with +. Windows paths are nasty
+		  			fs.writeFile(path.join(this.selectedSaveFolder, outputName), _data, 'utf8', (err) => {
 						if(err){
-							throw err;
-						}
+							observer.error(err);
+						} else {
+						    observer.next();
+                        }
+                        observer.complete();
 					});
 				}
 			}
-		})
+		}).pipe(
+		    catchError(this.handleError('File.saveFiles', null))
+        )
   	}
 
     /**
