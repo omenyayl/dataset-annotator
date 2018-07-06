@@ -19,7 +19,7 @@ export class RectangleDrawer extends Drawer{
     constructor(context: CanvasRenderingContext2D,
                 imageProvider: ImageProvider) {
         super(context, imageProvider);
-        this.boxes = this.getBoxes();
+        this.boxes = this.getBoxes().slice(0);
     }
 
     drawLine(start, end, color = DEFAULT_COLOR): void {
@@ -52,8 +52,7 @@ export class RectangleDrawer extends Drawer{
 
     getBoxes() {
         let currentImage = super.getImageProvider().currentImage;
-        if (currentImage && super.getImageProvider().annotations.hasOwnProperty(currentImage.src)  &&
-            super.getImageProvider().annotations[currentImage.src].hasOwnProperty('boxes')) {
+        if (currentImage) {
             return super.getImageProvider().annotations[currentImage.src].boxes
         } else {
             return [];
@@ -63,21 +62,8 @@ export class RectangleDrawer extends Drawer{
   	addBox(box) {
 		console.log("addBox():");
         let currentImage = super.getImageProvider().currentImage;
-        if (currentImage && super.getImageProvider().annotations.hasOwnProperty(currentImage.src) &&
-            super.getImageProvider().annotations[currentImage.src].hasOwnProperty('boxes')) {
-		  	console.log("box: ");
-		  	console.log(box);
-		  	//super.getImageProvider().annotations[currentImage.src].boxes.push(box);
-			console.log("All boxes");
-			console.log(super.getImageProvider().annotations[currentImage.src].boxes);
-        }
-        else if (currentImage && super.getImageProvider().annotations.hasOwnProperty(currentImage.src)) {
-            super.getImageProvider().annotations[currentImage.src].boxes = [box];
-        }
-        else if (currentImage) {
-            super.getImageProvider().annotations[currentImage.src] = {
-                boxes: [box]
-            }
+        if (currentImage ) {
+            super.getImageProvider().annotations[currentImage.src].boxes.push(box);
         }
     }
 

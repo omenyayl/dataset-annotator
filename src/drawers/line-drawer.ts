@@ -110,9 +110,9 @@ export class LineDrawer extends Drawer{
 
 
     getLines() {
+
         let currentImage = super.getImageProvider().currentImage;
-        if (currentImage && super.getImageProvider().annotations.hasOwnProperty(currentImage.src) &&
-            super.getImageProvider().annotations[currentImage.src].hasOwnProperty('lines')) {
+        if (currentImage) {
             return super.getImageProvider().annotations[currentImage.src].lines
         } else {
             return [];
@@ -121,20 +121,11 @@ export class LineDrawer extends Drawer{
 
     addLine(line: Line) {
 
-
         let currentImage = super.getImageProvider().currentImage;
-        if (currentImage && super.getImageProvider().annotations.hasOwnProperty(currentImage.src) &&
-            super.getImageProvider().annotations[currentImage.src].hasOwnProperty('lines')) {
+        if( currentImage ) {
             super.getImageProvider().annotations[currentImage.src].lines.push(line);
         }
-        else if (currentImage && super.getImageProvider().annotations.hasOwnProperty(currentImage.src)) {
-            super.getImageProvider().annotations[currentImage.src].lines = [line];
-        }
-        else if (currentImage) {
-            super.getImageProvider().annotations[currentImage.src] = {
-                lines: [line]
-            }
-        }
+
     }
 
     static getLineFromCoordinates(start: CoordinatesObject, end: CoordinatesObject): Line {

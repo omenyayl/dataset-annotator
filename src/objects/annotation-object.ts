@@ -1,8 +1,5 @@
 export class AnnotationObject{
-  /*annotations: {*/
- 	//fileName: string,
-	lines: any[] = [];
-	boxes: any[] = [];
-	polys: any[] = [];
-  //}
+    lines: any[] = [];
+    boxes: any[] = [];
+    polygons: any[] = [];
 }
