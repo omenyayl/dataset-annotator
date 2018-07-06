@@ -49,12 +49,15 @@ export class ImageProvider {
             height: height
         } as ImageObject;
 
-        this.annotations.push({
-            src: this.currentImage,
-            lines: [],
-            boxes: [],
-            polygons: []
-        } as AnnotationObject)
+        if (! this.annotations[this.currentImage.src]) {
+            this.annotations[this.currentImage.src] = {
+                src: this.currentImage,
+                lines: [],
+                boxes: [],
+                polygons: []
+            } as AnnotationObject;
+        }
+
     }
 
 	generateSaveData(): Observable<any> {
