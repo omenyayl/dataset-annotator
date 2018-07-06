@@ -21,7 +21,7 @@ export class LineDrawer extends Drawer{
     constructor(context: CanvasRenderingContext2D,
                 imageProvider: ImageProvider) {
         super(context, imageProvider);
-        this.lines = this.getLines();
+        this.lines = this.getLines().slice(0);
     }
 
     saveFromCoordinates(start: CoordinatesObject, end: CoordinatesObject) {
