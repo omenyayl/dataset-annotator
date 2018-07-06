@@ -52,8 +52,8 @@ export class ImageProvider {
         this.annotations.push({
             src: this.currentImage,
             lines: [],
-            rect: [],
-            poly: []
+            boxes: [],
+            polygons: []
         } as AnnotationObject)
     }
 
