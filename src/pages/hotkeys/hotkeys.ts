@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { HotkeyProvider } from '../../providers/hotkeys/hotkeys';
+import { NavProxyService } from '../../providers/nav-proxy/nav-proxy';
 
 @IonicPage()
 @Component({
@@ -13,14 +15,18 @@ export class HotkeysPage {
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
-              private formBuilder: FormBuilder) {
+              private formBuilder: FormBuilder,
+              private navProxy: NavProxyService,
+              private hotkeyProvider: HotkeyProvider) {
+
     this.hotkeys = this.formBuilder.group({
-      nextImage: [''],
-      prevImage: ['']
+      nextImage: [this.hotkeyProvider.hotkeys.nextImage],
+      prevImage: [this.hotkeyProvider.hotkeys.prevImage]
     })
   }
 
-  logForm() {
-    console.log(this.hotkeys.value);
+  updateHotkeys() {
+    this.hotkeyProvider.hotkeys = this.hotkeys.value;
+    this.navProxy.popMaster(HotkeysPage);
   }
 }

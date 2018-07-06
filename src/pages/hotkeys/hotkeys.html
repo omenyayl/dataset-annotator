@@ -14,7 +14,7 @@
 
 
 <ion-content padding>
-  <form [formGroup]="hotkeys" (ngSubmit)="logForm()">
+  <form [formGroup]="hotkeys" (ngSubmit)="updateHotkeys()">
     <ion-item>
       <ion-label stacked>Next image</ion-label>
       <ion-input type="text" formControlName="nextImage" maxlength="1"></ion-input>
