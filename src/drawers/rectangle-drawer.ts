@@ -61,11 +61,16 @@ export class RectangleDrawer extends Drawer{
         }
     }
 
-    addBox(box) {
+  	addBox(box) {
+		console.log("addBox():");
         let currentImage = super.getImageProvider().currentImage;
         if (currentImage && super.getImageProvider().annotations.hasOwnProperty(currentImage.src) &&
             super.getImageProvider().annotations[currentImage.src].hasOwnProperty('boxes')) {
-            super.getImageProvider().annotations[currentImage.src].boxes.push(box);
+		  	console.log("box: ");
+		  	console.log(box);
+		  	//super.getImageProvider().annotations[currentImage.src].boxes.push(box);
+			console.log("All boxes");
+			console.log(super.getImageProvider().annotations[currentImage.src].boxes);
         }
         else if (currentImage && super.getImageProvider().annotations.hasOwnProperty(currentImage.src)) {
             super.getImageProvider().annotations[currentImage.src].boxes = [box];

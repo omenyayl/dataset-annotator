@@ -9,7 +9,7 @@ import { CanvasDirectivesEnum } from "../../enums/canvas-directives-enum";
 import {platform} from 'process';
 import { DomSanitizer } from "@angular/platform-browser";
 import { HotkeyProvider } from '../../providers/hotkeys/hotkeys';
-
+import { AnnotationObject } from '../../objects/annotation-object';
 
 @IonicPage()
 @Component({
@@ -35,7 +35,7 @@ export class ItemPage extends _DetailPage {
                 private sanitizer: DomSanitizer,
                 private hotkeyProvider: HotkeyProvider) {
         super();
-        this.item = navParams.data;
+	  	this.item = navParams.data;
 
         const currentImagePath = path.join(fileProvider.selectedFolder, this.item);
 
@@ -77,9 +77,12 @@ export class ItemPage extends _DetailPage {
 		console.log("getting annotations...");
 		let currentImage = this.imageProvider.currentImage;
 	  	if(currentImage && this.imageProvider.annotations.hasOwnProperty(currentImage.src) && this.imageProvider.annotations[currentImage.src].hasOwnProperty('boxes')){
+			console.log(this.imageProvider.annotations[currentImage.src].boxes);
 			return this.imageProvider.annotations[currentImage.src].boxes
 		}else{
-			return [];
+		  	this.imageProvider.annotations[currentImage.src] = new AnnotationObject;
+			console.log(this.imageProvider.annotations[currentImage.src].boxes);
+			return this.imageProvider.annotations[currentImage.src].boxes
 		}
 	}
 
