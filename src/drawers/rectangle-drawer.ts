@@ -19,7 +19,6 @@ export class RectangleDrawer extends Drawer{
     constructor(context: CanvasRenderingContext2D,
                 imageProvider: ImageProvider) {
         super(context, imageProvider);
-        this.initBoxes();
         this.boxes = this.getBoxes();
     }
 
@@ -82,16 +81,6 @@ export class RectangleDrawer extends Drawer{
         }
     }
 
-    initBoxes() {
-        let currentImage = super.getImageProvider().currentImage;
-
-        if (currentImage && ! super.getImageProvider().annotations.hasOwnProperty(currentImage.src)){
-            super.getImageProvider().annotations[currentImage.src] = {
-                boxes: []
-            }
-        }
-
-    }
 
     drawCircle(coordinates: CoordinatesObject, color = DEFAULT_COLOR){
         super.getContext().beginPath();

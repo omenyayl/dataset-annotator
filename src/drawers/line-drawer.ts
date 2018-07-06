@@ -21,7 +21,6 @@ export class LineDrawer extends Drawer{
     constructor(context: CanvasRenderingContext2D,
                 imageProvider: ImageProvider) {
         super(context, imageProvider);
-        this.initLines();
         this.lines = this.getLines();
     }
 
@@ -136,18 +135,6 @@ export class LineDrawer extends Drawer{
                 lines: [line]
             }
         }
-    }
-
-    initLines() {
-
-        let currentImage = super.getImageProvider().currentImage;
-
-        if (currentImage && ! super.getImageProvider().annotations.hasOwnProperty(currentImage.src)){
-            super.getImageProvider().annotations[currentImage.src] = {
-                lines: []
-            }
-        }
-
     }
 
     static getLineFromCoordinates(start: CoordinatesObject, end: CoordinatesObject): Line {
