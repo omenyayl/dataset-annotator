@@ -22,6 +22,9 @@ import { HotkeyProvider } from '../../providers/hotkeys/hotkeys';
  */
 export class ItemPage extends _DetailPage {
 
+	dummy = [
+	];
+
     item: string = null;
     canvasDirectives = CanvasDirectivesEnum;
 
@@ -41,8 +44,9 @@ export class ItemPage extends _DetailPage {
             this.imageProvider.selectedCanvasDirective = this.canvasDirectives.canvas_line;
         }
 
-        this.imageProvider.initImage(currentImagePath as string);
-    }
+	  	this.imageProvider.initImage(currentImagePath as string);
+		this.dummy = this.getCurrentAnnotations();
+	}
 
     /**
      * Obtains the absolute local source of the selected image.
@@ -64,6 +68,20 @@ export class ItemPage extends _DetailPage {
     getCurrentImage(): ImageObject {
         return this.imageProvider.currentImage;
     }
+
+  	/**
+	 * Gets the annotations for the current image
+	 * and puts them in: dummy
+	 */
+  	getCurrentAnnotations(){
+		console.log("getting annotations...");
+		let currentImage = this.imageProvider.currentImage;
+	  	if(currentImage && this.imageProvider.annotations.hasOwnProperty(currentImage.src) && this.imageProvider.annotations[currentImage.src].hasOwnProperty('boxes')){
+			return this.imageProvider.annotations[currentImage.src].boxes
+		}else{
+			return [];
+		}
+	}
 
     selectCanvasDirective(directiveName: CanvasDirectivesEnum){
         this.imageProvider.selectedCanvasDirective = directiveName;
