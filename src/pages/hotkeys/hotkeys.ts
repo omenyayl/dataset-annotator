@@ -21,7 +21,10 @@ export class HotkeysPage {
 
     this.hotkeys = this.formBuilder.group({
       nextImage: [this.hotkeyProvider.hotkeys.nextImage],
-      prevImage: [this.hotkeyProvider.hotkeys.prevImage]
+      prevImage: [this.hotkeyProvider.hotkeys.prevImage],
+      line: [this.hotkeyProvider.hotkeys.line],
+      rectangle: [this.hotkeyProvider.hotkeys.rectangle],
+      polygon: [this.hotkeyProvider.hotkeys.polygon]
     })
   }
 

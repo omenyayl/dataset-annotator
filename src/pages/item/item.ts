@@ -8,6 +8,7 @@ import {ImageProvider} from "../../providers/image/image";
 import { CanvasDirectivesEnum } from "../../enums/canvas-directives-enum";
 import {platform} from 'process';
 import { DomSanitizer } from "@angular/platform-browser";
+import { HotkeyProvider } from '../../providers/hotkeys/hotkeys';
 
 
 @IonicPage()
@@ -28,7 +29,8 @@ export class ItemPage extends _DetailPage {
                 public navParams: NavParams,
                 private fileProvider: FileProvider,
                 private imageProvider: ImageProvider,
-                private sanitizer: DomSanitizer) {
+                private sanitizer: DomSanitizer,
+                private hotkeyProvider: HotkeyProvider) {
         super();
         this.item = navParams.data;
 
@@ -67,18 +69,28 @@ export class ItemPage extends _DetailPage {
         this.imageProvider.selectedCanvasDirective = directiveName;
     }
 
-    @HostListener('window:keydown.q', ['$event'])
+    @HostListener('window:keydown', ['$event'])
+    doAction($event) {
+        if($event.key === this.hotkeyProvider.hotkeys.line) {
+            this.hotkeySetCanvasDirectiveLine();
+        }
+        else if($event.key === this.hotkeyProvider.hotkeys.rectangle) {
+            this.hotkeySetCanvasDirectiveRectangle();
+        }
+        else if($event.key === this.hotkeyProvider.hotkeys.polygon) {
+            this.hotkeySetCanvasDirectivePolygon();
+        }
+    }
+
     hotkeySetCanvasDirectiveLine() {
         this.selectCanvasDirective(this.canvasDirectives.canvas_line);
     }
 
-    @HostListener('window:keydown.w', ['$event'])
     hotkeySetCanvasDirectiveRectangle() {
         this.selectCanvasDirective(this.canvasDirectives.canvas_rect);
 
     }
 
-    @HostListener('window:keydown.e', ['$event'])
     hotkeySetCanvasDirectivePolygon() {
         this.selectCanvasDirective(this.canvasDirectives.canvas_polygon);
     }

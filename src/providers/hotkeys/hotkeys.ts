@@ -5,7 +5,10 @@ export class HotkeyProvider {
 
     public hotkeys = {
         nextImage: "d",
-        prevImage: "a"
+        prevImage: "a",
+        line: "q",
+        rectangle: "w",
+        polygon: "e"
     };
 
     constructor() {
