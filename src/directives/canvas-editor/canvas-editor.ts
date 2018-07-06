@@ -46,14 +46,28 @@ export class CanvasEditorDirective {
     }
 
     @HostListener('click', ['$event']) onMouseClick(event) {
-        if (this.isDrawing === false) {
-            this.start = {
-                x: event.offsetX,
-                y: event.offsetY
-            };
-        } else {
+        let mouseCoordinates = {x: event.offsetX, y: event.offsetY} as CoordinatesObject;
 
-            let mouseCoordinates = {x: event.offsetX, y: event.offsetY} as CoordinatesObject;
+        if (this.isDrawing === false) {
+
+            let selectedElement = this.lineDrawer.selectElement(mouseCoordinates) ||
+                                    this.rectangleDrawer.selectElement(mouseCoordinates);
+
+            if (!selectedElement) {
+                this.start = {
+                    x: event.offsetX,
+                    y: event.offsetY
+                };
+
+                this.isDrawing = true;
+            } else {
+                this.render(); // re-render whatever was selected
+            }
+
+        }
+
+        else {
+
 
             switch (this.imageProvider.selectedCanvasDirective){
                 case CanvasDirectivesEnum.canvas_line:
@@ -63,8 +77,8 @@ export class CanvasEditorDirective {
                     this.rectangleDrawer.saveFromCoordinates(this.start, mouseCoordinates);
                     break;
             }
+            this.isDrawing = false;
         }
-        this.isDrawing = ! this.isDrawing;
     }
 
     @HostListener('mousedown', ['$event']) onMouseDown(event) {
