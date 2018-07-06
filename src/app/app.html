@@ -4,6 +4,13 @@
       <ion-title>Menu</ion-title>
     </ion-toolbar>
   </ion-header>
+  <ion-content>
+    <ion-list>
+      <button ion-item (click)="openHotkeysForm()">
+        Keybindings
+      </button>
+    </ion-list>
+  </ion-content>
 </ion-menu>
 <ion-split-pane when="(min-width: 1px)" (ionChange)="navProxy.onSplitPaneChanged($event._visible);">
   <ion-nav [root]="masterPage" #masterNav></ion-nav>

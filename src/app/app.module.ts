@@ -12,6 +12,8 @@ import {ItemPage} from "../pages/item/item";
 import {PlaceholderPage} from "../pages/placeholder/placeholder";
 import {ImageProvider} from '../providers/image/image';
 import {CanvasEditorDirective} from "../directives/canvas-editor/canvas-editor";
+import { HotkeyProvider } from '../providers/hotkeys/hotkeys';
+import { HotkeysPage } from '../pages/hotkeys/hotkeys';
 
 @NgModule({
     declarations: [
@@ -19,7 +21,8 @@ import {CanvasEditorDirective} from "../directives/canvas-editor/canvas-editor";
         ItemsPage,
         ItemPage,
         PlaceholderPage,
-        CanvasEditorDirective
+        CanvasEditorDirective,
+        HotkeysPage
     ],
     imports: [
         BrowserModule,
@@ -30,7 +33,8 @@ import {CanvasEditorDirective} from "../directives/canvas-editor/canvas-editor";
         MyApp,
         ItemsPage,
         ItemPage,
-        PlaceholderPage
+        PlaceholderPage,
+        HotkeysPage
     ],
     providers: [
         StatusBar,
@@ -38,7 +42,8 @@ import {CanvasEditorDirective} from "../directives/canvas-editor/canvas-editor";
         {provide: ErrorHandler, useClass: IonicErrorHandler},
         FileProvider,
         NavProxyService,
-        ImageProvider
+        ImageProvider,
+        HotkeyProvider
     ]
 })
 export class AppModule {

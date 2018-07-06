@@ -37,6 +37,9 @@ export class NavProxyService {
   pushMaster(page: any, params: any) {
     this.masterNav.push(page, params);
   }
+  popMaster(params: any) {
+    this.masterNav.pop(params);
+  }
   onSplitPaneChanged(isOn) {
     // set local 'isOn' flag...
     this.isOn = isOn;
@@ -72,4 +75,4 @@ export class NavProxyService {
         detailView.data);
     }
   }
-}
+ }
