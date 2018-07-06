@@ -1,6 +1,6 @@
 import {ImageProvider} from "../providers/image/image";
 import {CoordinatesObject} from "../objects/CoordinatesObject";
-import {Drawable} from "../interfaces/drawable";
+import {Drawer} from "./drawer";
 
 class Line {
     x1: number;
@@ -15,16 +15,13 @@ const POINT_RADIUS = 5;
 const DEFAULT_COLOR = 'red';
 const SELECTED_COLOR = 'yellow';
 
-export class LineDrawer implements Drawable{
-    private context: CanvasRenderingContext2D;
+export class LineDrawer extends Drawer{
     private readonly lines: Line[] = [];
-    private selectedLine: Line;
-    private imageProvider: ImageProvider;
 
     constructor(context: CanvasRenderingContext2D,
                 imageProvider: ImageProvider) {
-        this.context = context;
-        this.imageProvider = imageProvider;
+        super(context, imageProvider);
+        this.initLines();
         this.lines = this.getLines();
     }
 
@@ -51,23 +48,23 @@ export class LineDrawer implements Drawable{
             return;
         }
 
-        let color = line === this.selectedLine ? SELECTED_COLOR : DEFAULT_COLOR;
+        let color = line == super.getSelectedElement() ? SELECTED_COLOR : DEFAULT_COLOR;
 
         this.drawCircle(line.x1, line.y1, color);
-        this.context.beginPath();
-        this.context.moveTo(line.x1, line.y1);
-        this.context.lineTo(line.x2, line.y2);
-        this.context.strokeStyle = color;
-        this.context.stroke();
+        super.getContext().beginPath();
+        super.getContext().moveTo(line.x1, line.y1);
+        super.getContext().lineTo(line.x2, line.y2);
+        super.getContext().strokeStyle = color;
+        super.getContext().stroke();
         this.drawCircle(line.x2, line.y2, color);
     }
 
     drawCircle(x: number, y: number, color = DEFAULT_COLOR){
-        this.context.beginPath();
-        this.context.fillStyle = color;
-        this.context.arc(x, y, POINT_RADIUS, 0, 2 * Math.PI);
-        this.context.fill();
-        this.context.stroke();
+        super.getContext().beginPath();
+        super.getContext().fillStyle = color;
+        super.getContext().arc(x, y, POINT_RADIUS, 0, 2 * Math.PI);
+        super.getContext().fill();
+        super.getContext().stroke();
     }
 
     static computeLineLength(line: Line){
@@ -114,10 +111,10 @@ export class LineDrawer implements Drawable{
 
 
     getLines() {
-        let currentImage = this.imageProvider.currentImage;
-        if (currentImage && this.imageProvider.annotations.hasOwnProperty(currentImage.src) &&
-            this.imageProvider.annotations[currentImage.src].hasOwnProperty('lines')) {
-            return this.imageProvider.annotations[currentImage.src].lines
+        let currentImage = super.getImageProvider().currentImage;
+        if (currentImage && super.getImageProvider().annotations.hasOwnProperty(currentImage.src) &&
+            super.getImageProvider().annotations[currentImage.src].hasOwnProperty('lines')) {
+            return super.getImageProvider().annotations[currentImage.src].lines
         } else {
             return [];
         }
@@ -126,19 +123,31 @@ export class LineDrawer implements Drawable{
     addLine(line: Line) {
 
 
-        let currentImage = this.imageProvider.currentImage;
-        if (currentImage && this.imageProvider.annotations.hasOwnProperty(currentImage.src) &&
-            this.imageProvider.annotations[currentImage.src].hasOwnProperty('lines')) {
-            this.imageProvider.annotations[currentImage.src].lines.push(line);
+        let currentImage = super.getImageProvider().currentImage;
+        if (currentImage && super.getImageProvider().annotations.hasOwnProperty(currentImage.src) &&
+            super.getImageProvider().annotations[currentImage.src].hasOwnProperty('lines')) {
+            super.getImageProvider().annotations[currentImage.src].lines.push(line);
         }
-        else if (currentImage && this.imageProvider.annotations.hasOwnProperty(currentImage.src)) {
-            this.imageProvider.annotations[currentImage.src].lines = [line];
+        else if (currentImage && super.getImageProvider().annotations.hasOwnProperty(currentImage.src)) {
+            super.getImageProvider().annotations[currentImage.src].lines = [line];
         }
         else if (currentImage) {
-            this.imageProvider.annotations[currentImage.src] = {
+            super.getImageProvider().annotations[currentImage.src] = {
                 lines: [line]
             }
         }
+    }
+
+    initLines() {
+
+        let currentImage = super.getImageProvider().currentImage;
+
+        if (currentImage && ! super.getImageProvider().annotations.hasOwnProperty(currentImage.src)){
+            super.getImageProvider().annotations[currentImage.src] = {
+                lines: []
+            }
+        }
+
     }
 
     static getLineFromCoordinates(start: CoordinatesObject, end: CoordinatesObject): Line {
@@ -148,6 +157,16 @@ export class LineDrawer implements Drawable{
             x2: end.x,
             y2: end.y
         } as Line
+    }
+
+    selectElement(location: CoordinatesObject) : boolean {
+        for (let line of this.lines) {
+            if (LineDrawer.isNearCoordinates(line, location)) {
+                super.setSelectedElement(line);
+                return true;
+            }
+        }
+        return false;
     }
 
 }

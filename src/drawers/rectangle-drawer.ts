@@ -1,6 +1,6 @@
 import {ImageProvider} from "../providers/image/image";
-import {Drawable} from "../interfaces/drawable";
 import {CoordinatesObject} from "../objects/CoordinatesObject";
+import {Drawer} from "./drawer";
 
 class Box {
     x1: number;
@@ -10,85 +10,90 @@ class Box {
 }
 
 const DEFAULT_COLOR = 'red';
+const SELECTED_COLOR = 'yellow';
 const POINT_RADIUS = 5;
 
-export class RectangleDrawer implements Drawable{
-    private context: CanvasRenderingContext2D;
+export class RectangleDrawer extends Drawer{
     private readonly boxes: Box[];
-    private imageProvider: ImageProvider;
-    private selectedBox: Box;
 
     constructor(context: CanvasRenderingContext2D,
                 imageProvider: ImageProvider) {
-        this.context = context;
-        this.imageProvider = imageProvider;
+        super(context, imageProvider);
+        this.initBoxes();
         this.boxes = this.getBoxes();
-        this.imageProvider = imageProvider;
     }
 
     drawLine(start, end, color = DEFAULT_COLOR): void {
-        this.context.beginPath();
-        this.context.strokeStyle = color;
-        this.context.moveTo(start.x, start.y);
-        this.context.lineTo(end.x, end.y);
-        this.context.stroke();
+        super.getContext().beginPath();
+        super.getContext().strokeStyle = color;
+        super.getContext().moveTo(start.x, start.y);
+        super.getContext().lineTo(end.x, end.y);
+        super.getContext().stroke();
 
     }
 
     drawAllBoxes(): void {
         for (let box of this.boxes) {
-            if (box === this.selectedBox) {
-                this.drawBox(box, 'yellow');
-            } else {
-                this.drawBox(box, 'red');
-            }
+            this.drawBox(box, box === super.getSelectedElement() ? SELECTED_COLOR : DEFAULT_COLOR);
         }
     }
 
     drawBox(box, color = DEFAULT_COLOR): void {
+        color = super.getSelectedElement() === box ? SELECTED_COLOR : DEFAULT_COLOR;
         this.drawLine({x: box.x1, y: box.y1}, {x: box.x1, y: box.y2}, color);
         this.drawLine({x: box.x1, y: box.y1}, {x: box.x2, y: box.y1}, color);
         this.drawLine({x: box.x2, y: box.y1}, {x: box.x2, y: box.y2}, color);
         this.drawLine({x: box.x1, y: box.y2}, {x: box.x2, y: box.y2}, color);
 
-        this.drawCircle({x: box.x1, y: box.y1});
-        this.drawCircle({x: box.x2, y: box.y2});
-        this.drawCircle({x: box.x2, y: box.y1});
-        this.drawCircle({x: box.x1, y: box.y2});
+        this.drawCircle({x: box.x1, y: box.y1}, color);
+        this.drawCircle({x: box.x2, y: box.y2}, color);
+        this.drawCircle({x: box.x2, y: box.y1}, color);
+        this.drawCircle({x: box.x1, y: box.y2}, color);
     }
 
     getBoxes() {
-        let currentImage = this.imageProvider.currentImage;
-        if (currentImage && this.imageProvider.annotations.hasOwnProperty(currentImage.src)  &&
-            this.imageProvider.annotations[currentImage.src].hasOwnProperty('boxes')) {
-            return this.imageProvider.annotations[currentImage.src].boxes
+        let currentImage = super.getImageProvider().currentImage;
+        if (currentImage && super.getImageProvider().annotations.hasOwnProperty(currentImage.src)  &&
+            super.getImageProvider().annotations[currentImage.src].hasOwnProperty('boxes')) {
+            return super.getImageProvider().annotations[currentImage.src].boxes
         } else {
             return [];
         }
     }
 
     addBox(box) {
-        let currentImage = this.imageProvider.currentImage;
-        if (currentImage && this.imageProvider.annotations.hasOwnProperty(currentImage.src) &&
-            this.imageProvider.annotations[currentImage.src].hasOwnProperty('boxes')) {
-            this.imageProvider.annotations[currentImage.src].boxes.push(box);
+        let currentImage = super.getImageProvider().currentImage;
+        if (currentImage && super.getImageProvider().annotations.hasOwnProperty(currentImage.src) &&
+            super.getImageProvider().annotations[currentImage.src].hasOwnProperty('boxes')) {
+            super.getImageProvider().annotations[currentImage.src].boxes.push(box);
         }
-        else if (currentImage && this.imageProvider.annotations.hasOwnProperty(currentImage.src)) {
-            this.imageProvider.annotations[currentImage.src].boxes = [box];
+        else if (currentImage && super.getImageProvider().annotations.hasOwnProperty(currentImage.src)) {
+            super.getImageProvider().annotations[currentImage.src].boxes = [box];
         }
         else if (currentImage) {
-            this.imageProvider.annotations[currentImage.src] = {
+            super.getImageProvider().annotations[currentImage.src] = {
                 boxes: [box]
             }
         }
     }
 
+    initBoxes() {
+        let currentImage = super.getImageProvider().currentImage;
+
+        if (currentImage && ! super.getImageProvider().annotations.hasOwnProperty(currentImage.src)){
+            super.getImageProvider().annotations[currentImage.src] = {
+                boxes: []
+            }
+        }
+
+    }
+
     drawCircle(coordinates: CoordinatesObject, color = DEFAULT_COLOR){
-        this.context.beginPath();
-        this.context.fillStyle = color;
-        this.context.arc(coordinates.x, coordinates.y, POINT_RADIUS, 0, 2 * Math.PI);
-        this.context.fill();
-        this.context.stroke();
+        super.getContext().beginPath();
+        super.getContext().fillStyle = color;
+        super.getContext().arc(coordinates.x, coordinates.y, POINT_RADIUS, 0, 2 * Math.PI);
+        super.getContext().fill();
+        super.getContext().stroke();
     }
 
     drawFromCoordinates(...coordinates: CoordinatesObject[]) {
@@ -131,32 +136,48 @@ export class RectangleDrawer implements Drawable{
 
         let hovering = false;
         for(let box of this.boxes){
-            let pointCoordinates = [
-                {
-                    x: box.x1,
-                    y: box.y1
-                },
-                {
-                    x: box.x2,
-                    y: box.y2
-                },
-                {
-                    x: box.x2,
-                    y: box.y1
-                },
-                {
-                    x: box.x1,
-                    y: box.y2
-                }];
-            for(let point of pointCoordinates){
-                if (RectangleDrawer.computeDistance(coordinates, point) < POINT_RADIUS){
-                    hovering = true;
-                }
+            if(RectangleDrawer.isNearCoordinates(box, coordinates)) {
+                hovering = true;
             }
         }
 
         return hovering;
 
+    }
+
+    static isNearCoordinates(box: Box, location: CoordinatesObject) {
+        let pointCoordinates = [
+            {
+                x: box.x1,
+                y: box.y1
+            },
+            {
+                x: box.x2,
+                y: box.y2
+            },
+            {
+                x: box.x2,
+                y: box.y1
+            },
+            {
+                x: box.x1,
+                y: box.y2
+            }];
+        for(let point of pointCoordinates){
+            if (RectangleDrawer.computeDistance(location, point) < POINT_RADIUS){
+                return true;
+            }
+        }
+    }
+
+    selectElement(coordinates: CoordinatesObject): boolean {
+        for (let box of this.boxes) {
+            if (RectangleDrawer.isNearCoordinates(box, coordinates)) {
+                super.setSelectedElement(box);
+                return true;
+            }
+        }
+        return false;
     }
 
 }
