@@ -100,10 +100,36 @@ export class ItemPage extends _DetailPage {
 
 	itemSelected(itm){
 	  	console.log(`${itm} <- selected`);
-	  	//WIP
-	  	let deleteElement = this.boxes.indexOf(itm);
+	  	let deleteElement = 0;
+	  	switch(this.currentTool){
+		  	case 0:
+				console.log('line');
+	  			deleteElement = this.lines.indexOf(itm);
+				break;
+			case 1:
+				console.log('box');
+	  			deleteElement = this.boxes.indexOf(itm);
+				break;
+			case 2:
+				deleteElement = this.polys.indexOf(itm);
+				break;
+			default:
+				console.log(`${this.currentTool}`);
+		}
 	  	if(deleteElement > -1 ){
-		  	this.boxes.splice(deleteElement, 1);
+			switch(this.currentTool){
+				case 0:
+					console.log('line');
+		  			this.lines.splice(deleteElement, 1);
+					break;
+		  		case 1:
+					console.log('box');
+		  			this.boxes.splice(deleteElement, 1);
+					break;
+		  		case 2:	
+		  			this.polys.splice(deleteElement, 1);
+					break;
+			}
 			this.events.publish('render-canvas');
 	  	}
 	}
