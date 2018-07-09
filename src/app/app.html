@@ -17,14 +17,14 @@
   <ion-nav [root]="detailPage" #detailNav main></ion-nav>
 
 
-    </ion-fab>
-        </ion-fab-list>
-            </button>
-                <ion-icon name="md-download"></ion-icon>
     <ion-fab bottom right>
-            <button ion-fab color="secondary" (click)="saveDir()">
-            <button ion-fab color="secondary" (click)="openDir()"><ion-icon name="folder"></ion-icon></button>
-        <ion-fab-list side="top" class="fab-list-active">
         <button ion-fab><ion-icon name="add"></ion-icon></button>
+        <ion-fab-list side="top" class="fab-list-active">
+            <button ion-fab color="secondary" (click)="openDir()"><ion-icon name="folder"></ion-icon></button>
+            <button ion-fab color="secondary" (click)="saveDir()">
+                <ion-icon name="md-download"></ion-icon>
+            </button>
+        </ion-fab-list>
+    </ion-fab>
 
 </ion-split-pane>
