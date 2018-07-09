@@ -93,8 +93,6 @@ export class CanvasEditorDirective {
                     this.rectangleDrawer.saveFromCoordinates(this.start, mouseCoordinates);
                     this.isDrawing = false;
                     break;
-                case CanvasDirectivesEnum.canvas_polygon:
-                    this
             }
         }
     }
