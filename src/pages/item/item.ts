@@ -1,4 +1,4 @@
-import {Component, HostListener, ViewChild} from '@angular/core';
+import {Component, HostListener} from '@angular/core';
 import {IonicPage, NavParams} from 'ionic-angular';
 import {_DetailPage} from '../_DetailPage';
 import {FileProvider} from "../../providers/file/file";
@@ -98,10 +98,14 @@ export class ItemPage extends _DetailPage {
         }
 
         if (successfullyRemoved) {
-            this.events.publish('render-canvas');
+  	        this.renderCanvas();
         }
 
 	}
+
+	renderCanvas() {
+        this.events.publish('render-canvas');
+    }
 
     selectCanvasDirective(directiveName: CanvasDirectivesEnum){
         this.imageProvider.selectedCanvasDirective = directiveName;
