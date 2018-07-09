@@ -55,6 +55,7 @@ export class CanvasEditorDirective {
         this.context.clearRect(0, 0, this.element.width, this.element.height);
         this.lineDrawer.render();
         this.rectangleDrawer.render();
+        this.polygonDrawer.render();
     }
 
     ngAfterViewInit() {
@@ -80,6 +81,10 @@ export class CanvasEditorDirective {
                 this.render(); // re-render whatever was selected
             }
 
+            if (this.imageProvider.selectedCanvasDirective === CanvasDirectivesEnum.canvas_polygon) {
+                this.polygonDrawer.addPoint(this.start);
+            }
+
         }
 
         else {
@@ -93,6 +98,15 @@ export class CanvasEditorDirective {
                     this.rectangleDrawer.saveFromCoordinates(this.start, mouseCoordinates);
                     this.isDrawing = false;
                     break;
+                case CanvasDirectivesEnum.canvas_polygon:
+                    if(this.polygonDrawer.isNearStartPoint(mouseCoordinates)) {
+                        this.polygonDrawer.addPoint(this.start);
+                        this.polygonDrawer.saveFromCoordinates(...this.polygonDrawer.getPoints());
+                        this.isDrawing = false;
+                    } else {
+                        this.polygonDrawer.addPoint(mouseCoordinates);
+                    }
+                    break;
             }
         }
     }
@@ -105,7 +119,8 @@ export class CanvasEditorDirective {
 
         let hovering =
             this.lineDrawer.isHovering({x: event.offsetX, y: event.offsetY}) ||
-            this.rectangleDrawer.isHovering({x: event.offsetX, y: event.offsetY});
+            this.rectangleDrawer.isHovering({x: event.offsetX, y: event.offsetY}) ||
+            this.polygonDrawer.isHovering({x: event.offsetX, y: event.offsetY});
 
         if (hovering) {
             this.renderer.setStyle(this.element, 'cursor', 'pointer');
@@ -125,6 +140,9 @@ export class CanvasEditorDirective {
                     break;
                 case CanvasDirectivesEnum.canvas_rect:
                     this.rectangleDrawer.drawFromCoordinates(this.start, mouseCoordinates);
+                    break;
+                case CanvasDirectivesEnum.canvas_polygon:
+                    this.polygonDrawer.drawFromCoordinates(this.start, mouseCoordinates);
                     break;
             }
 
