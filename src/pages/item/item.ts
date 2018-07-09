@@ -1,5 +1,5 @@
-import {Component, HostListener} from '@angular/core';
-import {IonicPage, NavController, NavParams} from 'ionic-angular';
+import {Component, HostListener, ViewChild} from '@angular/core';
+import {IonicPage, NavParams} from 'ionic-angular';
 import {_DetailPage} from '../_DetailPage';
 import {FileProvider} from "../../providers/file/file";
 import * as path from 'path';
@@ -7,8 +7,9 @@ import {ImageObject} from '../../objects/image-object';
 import {ImageProvider} from "../../providers/image/image";
 import { CanvasDirectivesEnum } from "../../enums/canvas-directives-enum";
 import {platform} from 'process';
-import { DomSanitizer } from "@angular/platform-browser";
 import { HotkeyProvider } from '../../providers/hotkeys/hotkeys';
+import {CanvasEditorDirective} from "../../directives/canvas-editor/canvas-editor";
+import { DomSanitizer } from "@angular/platform-browser";
 
 
 @IonicPage()
@@ -22,17 +23,20 @@ import { HotkeyProvider } from '../../providers/hotkeys/hotkeys';
  */
 export class ItemPage extends _DetailPage {
 
+    @ViewChild(CanvasEditorDirective) canvasDirective;
+
     item: string = null;
     canvasDirectives = CanvasDirectivesEnum;
+    sanitizer: DomSanitizer;
 
-    constructor(public navCtrl: NavController,
-                public navParams: NavParams,
+    constructor(public navParams: NavParams,
                 private fileProvider: FileProvider,
                 private imageProvider: ImageProvider,
-                private sanitizer: DomSanitizer,
-                private hotkeyProvider: HotkeyProvider) {
+                private hotkeyProvider: HotkeyProvider,
+                sanitizer: DomSanitizer) {
         super();
         this.item = navParams.data;
+        this.sanitizer = sanitizer;
 
         const currentImagePath = path.join(fileProvider.selectedFolder, this.item);
 
