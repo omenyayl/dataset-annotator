@@ -125,7 +125,6 @@ export class ItemPage extends _DetailPage {
     }
 
   	hotkeySetCanvasDirectiveLine() {
-		console.log("Line!");
 	  	this.selectCanvasDirective(this.canvasDirectives.canvas_line);
     }
 
