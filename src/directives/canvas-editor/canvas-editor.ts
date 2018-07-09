@@ -5,6 +5,9 @@ import {RectangleDrawer} from "../../drawers/rectangle-drawer";
 import {ImageProvider} from "../../providers/image/image";
 import { CoordinatesObject } from "../../objects/CoordinatesObject";
 
+//EventListener for deletion
+import { Events } from 'ionic-angular';
+
 /**
  * Directive for drawing elements on the HTML5 Canvas
  */
@@ -25,14 +28,19 @@ export class CanvasEditorDirective {
 
     constructor(el: ElementRef,
                 imageProvider: ImageProvider,
-                renderer: Renderer2) {
+	  			renderer: Renderer2,
+	  			public events: Events) {
         this.element = (<HTMLCanvasElement>el.nativeElement);
         this.context = this.element.getContext('2d');
         this.lineDrawer = new LineDrawer(this.context, imageProvider);
         this.rectangleDrawer = new RectangleDrawer(this.context, imageProvider);
         this.imageProvider = imageProvider;
         this.isDrawing = false;
-        this.renderer = renderer;
+	  	this.renderer = renderer;
+
+	  	events.subscribe('render-canvas', () => {
+			this.render();
+		});
     }
 
     render() {

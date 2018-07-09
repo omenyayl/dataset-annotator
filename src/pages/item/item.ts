@@ -8,9 +8,12 @@ import {ImageProvider} from "../../providers/image/image";
 import { CanvasDirectivesEnum } from "../../enums/canvas-directives-enum";
 import {platform} from 'process';
 import { HotkeyProvider } from '../../providers/hotkeys/hotkeys';
+import { AnnotationObject } from '../../objects/annotation-object';
 import {CanvasEditorDirective} from "../../directives/canvas-editor/canvas-editor";
 import { DomSanitizer } from "@angular/platform-browser";
 
+//EventListener for deletion
+import { Events } from 'ionic-angular';
 
 @IonicPage()
 @Component({
@@ -23,6 +26,10 @@ import { DomSanitizer } from "@angular/platform-browser";
  */
 export class ItemPage extends _DetailPage {
 
+	boxes = [];
+	lines = [];
+  	polys = [];
+	currentTool = 0;
     @ViewChild(CanvasEditorDirective) canvasDirective;
 
     item: string = null;
@@ -30,6 +37,7 @@ export class ItemPage extends _DetailPage {
     sanitizer: DomSanitizer;
 
     constructor(public navParams: NavParams,
+				public events: Events,
                 private fileProvider: FileProvider,
                 private imageProvider: ImageProvider,
                 private hotkeyProvider: HotkeyProvider,
@@ -45,8 +53,9 @@ export class ItemPage extends _DetailPage {
             this.imageProvider.selectedCanvasDirective = this.canvasDirectives.canvas_line;
         }
 
-        this.imageProvider.initImage(currentImagePath as string);
-    }
+	  	this.imageProvider.initImage(currentImagePath as string);
+		this.getCurrentAnnotations();
+	}
 
     /**
      * Obtains the absolute local source of the selected image.
@@ -69,6 +78,36 @@ export class ItemPage extends _DetailPage {
         return this.imageProvider.currentImage;
     }
 
+  	/**
+	 * Gets the annotations for the current image
+	 * and puts them in: dummy
+	 */
+  	getCurrentAnnotations(){
+	  	//let allAnnotations = [];
+		console.log("getting annotations...");
+		let currentImage = this.imageProvider.currentImage;
+	  	if(currentImage && this.imageProvider.annotations.hasOwnProperty(currentImage.src) && this.imageProvider.annotations[currentImage.src].hasOwnProperty('boxes') && this.imageProvider.annotations[currentImage.src].hasOwnProperty('lines')){
+			console.log(this.imageProvider.annotations[currentImage.src].boxes);
+		  	this.boxes = this.imageProvider.annotations[currentImage.src].boxes;
+		  	this.lines = this.imageProvider.annotations[currentImage.src].lines;
+		}else{
+		  	this.imageProvider.annotations[currentImage.src] = new AnnotationObject;
+			console.log(this.imageProvider.annotations[currentImage.src].boxes);
+		  	this.boxes = this.imageProvider.annotations[currentImage.src].boxes;
+		  	this.lines = this.imageProvider.annotations[currentImage.src].lines;
+		}
+	}
+
+	itemSelected(itm){
+	  	console.log(`${itm} <- selected`);
+	  	//WIP
+	  	let deleteElement = this.boxes.indexOf(itm);
+	  	if(deleteElement > -1 ){
+		  	this.boxes.splice(deleteElement, 1);
+			this.events.publish('render-canvas');
+	  	}
+	}
+
     selectCanvasDirective(directiveName: CanvasDirectivesEnum){
         this.imageProvider.selectedCanvasDirective = directiveName;
     }
@@ -86,16 +125,19 @@ export class ItemPage extends _DetailPage {
         }
     }
 
-    hotkeySetCanvasDirectiveLine() {
-        this.selectCanvasDirective(this.canvasDirectives.canvas_line);
+  	hotkeySetCanvasDirectiveLine() {
+		console.log("Line!");
+	  	this.selectCanvasDirective(this.canvasDirectives.canvas_line);
+		this.currentTool = 0;
     }
 
     hotkeySetCanvasDirectiveRectangle() {
         this.selectCanvasDirective(this.canvasDirectives.canvas_rect);
-
+		this.currentTool = 1;
     }
 
     hotkeySetCanvasDirectivePolygon() {
         this.selectCanvasDirective(this.canvasDirectives.canvas_polygon);
+		this.currentTool = 2;
     }
 }

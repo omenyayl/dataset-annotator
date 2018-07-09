@@ -49,7 +49,27 @@
                         height="{{getCurrentImage().height}}"
                         canvas-editor></canvas>
             </div>
-        </ion-row>
+		  	<div class="labels-div">
+			  	<ion-list *ngIf="currentTool==2">
+				  	<h1>Polys</h1>
+					<button ion-item *ngFor="let itm of polys" (click)="itemSelected(itm)">
+					      {{ itm }}
+					</button>
+				</ion-list>
+			  	<ion-list *ngIf="currentTool==1">
+				  	<h1>Boxes</h1>
+					<button ion-item *ngFor="let itm of boxes" (click)="itemSelected(itm)">
+					      {{ itm }}
+					</button>
+				</ion-list>
+	  			<ion-list *ngIf="currentTool==0">	  
+				  	<h1>Lines</h1>
+					<button ion-item *ngFor="let itm of lines" (click)="itemSelected(itm)">
+					      {{ itm }}
+					</button> 
+				</ion-list>
+		  	</div>
+		</ion-row>
     </ion-grid>
 
 </ion-content>
