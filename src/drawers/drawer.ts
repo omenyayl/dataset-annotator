@@ -3,10 +3,8 @@ import { AnnotationsProvider } from "../providers/annotations/annotations";
 
 export abstract class Drawer {
 
-    private static selectedElement: any;
-
-    constructor(private context: CanvasRenderingContext2D,
-                private annotationsProvider: AnnotationsProvider){
+    protected constructor(private context: CanvasRenderingContext2D,
+                          private annotationsProvider: AnnotationsProvider){
     }
 
     public getContext() {
@@ -17,12 +15,12 @@ export abstract class Drawer {
         return this.annotationsProvider;
     }
 
-    public getSelectedElement() {
-        return Drawer.selectedElement;
+    static getSelectedElement() {
+        return AnnotationsProvider.selectedElement;
     }
 
-    public setSelectedElement(element: any) {
-        Drawer.selectedElement = element;
+    static setSelectedElement(element: any) {
+        AnnotationsProvider.selectedElement = element;
     }
     abstract saveFromCoordinates(...coordinates: CoordinatesObject[]);
     abstract drawFromCoordinates(...coordinates: CoordinatesObject[]);

@@ -40,7 +40,7 @@ export class LineDrawer extends Drawer{
             return;
         }
 
-        let color = line == super.getSelectedElement() ? SELECTED_COLOR : DEFAULT_COLOR;
+        let color = line == Drawer.getSelectedElement() ? SELECTED_COLOR : DEFAULT_COLOR;
 
         this.drawCircle(line.x1, line.y1, color);
         super.getContext().beginPath();
@@ -114,7 +114,7 @@ export class LineDrawer extends Drawer{
     selectElement(location: CoordinatesObject) : boolean {
         for (let line of this.lines) {
             if (LineDrawer.isNearCoordinates(line, location)) {
-                super.setSelectedElement(line);
+                Drawer.setSelectedElement(line);
                 return true;
             }
         }

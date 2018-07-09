@@ -28,12 +28,12 @@ export class RectangleDrawer extends Drawer{
 
     drawAllBoxes(): void {
         for (let box of this.boxes) {
-            this.drawBox(box, box === super.getSelectedElement() ? SELECTED_COLOR : DEFAULT_COLOR);
+            this.drawBox(box, box === Drawer.getSelectedElement() ? SELECTED_COLOR : DEFAULT_COLOR);
         }
     }
 
     drawBox(box, color = DEFAULT_COLOR): void {
-        color = super.getSelectedElement() === box ? SELECTED_COLOR : DEFAULT_COLOR;
+        color = Drawer.getSelectedElement() === box ? SELECTED_COLOR : DEFAULT_COLOR;
         this.drawLine({x: box.x1, y: box.y1}, {x: box.x1, y: box.y2}, color);
         this.drawLine({x: box.x1, y: box.y1}, {x: box.x2, y: box.y1}, color);
         this.drawLine({x: box.x2, y: box.y1}, {x: box.x2, y: box.y2}, color);
@@ -130,7 +130,7 @@ export class RectangleDrawer extends Drawer{
     selectElement(coordinates: CoordinatesObject): boolean {
         for (let box of this.boxes) {
             if (RectangleDrawer.isNearCoordinates(box, coordinates)) {
-                super.setSelectedElement(box);
+                Drawer.setSelectedElement(box);
                 return true;
             }
         }

@@ -8,6 +8,7 @@ import { ImageProvider } from "../image/image"
 @Injectable()
 export class AnnotationsProvider {
     private annotations: AnnotationObject[] = [];
+    public static selectedElement;
 
     constructor(private imageProvider: ImageProvider) {
     }
