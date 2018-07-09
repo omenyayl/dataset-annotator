@@ -8,9 +8,9 @@ import {ImageProvider} from "../../providers/image/image";
 import { CanvasDirectivesEnum } from "../../enums/canvas-directives-enum";
 import {platform} from 'process';
 import { HotkeyProvider } from '../../providers/hotkeys/hotkeys';
-import { AnnotationObject } from '../../objects/annotation-object';
 import {CanvasEditorDirective} from "../../directives/canvas-editor/canvas-editor";
 import { DomSanitizer } from "@angular/platform-browser";
+import { AnnotationsProvider } from "../../providers/annotations/annotations";
 
 //EventListener for deletion
 import { Events } from 'ionic-angular';
@@ -41,6 +41,7 @@ export class ItemPage extends _DetailPage {
                 private fileProvider: FileProvider,
                 private imageProvider: ImageProvider,
                 private hotkeyProvider: HotkeyProvider,
+                private annotationsProvider: AnnotationsProvider,
                 sanitizer: DomSanitizer) {
         super();
         this.item = navParams.data;
@@ -53,7 +54,7 @@ export class ItemPage extends _DetailPage {
             this.imageProvider.selectedCanvasDirective = this.canvasDirectives.canvas_line;
         }
 
-	  	this.imageProvider.initImage(currentImagePath as string);
+	  	this.imageProvider.initImage(currentImagePath as string, this.annotationsProvider);
 		this.getCurrentAnnotations();
 	}
 
@@ -84,18 +85,8 @@ export class ItemPage extends _DetailPage {
 	 */
   	getCurrentAnnotations(){
 	  	//let allAnnotations = [];
-		console.log("getting annotations...");
-		let currentImage = this.imageProvider.currentImage;
-	  	if(currentImage && this.imageProvider.annotations.hasOwnProperty(currentImage.src) && this.imageProvider.annotations[currentImage.src].hasOwnProperty('boxes') && this.imageProvider.annotations[currentImage.src].hasOwnProperty('lines')){
-			console.log(this.imageProvider.annotations[currentImage.src].boxes);
-		  	this.boxes = this.imageProvider.annotations[currentImage.src].boxes;
-		  	this.lines = this.imageProvider.annotations[currentImage.src].lines;
-		}else{
-		  	this.imageProvider.annotations[currentImage.src] = new AnnotationObject;
-			console.log(this.imageProvider.annotations[currentImage.src].boxes);
-		  	this.boxes = this.imageProvider.annotations[currentImage.src].boxes;
-		  	this.lines = this.imageProvider.annotations[currentImage.src].lines;
-		}
+		this.boxes = this.annotationsProvider.getBoxes();
+		this.lines = this.annotationsProvider.getLines();
 	}
 
 	itemSelected(itm){

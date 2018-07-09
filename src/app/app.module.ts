@@ -14,6 +14,7 @@ import {ImageProvider} from '../providers/image/image';
 import {CanvasEditorDirective} from "../directives/canvas-editor/canvas-editor";
 import { HotkeyProvider } from '../providers/hotkeys/hotkeys';
 import { HotkeysPage } from '../pages/hotkeys/hotkeys';
+import { AnnotationsProvider } from '../providers/annotations/annotations';
 
 @NgModule({
     declarations: [
@@ -43,7 +44,8 @@ import { HotkeysPage } from '../pages/hotkeys/hotkeys';
         FileProvider,
         NavProxyService,
         ImageProvider,
-        HotkeyProvider
+        HotkeyProvider,
+        AnnotationsProvider
     ]
 })
 export class AppModule {

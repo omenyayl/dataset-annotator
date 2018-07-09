@@ -1,13 +1,8 @@
-import {ImageProvider} from "../providers/image/image";
 import {CoordinatesObject} from "../objects/CoordinatesObject";
 import {Drawer} from "./drawer";
+import {AnnotationsProvider, Box} from "../providers/annotations/annotations";
 
-class Box {
-    x1: number;
-    y1: number;
-    x2: number;
-    y2: number
-}
+
 
 const DEFAULT_COLOR = 'red';
 const SELECTED_COLOR = 'yellow';
@@ -17,9 +12,9 @@ export class RectangleDrawer extends Drawer{
     private boxes: Box[];
 
     constructor(context: CanvasRenderingContext2D,
-                imageProvider: ImageProvider) {
-        super(context, imageProvider);
-        this.boxes = this.getBoxes(); // reference!
+                annotationsProvider: AnnotationsProvider) {
+        super(context, annotationsProvider);
+        this.boxes = super.getAnnotationsProvider().getBoxes() // reference!
     }
 
     drawLine(start, end, color = DEFAULT_COLOR): void {
@@ -48,23 +43,6 @@ export class RectangleDrawer extends Drawer{
         this.drawCircle({x: box.x2, y: box.y2}, color);
         this.drawCircle({x: box.x2, y: box.y1}, color);
         this.drawCircle({x: box.x1, y: box.y2}, color);
-    }
-
-    getBoxes() {
-        let currentImage = super.getImageProvider().currentImage;
-        if (currentImage) {
-            return super.getImageProvider().annotations[currentImage.src].boxes
-        } else {
-            return [];
-        }
-    }
-
-  	addBox(box) {
-		console.log("addBox():");
-        let currentImage = super.getImageProvider().currentImage;
-        if (currentImage ) {
-            super.getImageProvider().annotations[currentImage.src].boxes.push(box);
-        }
     }
 
 
@@ -101,7 +79,7 @@ export class RectangleDrawer extends Drawer{
         };
 
         if (RectangleDrawer.computeDistance(coordinates[0], coordinates[1]) > POINT_RADIUS * 2){
-            this.addBox(newBox);
+            this.getAnnotationsProvider().addBox(newBox);
             this.drawBox(newBox);
         }
 
