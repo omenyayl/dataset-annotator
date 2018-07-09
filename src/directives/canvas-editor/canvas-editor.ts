@@ -46,7 +46,7 @@ export class CanvasEditorDirective {
     }
 
     subscribeToEvents() {
-        this.events.subscribe('render-canvas', () => {
+	  	this.events.subscribe('render-canvas', () => {
             this.render();
         });
     }
