@@ -68,7 +68,8 @@ export class CanvasEditorDirective {
         if (this.isDrawing === false) {
 
             let selectedElement = this.lineDrawer.selectElement(mouseCoordinates) ||
-                                    this.rectangleDrawer.selectElement(mouseCoordinates);
+                                    this.rectangleDrawer.selectElement(mouseCoordinates) ||
+                                    this.polygonDrawer.selectElement(mouseCoordinates);
 
             if (!selectedElement) {
                 this.start = {
@@ -77,12 +78,13 @@ export class CanvasEditorDirective {
                 };
 
                 this.isDrawing = true;
+
+                if (this.imageProvider.selectedCanvasDirective === CanvasDirectivesEnum.canvas_polygon) {
+                    this.polygonDrawer.addPoint(this.start);
+                }
+
             } else {
                 this.render(); // re-render whatever was selected
-            }
-
-            if (this.imageProvider.selectedCanvasDirective === CanvasDirectivesEnum.canvas_polygon) {
-                this.polygonDrawer.addPoint(this.start);
             }
 
         }
