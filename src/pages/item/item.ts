@@ -86,7 +86,16 @@ export class ItemPage extends _DetailPage {
 		this.lines = this.annotationsProvider.getLines();
 	}
 
-	itemSelected(itm){
+	isSelected(itm){
+		return (AnnotationsProvider.selectedElement === itm);
+	}
+
+	itemSelect(itm){
+	  	AnnotationsProvider.selectedElement = itm;
+		this.renderCanvas();
+	}
+
+	itemDelete(itm){
   	    let successfullyRemoved = false;
   	    switch(this.getSelectedCanvasDirective()) {
             case CanvasDirectivesEnum.canvas_line:
