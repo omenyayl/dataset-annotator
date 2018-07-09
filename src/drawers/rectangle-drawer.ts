@@ -14,12 +14,12 @@ const SELECTED_COLOR = 'yellow';
 const POINT_RADIUS = 5;
 
 export class RectangleDrawer extends Drawer{
-    private readonly boxes: Box[];
+    private boxes: Box[];
 
     constructor(context: CanvasRenderingContext2D,
                 imageProvider: ImageProvider) {
         super(context, imageProvider);
-        this.boxes = this.getBoxes().slice(0);
+        this.boxes = this.getBoxes(); // reference!
     }
 
     drawLine(start, end, color = DEFAULT_COLOR): void {
@@ -32,7 +32,6 @@ export class RectangleDrawer extends Drawer{
     }
 
     drawAllBoxes(): void {
-        this.boxes = this.getBoxes().slice(0);
         for (let box of this.boxes) {
             this.drawBox(box, box === super.getSelectedElement() ? SELECTED_COLOR : DEFAULT_COLOR);
         }
@@ -102,7 +101,6 @@ export class RectangleDrawer extends Drawer{
         };
 
         if (RectangleDrawer.computeDistance(coordinates[0], coordinates[1]) > POINT_RADIUS * 2){
-            this.boxes.push(newBox);
             this.addBox(newBox);
             this.drawBox(newBox);
         }

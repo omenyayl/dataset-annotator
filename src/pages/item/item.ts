@@ -104,7 +104,7 @@ export class ItemPage extends _DetailPage {
 	  	let deleteElement = this.boxes.indexOf(itm);
 	  	if(deleteElement > -1 ){
 		  	this.boxes.splice(deleteElement, 1);
-			this.events.publish('deleteItem');
+			this.events.publish('render-canvas');
 	  	}
 	}
 

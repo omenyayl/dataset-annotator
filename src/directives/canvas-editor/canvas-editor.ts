@@ -38,8 +38,7 @@ export class CanvasEditorDirective {
         this.isDrawing = false;
 	  	this.renderer = renderer;
 
-	  	events.subscribe('deleteItem', () => {
-			console.log('item');
+	  	events.subscribe('render-canvas', () => {
 			this.render();
 		});
     }

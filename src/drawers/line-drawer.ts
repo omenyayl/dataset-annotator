@@ -16,12 +16,12 @@ const DEFAULT_COLOR = 'red';
 const SELECTED_COLOR = 'yellow';
 
 export class LineDrawer extends Drawer{
-    private readonly lines: Line[] = [];
+    private lines: Line[] = [];
 
     constructor(context: CanvasRenderingContext2D,
                 imageProvider: ImageProvider) {
         super(context, imageProvider);
-        this.lines = this.getLines().slice(0);
+        this.lines = this.getLines(); // Reference!
     }
 
     saveFromCoordinates(start: CoordinatesObject, end: CoordinatesObject) {
@@ -36,7 +36,6 @@ export class LineDrawer extends Drawer{
 
     saveLine(line: Line){
         if (LineDrawer.computeLineLength(line) > MIN_LINE_LENGTH){
-            this.lines.push(line);
             this.addLine(line);
             this.drawLine(line);
         }
