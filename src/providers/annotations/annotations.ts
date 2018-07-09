@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {AnnotationObject} from "../../objects/annotation-object";
 import { ImageProvider } from "../image/image"
+import {CoordinatesObject} from "../../objects/CoordinatesObject";
 
 /**
     Provider that deals with getting and setting annotations
@@ -24,6 +25,8 @@ export class AnnotationsProvider {
         }
     }
 
+
+    // BEGIN - BOX METHODS
     getBoxes() {
         let currentImage = this.imageProvider.currentImage;
         if (currentImage) {
@@ -33,13 +36,31 @@ export class AnnotationsProvider {
         }
     }
 
-    addBox(box) {
+    addBox(box: Box) {
         console.log("addBox():");
         let currentImage = this.imageProvider.currentImage;
         if (currentImage ) {
             this.annotations[currentImage.src].boxes.push(box);
         }
     }
+
+    removeBox(box: Box): boolean {
+        let annotation = this.getCurrentAnnotation();
+
+        let i = annotation.boxes.indexOf(box);
+
+        if (i != -1) {
+            annotation.boxes.splice(i, 1);
+            return true;
+        }
+
+        return false;
+    }
+
+    // END - BOX METHODS
+
+
+    // BEGIN - LINE METHODS
 
     getLines() {
 
@@ -60,24 +81,6 @@ export class AnnotationsProvider {
 
     }
 
-    getCurrentAnnotation() {
-        let currentSrc = this.imageProvider.currentImage.src;
-        return this.annotations[currentSrc];
-    }
-
-    removeBox(box: Box): boolean {
-        let annotation = this.getCurrentAnnotation();
-
-        let i = annotation.boxes.indexOf(box);
-
-        if (i != -1) {
-            annotation.boxes.splice(i, 1);
-            return true;
-        }
-
-        return false;
-    }
-
     removeLine(line: Line) {
         let annotation = this.getCurrentAnnotation();
 
@@ -89,6 +92,18 @@ export class AnnotationsProvider {
         }
 
         return false;
+    }
+
+    // END - LINE METHODS
+
+
+
+    // BEGIN - POLYGON METHODS
+
+
+    getCurrentAnnotation() {
+        let currentSrc = this.imageProvider.currentImage.src;
+        return this.annotations[currentSrc];
     }
 
     public getAnnotations() {
@@ -111,4 +126,9 @@ export class Box {
     y1: number;
     x2: number;
     y2: number
+}
+
+export class Polygon {
+    label: string = 'unnamed';
+    coordinates: CoordinatesObject[];
 }

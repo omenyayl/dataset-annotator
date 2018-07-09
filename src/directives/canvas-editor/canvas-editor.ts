@@ -8,6 +8,7 @@ import { CoordinatesObject } from "../../objects/CoordinatesObject";
 //EventListener for deletion
 import { Events } from 'ionic-angular';
 import {AnnotationsProvider} from "../../providers/annotations/annotations";
+import {PolygonDrawer} from "../../drawers/polygon-drawer";
 
 /**
  * Directive for drawing elements on the HTML5 Canvas
@@ -18,6 +19,7 @@ import {AnnotationsProvider} from "../../providers/annotations/annotations";
 export class CanvasEditorDirective {
     private lineDrawer: LineDrawer;
     private rectangleDrawer: RectangleDrawer;
+    private polygonDrawer: PolygonDrawer;
 
     private readonly context: CanvasRenderingContext2D;
     private readonly element: HTMLCanvasElement;
@@ -32,8 +34,11 @@ export class CanvasEditorDirective {
                 private imageProvider: ImageProvider) {
         this.element = (<HTMLCanvasElement>el.nativeElement);
         this.context = this.element.getContext('2d');
+
         this.lineDrawer = new LineDrawer(this.context, annotationsProvider);
         this.rectangleDrawer = new RectangleDrawer(this.context, annotationsProvider);
+        this.polygonDrawer = new PolygonDrawer(this.context, annotationsProvider);
+
         this.isDrawing = false;
 	  	this.renderer = renderer;
 
@@ -79,16 +84,18 @@ export class CanvasEditorDirective {
 
         else {
 
-
             switch (this.imageProvider.selectedCanvasDirective){
                 case CanvasDirectivesEnum.canvas_line:
                     this.lineDrawer.saveFromCoordinates(this.start, mouseCoordinates);
+                    this.isDrawing = false;
                     break;
                 case CanvasDirectivesEnum.canvas_rect:
                     this.rectangleDrawer.saveFromCoordinates(this.start, mouseCoordinates);
+                    this.isDrawing = false;
                     break;
+                case CanvasDirectivesEnum.canvas_polygon:
+                    this
             }
-            this.isDrawing = false;
         }
     }
 

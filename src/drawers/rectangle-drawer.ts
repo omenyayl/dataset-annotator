@@ -76,7 +76,7 @@ export class RectangleDrawer extends Drawer{
             y1: coordinates[0].y,
             x2: coordinates[1].x,
             y2: coordinates[1].y
-        };
+        } as Box;
 
         if (RectangleDrawer.computeDistance(coordinates[0], coordinates[1]) > POINT_RADIUS * 2){
             this.getAnnotationsProvider().addBox(newBox);
