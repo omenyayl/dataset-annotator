@@ -95,15 +95,18 @@ export class CanvasEditorDirective {
                 case CanvasDirectivesEnum.canvas_line:
                     this.lineDrawer.saveFromCoordinates(this.start, mouseCoordinates);
                     this.isDrawing = false;
+                    this.render();
                     break;
                 case CanvasDirectivesEnum.canvas_rect:
                     this.rectangleDrawer.saveFromCoordinates(this.start, mouseCoordinates);
                     this.isDrawing = false;
+                    this.render();
                     break;
                 case CanvasDirectivesEnum.canvas_polygon:
                     if(this.polygonDrawer.isNearStartPoint(mouseCoordinates)) {
                         this.polygonDrawer.addPoint(this.start);
                         this.polygonDrawer.saveFromCoordinates(...this.polygonDrawer.getPoints());
+                        this.render();
                         this.isDrawing = false;
                     } else {
                         this.polygonDrawer.addPoint(mouseCoordinates);
