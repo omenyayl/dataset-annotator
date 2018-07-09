@@ -8,9 +8,8 @@ import {ImageProvider} from "../../providers/image/image";
 import { CanvasDirectivesEnum } from "../../enums/canvas-directives-enum";
 import {platform} from 'process';
 import { HotkeyProvider } from '../../providers/hotkeys/hotkeys';
-import {CanvasEditorDirective} from "../../directives/canvas-editor/canvas-editor";
 import { DomSanitizer } from "@angular/platform-browser";
-import { AnnotationsProvider } from "../../providers/annotations/annotations";
+import { AnnotationsProvider, Line, Box } from "../../providers/annotations/annotations";
 
 //EventListener for deletion
 import { Events } from 'ionic-angular';
@@ -29,8 +28,6 @@ export class ItemPage extends _DetailPage {
 	boxes = [];
 	lines = [];
   	polys = [];
-	currentTool = 0;
-    @ViewChild(CanvasEditorDirective) canvasDirective;
 
     item: string = null;
     canvasDirectives = CanvasDirectivesEnum;
@@ -90,39 +87,20 @@ export class ItemPage extends _DetailPage {
 	}
 
 	itemSelected(itm){
-	  	console.log(`${itm} <- selected`);
-	  	let deleteElement = 0;
-	  	switch(this.currentTool){
-		  	case 0:
-				console.log('line');
-	  			deleteElement = this.lines.indexOf(itm);
-				break;
-			case 1:
-				console.log('box');
-	  			deleteElement = this.boxes.indexOf(itm);
-				break;
-			case 2:
-				deleteElement = this.polys.indexOf(itm);
-				break;
-			default:
-				console.log(`${this.currentTool}`);
-		}
-	  	if(deleteElement > -1 ){
-			switch(this.currentTool){
-				case 0:
-					console.log('line');
-		  			this.lines.splice(deleteElement, 1);
-					break;
-		  		case 1:
-					console.log('box');
-		  			this.boxes.splice(deleteElement, 1);
-					break;
-		  		case 2:	
-		  			this.polys.splice(deleteElement, 1);
-					break;
-			}
-			this.events.publish('render-canvas');
-	  	}
+  	    let successfullyRemoved = false;
+  	    switch(this.getSelectedCanvasDirective()) {
+            case CanvasDirectivesEnum.canvas_line:
+                successfullyRemoved = this.annotationsProvider.removeLine(itm as Line);
+                break;
+            case CanvasDirectivesEnum.canvas_rect:
+                successfullyRemoved = this.annotationsProvider.removeBox(itm as Box);
+                break;
+        }
+
+        if (successfullyRemoved) {
+            this.events.publish('render-canvas');
+        }
+
 	}
 
     selectCanvasDirective(directiveName: CanvasDirectivesEnum){
@@ -145,16 +123,13 @@ export class ItemPage extends _DetailPage {
   	hotkeySetCanvasDirectiveLine() {
 		console.log("Line!");
 	  	this.selectCanvasDirective(this.canvasDirectives.canvas_line);
-		this.currentTool = 0;
     }
 
     hotkeySetCanvasDirectiveRectangle() {
         this.selectCanvasDirective(this.canvasDirectives.canvas_rect);
-		this.currentTool = 1;
     }
 
     hotkeySetCanvasDirectivePolygon() {
         this.selectCanvasDirective(this.canvasDirectives.canvas_polygon);
-		this.currentTool = 2;
     }
 }

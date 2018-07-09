@@ -59,6 +59,37 @@ export class AnnotationsProvider {
 
     }
 
+    getAnnotation() {
+        let currentSrc = this.imageProvider.currentImage.src;
+        return this.annotations[currentSrc];
+    }
+
+    removeBox(box: Box): boolean {
+        let annotation = this.getAnnotation();
+
+        let i = annotation.boxes.indexOf(box);
+
+        if (i != -1) {
+            annotation.boxes.splice(i, 1);
+            return true;
+        }
+
+        return false;
+    }
+
+    removeLine(line: Line) {
+        let annotation = this.getAnnotation();
+
+        let i = annotation.lines.indexOf(line);
+
+        if (i != -1) {
+            annotation.lines.splice(i, 1);
+            return true;
+        }
+
+        return false;
+    }
+
 }
 
 export class Line {
