@@ -3,7 +3,7 @@ import {ImageObject} from "../../objects/image-object";
 import * as imageSize from 'image-size';
 import {Observable} from "rxjs/Observable";
 import {CanvasDirectivesEnum} from "../../enums/canvas-directives-enum";
-import {AnnotationObject} from "../../objects/annotation-object";
+import {AnnotationsProvider} from "../annotations/annotations";
 
 const MAX_IMAGE_WIDTH = 500;
 const MAX_IMAGE_HEIGHT = 500;
@@ -15,8 +15,8 @@ const MAX_IMAGE_HEIGHT = 500;
 export class ImageProvider {
 
     public currentImage: ImageObject;
-    public annotations: AnnotationObject[] = [];
     public selectedCanvasDirective: CanvasDirectivesEnum;
+    private annotationsProvider: AnnotationsProvider;
 
     constructor() {
     }
@@ -25,9 +25,14 @@ export class ImageProvider {
      * Takes in the path of the image, scales it down if it has to, and returns a new ImageObject object with
      * width, height, src, and scaling factor
      * @param path The Path of the image
+     * @param annotationsProvider the AnnotationsProvider
      * @returns {ImageObject} the ImageObject object with width, height, src, and scale
      */
-    initImage(path: string) {
+    initImage(path: string,
+              annotationsProvider: AnnotationsProvider) {
+
+        this.annotationsProvider = annotationsProvider;
+
         const sizeOfCurrentImage = imageSize(path);
         let width = sizeOfCurrentImage.width;
         let height = sizeOfCurrentImage.height;
@@ -49,21 +54,14 @@ export class ImageProvider {
             height: height
         } as ImageObject;
 
-        if (! this.annotations[this.currentImage.src]) {
-            this.annotations[this.currentImage.src] = {
-                src: this.currentImage,
-                lines: [],
-                boxes: [],
-                polygons: []
-            } as AnnotationObject;
-        }
+        this.annotationsProvider.initAnnotations(this.currentImage.src);
 
     }
 
 	generateSaveData(): Observable<any> {
 	  	return new Observable<any>((observer) => {
 		  	//observer.next({'testFile': 'testData', 'frame_05420': '[{type: \'box\'}]'});
-		  	observer.next(this.annotations);
+		  	observer.next(this.annotationsProvider.annotations);
 			observer.complete();
 		})
 	}

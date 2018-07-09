@@ -1,13 +1,7 @@
-import {ImageProvider} from "../providers/image/image";
 import {CoordinatesObject} from "../objects/CoordinatesObject";
 import {Drawer} from "./drawer";
+import {AnnotationsProvider, Line} from "../providers/annotations/annotations";
 
-class Line {
-    x1: number;
-    y1: number;
-    x2: number;
-    y2: number
-}
 
 const MIN_LINE_LENGTH = 10;
 const POINT_RADIUS = 5;
@@ -19,9 +13,9 @@ export class LineDrawer extends Drawer{
     private lines: Line[] = [];
 
     constructor(context: CanvasRenderingContext2D,
-                imageProvider: ImageProvider) {
-        super(context, imageProvider);
-        this.lines = this.getLines(); // Reference!
+                annotationsProvider: AnnotationsProvider) {
+        super(context, annotationsProvider);
+        this.lines = this.getAnnotationsProvider().getLines(); // Reference!
     }
 
     saveFromCoordinates(start: CoordinatesObject, end: CoordinatesObject) {
@@ -36,7 +30,7 @@ export class LineDrawer extends Drawer{
 
     saveLine(line: Line){
         if (LineDrawer.computeLineLength(line) > MIN_LINE_LENGTH){
-            this.addLine(line);
+            this.getAnnotationsProvider().addLine(line);
             this.drawLine(line);
         }
     }
@@ -107,25 +101,6 @@ export class LineDrawer extends Drawer{
         return hoveringOnLine;
     }
 
-
-    getLines() {
-
-        let currentImage = super.getImageProvider().currentImage;
-        if (currentImage) {
-            return super.getImageProvider().annotations[currentImage.src].lines
-        } else {
-            return [];
-        }
-    }
-
-    addLine(line: Line) {
-
-        let currentImage = super.getImageProvider().currentImage;
-        if( currentImage ) {
-            super.getImageProvider().annotations[currentImage.src].lines.push(line);
-        }
-
-    }
 
     static getLineFromCoordinates(start: CoordinatesObject, end: CoordinatesObject): Line {
         return {
