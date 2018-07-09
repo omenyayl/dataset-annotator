@@ -108,6 +108,40 @@ export class AnnotationsProvider {
 
     // BEGIN - POLYGON METHODS
 
+    addPolygon(polygon: Polygon) {
+        if (! polygon.hasOwnProperty('label')){
+            polygon.label = 'unnamed';
+        }
+
+        let currentImage = this.imageProvider.currentImage;
+        if( currentImage ) {
+            this.annotations[currentImage.src].polygons.push(polygon);
+        }
+    }
+
+    getPolygons() {
+        let currentImage = this.imageProvider.currentImage;
+        if (currentImage) {
+            return this.annotations[currentImage.src].polygons
+        } else {
+            return [];
+        }
+    }
+
+    removePolygon(polygon: Polygon) {
+        let annotation = this.getCurrentAnnotation();
+
+        let i = annotation.polygons.indexOf(polygon);
+
+        if (i != -1) {
+            annotation.polygons.splice(i, 1);
+            return true;
+        }
+
+        return false;
+    }
+
+    // END - POLYGON METHODS
 
     getCurrentAnnotation() {
         let currentSrc = this.imageProvider.currentImage.src;

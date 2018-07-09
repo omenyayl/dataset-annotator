@@ -102,7 +102,7 @@ export class RectangleDrawer extends Drawer{
 
     }
 
-    static isNearCoordinates(box: Box, location: CoordinatesObject) {
+    static isNearCoordinates(box: Box, location: CoordinatesObject) : boolean {
         let pointCoordinates = [
             {
                 x: box.x1,
@@ -125,6 +125,7 @@ export class RectangleDrawer extends Drawer{
                 return true;
             }
         }
+        return false;
     }
 
     selectElement(coordinates: CoordinatesObject): boolean {
