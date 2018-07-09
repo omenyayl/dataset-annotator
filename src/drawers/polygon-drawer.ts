@@ -1,8 +1,10 @@
 import {Drawer} from "./drawer";
 import {CoordinatesObject} from "../objects/CoordinatesObject";
 import {AnnotationsProvider, Polygon} from "../providers/annotations/annotations";
+import {LineDrawer} from "./line-drawer";
 
 const DEFAULT_COLOR = 'red';
+const SELECTED_COLOR = 'yellow';
 const POINT_RADIUS = 5;
 
 export class PolygonDrawer extends Drawer{
@@ -33,10 +35,11 @@ export class PolygonDrawer extends Drawer{
     }
 
     drawPolygon(polygon: Polygon) {
+        let color = polygon === Drawer.getSelectedElement() ? SELECTED_COLOR : DEFAULT_COLOR;
         for (let i = 0; i < polygon.coordinates.length; i++){
             if (polygon.coordinates[i+1]) {
-                this.drawCircle(polygon.coordinates[i]);
-                this.drawLine(polygon.coordinates[i], polygon.coordinates[i+1]);
+                this.drawCircle(polygon.coordinates[i], color);
+                this.drawLine(polygon.coordinates[i], polygon.coordinates[i+1], color);
             }
         }
     }
@@ -46,9 +49,12 @@ export class PolygonDrawer extends Drawer{
     }
 
     isHovering(coordinates: CoordinatesObject) {
-        return PolygonDrawer.isNearCoordinates({
-            coordinates: this.points
-        } as Polygon, coordinates);
+        for (let polygon of this.polygons.concat({coordinates: this.points} as Polygon)) {
+            if (PolygonDrawer.isNearCoordinates(polygon, coordinates)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     render() {
@@ -58,13 +64,21 @@ export class PolygonDrawer extends Drawer{
     }
 
     saveFromCoordinates(...coordinates: CoordinatesObject[]) {
-        this.getAnnotationsProvider().addPolygon({
-            coordinates: coordinates
-        } as Polygon);
+        if (coordinates.length > 3) {
+            this.getAnnotationsProvider().addPolygon({
+                coordinates: coordinates
+            } as Polygon);
+        }
         this.points = [];
     }
 
     selectElement(coordinates: CoordinatesObject): boolean {
+        for (let polygon of this.polygons) {
+            if (PolygonDrawer.isNearCoordinates(polygon, coordinates)) {
+                Drawer.setSelectedElement(polygon);
+                return true;
+            }
+        }
         return false;
     }
 

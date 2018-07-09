@@ -68,7 +68,8 @@ export class CanvasEditorDirective {
         if (this.isDrawing === false) {
 
             let selectedElement = this.lineDrawer.selectElement(mouseCoordinates) ||
-                                    this.rectangleDrawer.selectElement(mouseCoordinates);
+                                    this.rectangleDrawer.selectElement(mouseCoordinates) ||
+                                    this.polygonDrawer.selectElement(mouseCoordinates);
 
             if (!selectedElement) {
                 this.start = {
@@ -77,12 +78,13 @@ export class CanvasEditorDirective {
                 };
 
                 this.isDrawing = true;
+
+                if (this.imageProvider.selectedCanvasDirective === CanvasDirectivesEnum.canvas_polygon) {
+                    this.polygonDrawer.addPoint(this.start);
+                }
+
             } else {
                 this.render(); // re-render whatever was selected
-            }
-
-            if (this.imageProvider.selectedCanvasDirective === CanvasDirectivesEnum.canvas_polygon) {
-                this.polygonDrawer.addPoint(this.start);
             }
 
         }
@@ -93,15 +95,18 @@ export class CanvasEditorDirective {
                 case CanvasDirectivesEnum.canvas_line:
                     this.lineDrawer.saveFromCoordinates(this.start, mouseCoordinates);
                     this.isDrawing = false;
+                    this.render();
                     break;
                 case CanvasDirectivesEnum.canvas_rect:
                     this.rectangleDrawer.saveFromCoordinates(this.start, mouseCoordinates);
                     this.isDrawing = false;
+                    this.render();
                     break;
                 case CanvasDirectivesEnum.canvas_polygon:
                     if(this.polygonDrawer.isNearStartPoint(mouseCoordinates)) {
                         this.polygonDrawer.addPoint(this.start);
                         this.polygonDrawer.saveFromCoordinates(...this.polygonDrawer.getPoints());
+                        this.render();
                         this.isDrawing = false;
                     } else {
                         this.polygonDrawer.addPoint(mouseCoordinates);

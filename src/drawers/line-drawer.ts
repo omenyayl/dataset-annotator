@@ -36,10 +36,6 @@ export class LineDrawer extends Drawer{
     }
 
     drawLine(line: Line){
-        if (LineDrawer.computeLineLength(line) < MIN_LINE_LENGTH){
-            return;
-        }
-
         let color = line == Drawer.getSelectedElement() ? SELECTED_COLOR : DEFAULT_COLOR;
 
         this.drawCircle(line.x1, line.y1, color);
