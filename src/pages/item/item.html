@@ -50,19 +50,19 @@
                         canvas-editor></canvas>
             </div>
 		  	<div class="labels-div">
-			  	<ion-list *ngIf="currentTool==2">
+			  	<ion-list *ngIf="getSelectedCanvasDirective() === canvasDirectives.canvas_polygon">
 				  	<h1>Polys</h1>
 					<button ion-item *ngFor="let itm of polys" (click)="itemSelected(itm)">
 					      {{ itm }}
 					</button>
 				</ion-list>
-			  	<ion-list *ngIf="currentTool==1">
+			  	<ion-list *ngIf="getSelectedCanvasDirective() === canvasDirectives.canvas_rect">
 				  	<h1>Boxes</h1>
 					<button ion-item *ngFor="let itm of boxes" (click)="itemSelected(itm)">
 					      {{ itm }}
 					</button>
 				</ion-list>
-	  			<ion-list *ngIf="currentTool==0">	  
+	  			<ion-list *ngIf="getSelectedCanvasDirective() === canvasDirectives.canvas_line">
 				  	<h1>Lines</h1>
 					<button ion-item *ngFor="let itm of lines" (click)="itemSelected(itm)">
 					      {{ itm }}
