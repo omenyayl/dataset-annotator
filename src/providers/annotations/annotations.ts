@@ -45,7 +45,6 @@ export class AnnotationsProvider {
         let currentImage = this.imageProvider.currentImage;
         if (currentImage ) {
             this.annotations[currentImage.src].boxes.push(box);
-            console.log(box);
         }
     }
 
@@ -86,7 +85,6 @@ export class AnnotationsProvider {
         let currentImage = this.imageProvider.currentImage;
         if( currentImage ) {
             this.annotations[currentImage.src].lines.push(line);
-            console.log(line);
         }
 
     }
