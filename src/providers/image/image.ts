@@ -61,7 +61,7 @@ export class ImageProvider {
 	generateSaveData(): Observable<any> {
 	  	return new Observable<any>((observer) => {
 		  	//observer.next({'testFile': 'testData', 'frame_05420': '[{type: \'box\'}]'});
-		  	observer.next(this.annotationsProvider.annotations);
+		  	observer.next(this.annotationsProvider.getAnnotations());
 			observer.complete();
 		})
 	}

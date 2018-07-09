@@ -1,4 +1,4 @@
-import {Injectable, NgModule} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {AnnotationObject} from "../../objects/annotation-object";
 import { ImageProvider } from "../image/image"
 
@@ -7,7 +7,7 @@ import { ImageProvider } from "../image/image"
  */
 @Injectable()
 export class AnnotationsProvider {
-    public annotations: AnnotationObject[] = [];
+    private annotations: AnnotationObject[] = [];
 
     constructor(private imageProvider: ImageProvider) {
     }
@@ -59,13 +59,13 @@ export class AnnotationsProvider {
 
     }
 
-    getAnnotation() {
+    getCurrentAnnotation() {
         let currentSrc = this.imageProvider.currentImage.src;
         return this.annotations[currentSrc];
     }
 
     removeBox(box: Box): boolean {
-        let annotation = this.getAnnotation();
+        let annotation = this.getCurrentAnnotation();
 
         let i = annotation.boxes.indexOf(box);
 
@@ -78,7 +78,7 @@ export class AnnotationsProvider {
     }
 
     removeLine(line: Line) {
-        let annotation = this.getAnnotation();
+        let annotation = this.getCurrentAnnotation();
 
         let i = annotation.lines.indexOf(line);
 
@@ -88,6 +88,10 @@ export class AnnotationsProvider {
         }
 
         return false;
+    }
+
+    public getAnnotations() {
+        return this.annotations;
     }
 
 }
