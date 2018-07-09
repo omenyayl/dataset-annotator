@@ -32,6 +32,7 @@ export class RectangleDrawer extends Drawer{
     }
 
     drawAllBoxes(): void {
+        this.boxes = this.getBoxes().slice(0);
         for (let box of this.boxes) {
             this.drawBox(box, box === super.getSelectedElement() ? SELECTED_COLOR : DEFAULT_COLOR);
         }

@@ -11,6 +11,9 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { HotkeyProvider } from '../../providers/hotkeys/hotkeys';
 import { AnnotationObject } from '../../objects/annotation-object';
 
+//EventListener for deletion
+import { Events } from 'ionic-angular';
+
 @IonicPage()
 @Component({
     selector: 'page-item',
@@ -22,20 +25,23 @@ import { AnnotationObject } from '../../objects/annotation-object';
  */
 export class ItemPage extends _DetailPage {
 
-	dummy = [
-	];
+	boxes = [];
+	lines = [];
+  	polys = [];
+	currentTool = 0;
 
     item: string = null;
     canvasDirectives = CanvasDirectivesEnum;
 
     constructor(public navCtrl: NavController,
-                public navParams: NavParams,
+	  			public navParams: NavParams,
+				public events: Events,
                 private fileProvider: FileProvider,
                 private imageProvider: ImageProvider,
                 private sanitizer: DomSanitizer,
                 private hotkeyProvider: HotkeyProvider) {
         super();
-	  	this.item = navParams.data;
+	 	this.item = navParams.data;
 
         const currentImagePath = path.join(fileProvider.selectedFolder, this.item);
 
@@ -45,7 +51,7 @@ export class ItemPage extends _DetailPage {
         }
 
 	  	this.imageProvider.initImage(currentImagePath as string);
-		this.dummy = this.getCurrentAnnotations();
+		this.getCurrentAnnotations();
 	}
 
     /**
@@ -74,18 +80,29 @@ export class ItemPage extends _DetailPage {
 	 * and puts them in: dummy
 	 */
   	getCurrentAnnotations(){
-		let allAnnotations = [];
+	  	//let allAnnotations = [];
 		console.log("getting annotations...");
 		let currentImage = this.imageProvider.currentImage;
-	  	if(currentImage && this.imageProvider.annotations.hasOwnProperty(currentImage.src) && this.imageProvider.annotations[currentImage.src].hasOwnProperty('boxes')){
+	  	if(currentImage && this.imageProvider.annotations.hasOwnProperty(currentImage.src) && this.imageProvider.annotations[currentImage.src].hasOwnProperty('boxes') && this.imageProvider.annotations[currentImage.src].hasOwnProperty('lines')){
 			console.log(this.imageProvider.annotations[currentImage.src].boxes);
-			allAnnotations = this.imageProvider.annotations[currentImage.src].boxes
-			return allAnnotations;
+		  	this.boxes = this.imageProvider.annotations[currentImage.src].boxes;
+		  	this.lines = this.imageProvider.annotations[currentImage.src].lines;
 		}else{
 		  	this.imageProvider.annotations[currentImage.src] = new AnnotationObject;
 			console.log(this.imageProvider.annotations[currentImage.src].boxes);
-			return this.imageProvider.annotations[currentImage.src].boxes
+		  	this.boxes = this.imageProvider.annotations[currentImage.src].boxes;
+		  	this.lines = this.imageProvider.annotations[currentImage.src].lines;
 		}
+	}
+
+	itemSelected(itm){
+	  	console.log(`${itm} <- selected`);
+	  	//WIP
+	  	let deleteElement = this.boxes.indexOf(itm);
+	  	if(deleteElement > -1 ){
+		  	this.boxes.splice(deleteElement, 1);
+			this.events.publish('deleteItem');
+	  	}
 	}
 
     selectCanvasDirective(directiveName: CanvasDirectivesEnum){
@@ -105,16 +122,19 @@ export class ItemPage extends _DetailPage {
         }
     }
 
-    hotkeySetCanvasDirectiveLine() {
-        this.selectCanvasDirective(this.canvasDirectives.canvas_line);
+  	hotkeySetCanvasDirectiveLine() {
+		console.log("Line!");
+	  	this.selectCanvasDirective(this.canvasDirectives.canvas_line);
+		this.currentTool = 0;
     }
 
     hotkeySetCanvasDirectiveRectangle() {
         this.selectCanvasDirective(this.canvasDirectives.canvas_rect);
-
+		this.currentTool = 1;
     }
 
     hotkeySetCanvasDirectivePolygon() {
         this.selectCanvasDirective(this.canvasDirectives.canvas_polygon);
+		this.currentTool = 2;
     }
 }
