@@ -84,6 +84,7 @@ export class ItemPage extends _DetailPage {
 	  	//let allAnnotations = [];
 		this.boxes = this.annotationsProvider.getBoxes();
 		this.lines = this.annotationsProvider.getLines();
+	  	this.polys = this.annotationsProvider.getPolygons();
 	}
 
 	isSelected(itm){
@@ -103,6 +104,9 @@ export class ItemPage extends _DetailPage {
                 break;
             case CanvasDirectivesEnum.canvas_rect:
                 successfullyRemoved = this.annotationsProvider.removeBox(itm as Box);
+                break;
+            case CanvasDirectivesEnum.canvas_polygon:
+                successfullyRemoved = this.annotationsProvider.removePolygon(itm as Polygon);
                 break;
         }
 

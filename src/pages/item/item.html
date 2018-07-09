@@ -52,9 +52,13 @@
 		  	<div class="labels-div">
 			  	<ion-list *ngIf="getSelectedCanvasDirective() === canvasDirectives.canvas_polygon">
 				  	<h1>Polys</h1>
-					<button ion-item *ngFor="let itm of polys" (click)="itemSelected(itm)">
-					      {{ itm }}
-					</button>
+					<div *ngFor="let itm of polys">
+					  	<ion-input [(ngModel)]="itm.label" *ngIf="isSelected(itm)"></ion-input>
+						<button ion-item *ngIf="!isSelected(itm)" (click)="itemSelect(itm)">
+					    	{{ itm.label }}
+						</button>
+						<button ion-item (click)="itemDelete(itm)">X</button>
+					</div>
 				</ion-list>
 			  	<ion-list *ngIf="getSelectedCanvasDirective() === canvasDirectives.canvas_rect">
 				  	<h1>Boxes</h1>
