@@ -37,10 +37,15 @@ export class AnnotationsProvider {
     }
 
     addBox(box: Box) {
-        console.log("addBox():");
+
+        if (! box.hasOwnProperty('label')){
+            box.label = 'unnamed';
+        }
+
         let currentImage = this.imageProvider.currentImage;
         if (currentImage ) {
             this.annotations[currentImage.src].boxes.push(box);
+            console.log(box);
         }
     }
 
@@ -74,9 +79,14 @@ export class AnnotationsProvider {
 
     addLine(line: Line) {
 
+        if (! line.hasOwnProperty('label')){
+            line.label = 'unnamed';
+        }
+
         let currentImage = this.imageProvider.currentImage;
         if( currentImage ) {
             this.annotations[currentImage.src].lines.push(line);
+            console.log(line);
         }
 
     }
