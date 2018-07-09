@@ -97,6 +97,7 @@ export class AnnotationsProvider {
 }
 
 export class Line {
+    label: string = 'unnamed';
     x1: number;
     y1: number;
     x2: number;
@@ -104,6 +105,7 @@ export class Line {
 }
 
 export class Box {
+    label: string = 'unnamed';
     x1: number;
     y1: number;
     x2: number;
