@@ -15,19 +15,19 @@
                 <ion-col>
                     <button ion-button [ngClass]="{'activated-button': getSelectedCanvasDirective() === canvasDirectives.canvas_line}" block
                     (click)="selectCanvasDirective(canvasDirectives.canvas_line)">
-                    <p class="button-text">{{"Line (" + hotkeyProvider.hotkeys.line + ")"}}</p>
+                    <p class="button-text">{{"Line (" + hotkeys.line + ")"}}</p>
                         <ion-icon name="md-create"></ion-icon></button>
                 </ion-col>
                 <ion-col>
                     <button ion-button [ngClass]="{'activated-button': getSelectedCanvasDirective() === canvasDirectives.canvas_rect}" color="primary" block
                     (click)="selectCanvasDirective(canvasDirectives.canvas_rect)">
-                    <p class="button-text">{{"Rectangle (" + hotkeyProvider.hotkeys.rectangle + ")"}}</p>
+                    <p class="button-text">{{"Rectangle (" + hotkeys.rectangle + ")"}}</p>
                         <ion-icon name="ios-square"></ion-icon></button>
                 </ion-col>
                 <ion-col>
                     <button ion-button [ngClass]="{'activated-button': getSelectedCanvasDirective() === canvasDirectives.canvas_polygon}" color="primary" block
                     (click)="selectCanvasDirective(canvasDirectives.canvas_polygon)">
-                    <p class="button-text">{{"POLYGON (" + hotkeyProvider.hotkeys.polygon + ")"}}</p>
+                    <p class="button-text">{{"POLYGON (" + hotkeys.polygon + ")"}}</p>
                         <ion-icon name="star"></ion-icon></button>
                 </ion-col>
             </ion-row>

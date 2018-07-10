@@ -9,6 +9,8 @@ import { CanvasDirectivesEnum } from "../../enums/canvas-directives-enum";
 import {platform} from 'process';
 import { DomSanitizer } from "@angular/platform-browser";
 import { HotkeyProvider } from '../../providers/hotkeys/hotkeys';
+import { HotkeysService, Hotkey } from 'angular2-hotkeys';
+import { HotkeyObject } from '../../objects/hotkey-object';
 
 
 @IonicPage()
@@ -23,6 +25,7 @@ import { HotkeyProvider } from '../../providers/hotkeys/hotkeys';
 export class ItemPage extends _DetailPage {
 
     item: string = null;
+    hotkeys: HotkeyObject;
     canvasDirectives = CanvasDirectivesEnum;
 
     constructor(public navCtrl: NavController,
@@ -30,7 +33,9 @@ export class ItemPage extends _DetailPage {
                 private fileProvider: FileProvider,
                 private imageProvider: ImageProvider,
                 private sanitizer: DomSanitizer,
-                private hotkeyProvider: HotkeyProvider) {
+                private hotkeyProvider: HotkeyProvider,
+                private hotkeyService: HotkeysService) {
+
         super();
         this.item = navParams.data;
 
@@ -42,6 +47,10 @@ export class ItemPage extends _DetailPage {
         }
 
         this.imageProvider.initImage(currentImagePath as string);
+
+        this.hotkeyProvider.hotkeys.subscribe(value => {
+            this.updateHotkeys(value);
+        })
     }
 
     /**
@@ -69,21 +78,6 @@ export class ItemPage extends _DetailPage {
         this.imageProvider.selectedCanvasDirective = directiveName;
     }
 
-    /*
-    @HostListener('window:keydown', ['$event'])
-    doAction($event) {
-        if($event.key === this.hotkeyProvider.hotkeys.line) {
-            this.hotkeySetCanvasDirectiveLine();
-        }
-        else if($event.key === this.hotkeyProvider.hotkeys.rectangle) {
-            this.hotkeySetCanvasDirectiveRectangle();
-        }
-        else if($event.key === this.hotkeyProvider.hotkeys.polygon) {
-            this.hotkeySetCanvasDirectivePolygon();
-        }
-    }
-    */
-
     hotkeySetCanvasDirectiveLine() {
         this.selectCanvasDirective(this.canvasDirectives.canvas_line);
     }
@@ -95,5 +89,30 @@ export class ItemPage extends _DetailPage {
 
     hotkeySetCanvasDirectivePolygon() {
         this.selectCanvasDirective(this.canvasDirectives.canvas_polygon);
+    }
+
+    updateHotkeys(hotkeys) {
+        if(this.hotkeys !== undefined) {
+            this.hotkeyService.remove(new Hotkey(this.hotkeys.line, null));
+            this.hotkeyService.remove(new Hotkey(this.hotkeys.rectangle, null));
+            this.hotkeyService.remove(new Hotkey(this.hotkeys.polygon, null));
+        }
+
+        this.hotkeys = hotkeys;
+        this.hotkeyService.add(new Hotkey(this.hotkeys.line,
+            (event: KeyboardEvent): boolean => {
+                this.hotkeySetCanvasDirectiveLine();
+                return false;
+            }));
+        this.hotkeyService.add(new Hotkey(this.hotkeys.rectangle,
+            (event: KeyboardEvent): boolean => {
+                this.hotkeySetCanvasDirectiveRectangle();
+                return false;
+            }));
+        this.hotkeyService.add(new Hotkey(this.hotkeys.polygon,
+            (event: KeyboardEvent): boolean => {
+                this.hotkeySetCanvasDirectivePolygon();
+                return false;
+            }));
     }
 }

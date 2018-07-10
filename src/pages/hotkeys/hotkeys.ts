@@ -40,7 +40,6 @@ export class HotkeysPage {
 
   markInput($event) {
     // Only mark inputs that are not Shift and are not currently marked.
-    console.log($event);
     if($event.key !== "Shift" &&
        this.inputs !== undefined && this.inputs.indexOf($event.key) == -1) {
 

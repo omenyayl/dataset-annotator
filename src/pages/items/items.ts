@@ -38,11 +38,11 @@ export class ItemsPage extends _MasterPage {
                 private navProxy: NavProxyService,
                 private fileProvider: FileProvider,
                 private hotkeyProvider: HotkeyProvider,
-                private hotkeysService: HotkeysService) {
+                private hotkeyService: HotkeysService) {
         super();
 
         this.hotkeyProvider.hotkeys.subscribe(value => {
-            this.hotkeys = value;
+            this.updateHotkeys(value);
         })
     }
 
@@ -67,18 +67,6 @@ export class ItemsPage extends _MasterPage {
         this.navProxy.pushDetail(ItemPage, item);
     }
 
-    /*
-    @HostListener('window:keydown', ['$event'])
-    doAction($event) {
-        if($event.key === this.hotkeyProvider.hotkeys.prevImage) {
-            this.previousItem();
-        }
-        else if($event.key === this.hotkeyProvider.hotkeys.nextImage) {
-            this.nextItem();
-        }
-    }
-    */
-
     previousItem() {
         let newIndex = this.selected[1] - 1;
         if(newIndex >= 0) {
@@ -97,5 +85,24 @@ export class ItemsPage extends _MasterPage {
             let yOffset = document.getElementById(`${newIndex}`).offsetTop;
             this.content.scrollTo(0, yOffset, 1);
         }
+    }
+
+    updateHotkeys(hotkeys) {
+        if(this.hotkeys !== undefined) {
+            this.hotkeyService.remove(new Hotkey(this.hotkeys.nextImage, null));
+            this.hotkeyService.remove(new Hotkey(this.hotkeys.prevImage, null));
+        }
+
+        this.hotkeys = hotkeys;
+        this.hotkeyService.add(new Hotkey(this.hotkeys.nextImage,
+            (event: KeyboardEvent): boolean => {
+                this.nextItem();
+                return false;
+            }));
+        this.hotkeyService.add(new Hotkey(this.hotkeys.prevImage,
+            (event: KeyboardEvent): boolean => {
+                this.previousItem();
+                return false;
+            }));
     }
 }
