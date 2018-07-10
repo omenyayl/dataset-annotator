@@ -123,8 +123,22 @@ export class LineDrawer extends Drawer{
         return false;
     }
 
-    movePoint(start: CoordinatesObject, mouse: CoordinatesObject) {
-
+    getHoveringPoint(mouse: CoordinatesObject): CoordinatesObject {
+        for(let i = 0; i < this.lines.length; i++) {
+            if (LineDrawer.computeLineLength({
+                start: this.lines[i].start,
+                end: mouse
+            } as Line) < POINT_RADIUS) {
+                return this.lines[i].start
+            }
+            else if (LineDrawer.computeLineLength({
+                start: this.lines[i].end,
+                end: mouse
+            } as Line) < POINT_RADIUS) {
+                return this.lines[i].end
+            }
+        }
+        return null;
     }
 
 }

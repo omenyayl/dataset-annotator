@@ -9,6 +9,7 @@ import { CoordinatesObject } from "../../objects/CoordinatesObject";
 import { Events } from 'ionic-angular';
 import {AnnotationsProvider} from "../../providers/annotations/annotations";
 import {PolygonDrawer} from "../../drawers/polygon-drawer";
+import {Drawer} from "../../drawers/drawer";
 
 /**
  * Directive for drawing elements on the HTML5 Canvas
@@ -24,12 +25,13 @@ export class CanvasEditorDirective {
     private readonly context: CanvasRenderingContext2D;
     private readonly element: HTMLCanvasElement;
     private isDrawing: boolean;
-    // private isPointHeld: boolean;
+    private isPointHeld: boolean;
     private start: CoordinatesObject;
+    private hoveringPoint = null;
 
 
-    constructor(private el: ElementRef,
-                private annotationsProvider: AnnotationsProvider,
+    constructor(el: ElementRef,
+                annotationsProvider: AnnotationsProvider,
 	  			private renderer: Renderer2,
 	  			private events: Events,
                 private imageProvider: ImageProvider) {
@@ -40,8 +42,8 @@ export class CanvasEditorDirective {
         this.rectangleDrawer = new RectangleDrawer(this.context, annotationsProvider);
         this.polygonDrawer = new PolygonDrawer(this.context, annotationsProvider);
 
-        this.isDrawing = false;
-        // this.isPointHeld = false;
+        this.isDrawing = false; // for drawing
+        this.isPointHeld = false; // for moving points
 
 	  	this.renderer = renderer;
 
@@ -67,7 +69,7 @@ export class CanvasEditorDirective {
 
     @HostListener('click', ['$event']) onMouseClick(event) {
 
-        // if (this.isPointHeld) return; // Don't draw anything if the user is trying to move points
+        if (this.isPointHeld) return; // Don't draw anything if the user is trying to move points
 
         let mouseCoordinates = {x: event.offsetX, y: event.offsetY} as CoordinatesObject;
 
@@ -123,14 +125,14 @@ export class CanvasEditorDirective {
     }
 
     @HostListener('mousedown', ['$event']) onMouseDown(event) {
-        // let isHovering = this.checkIfHovering(event);
-        // if (isHovering) {
-        //     this.isPointHeld = true;
-        //     this.start = {
-        //         x: event.offsetX,
-        //         y: event.offsertY
-        //     };
-        // }
+        let mouseCoordinates = {x: event.offsetX, y: event.offsetY};
+        let isDraggingPoint = (this.hoveringPoint = this.lineDrawer.getHoveringPoint(mouseCoordinates)) ||
+                                (this.hoveringPoint = this.rectangleDrawer.getHoveringPoint(mouseCoordinates)) ||
+                                (this.hoveringPoint = this.polygonDrawer.getHoveringPoint(mouseCoordinates));
+
+        if (isDraggingPoint) {
+            this.isPointHeld = true;
+        }
     }
 
     @HostListener('mousemove', ['$event']) onMouseMove(event) {
@@ -161,24 +163,16 @@ export class CanvasEditorDirective {
                     break;
             }
         }
-        // else if (this.isPointHeld) {
-        //     switch (this.imageProvider.selectedCanvasDirective) {
-        //         case CanvasDirectivesEnum.canvas_line:
-        //             this.lineDrawer.movePoint(this.start, mouseCoordinates);
-        //             break;
-        //         case CanvasDirectivesEnum.canvas_rect:
-        //             break;
-        //         case CanvasDirectivesEnum.canvas_polygon:
-        //             break;
-        //     }
-        //     this.render();
-        // }
+        else if (this.isPointHeld) {
+            Drawer.movePoint(this.hoveringPoint, mouseCoordinates);
+            this.render();
+        }
     }
 
     @HostListener('mouseup', ['$event']) onMouseUp(event) {
-        // if (this.isPointHeld && ! this.isDrawing) {
-        //     this.isPointHeld = false;
-        // }
+        if (this.isPointHeld && ! this.isDrawing) {
+            this.isPointHeld = false;
+        }
     }
 
     checkIfHovering(event): boolean {
