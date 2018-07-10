@@ -6,7 +6,6 @@ import {of} from "rxjs/observable/of";
 import * as fs from 'fs';
 import * as path from 'path';
 import {Subject} from "rxjs/Subject";
-import {observableToBeFn} from "rxjs/testing/TestScheduler";
 
 let {dialog} = remote;
 

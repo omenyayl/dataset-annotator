@@ -1,6 +1,7 @@
-import {Injectable, NgZone} from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { HotkeyObject } from '../../objects/hotkey-object';
+import {Injectable} from '@angular/core';
+
 
 @Injectable()
 export class HotkeyProvider {

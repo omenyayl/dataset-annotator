@@ -15,6 +15,7 @@ import {CanvasEditorDirective} from "../directives/canvas-editor/canvas-editor";
 import { HotkeyProvider } from '../providers/hotkeys/hotkeys';
 import { HotkeysPage } from '../pages/hotkeys/hotkeys';
 import { HotkeyModule } from 'angular2-hotkeys';
+import { AnnotationsProvider } from '../providers/annotations/annotations';
 
 @NgModule({
     declarations: [
@@ -45,7 +46,8 @@ import { HotkeyModule } from 'angular2-hotkeys';
         FileProvider,
         NavProxyService,
         ImageProvider,
-        HotkeyProvider
+        HotkeyProvider,
+        AnnotationsProvider
     ]
 })
 export class AppModule {

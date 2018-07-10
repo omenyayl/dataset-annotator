@@ -1,5 +1,5 @@
 import {Component, HostListener} from '@angular/core';
-import {IonicPage, NavController, NavParams} from 'ionic-angular';
+import {IonicPage, NavParams} from 'ionic-angular';
 import {_DetailPage} from '../_DetailPage';
 import {FileProvider} from "../../providers/file/file";
 import * as path from 'path';
@@ -7,11 +7,14 @@ import {ImageObject} from '../../objects/image-object';
 import {ImageProvider} from "../../providers/image/image";
 import { CanvasDirectivesEnum } from "../../enums/canvas-directives-enum";
 import {platform} from 'process';
-import { DomSanitizer } from "@angular/platform-browser";
 import { HotkeyProvider } from '../../providers/hotkeys/hotkeys';
 import { HotkeysService, Hotkey } from 'angular2-hotkeys';
 import { HotkeyObject } from '../../objects/hotkey-object';
+import { DomSanitizer } from "@angular/platform-browser";
+import { AnnotationsProvider, Line, Box, Polygon } from "../../providers/annotations/annotations";
 
+//EventListener for deletion
+import { Events } from 'ionic-angular';
 
 @IonicPage()
 @Component({
@@ -24,20 +27,28 @@ import { HotkeyObject } from '../../objects/hotkey-object';
  */
 export class ItemPage extends _DetailPage {
 
+	boxes = [];
+	lines = [];
+  	polys = [];
+
     item: string = null;
     hotkeys: HotkeyObject;
     canvasDirectives = CanvasDirectivesEnum;
+    sanitizer: DomSanitizer;
 
-    constructor(public navCtrl: NavController,
-                public navParams: NavParams,
+    constructor(public navParams: NavParams,
+				public events: Events,
                 private fileProvider: FileProvider,
                 private imageProvider: ImageProvider,
                 private sanitizer: DomSanitizer,
                 private hotkeyProvider: HotkeyProvider,
-                private hotkeyService: HotkeysService) {
+                private hotkeyService: HotkeysService,
+                private annotationsProvider: AnnotationsProvider,
+                sanitizer: DomSanitizer) {
 
         super();
         this.item = navParams.data;
+        this.sanitizer = sanitizer;
 
         const currentImagePath = path.join(fileProvider.selectedFolder, this.item);
 
@@ -46,12 +57,13 @@ export class ItemPage extends _DetailPage {
             this.imageProvider.selectedCanvasDirective = this.canvasDirectives.canvas_line;
         }
 
-        this.imageProvider.initImage(currentImagePath as string);
-
         this.hotkeyProvider.hotkeys.subscribe(value => {
             this.updateHotkeys(value);
         })
-    }
+      
+	  	  this.imageProvider.initImage(currentImagePath as string, this.annotationsProvider);
+		    this.getCurrentAnnotations();
+	}
 
     /**
      * Obtains the absolute local source of the selected image.
@@ -74,6 +86,50 @@ export class ItemPage extends _DetailPage {
         return this.imageProvider.currentImage;
     }
 
+  	/**
+	 * Gets the annotations for the current image
+	 * and puts them in: dummy
+	 */
+  	getCurrentAnnotations(){
+	  	//let allAnnotations = [];
+		this.boxes = this.annotationsProvider.getBoxes();
+		this.lines = this.annotationsProvider.getLines();
+	  	this.polys = this.annotationsProvider.getPolygons();
+	}
+
+	isSelected(itm){
+		return (AnnotationsProvider.selectedElement === itm);
+	}
+
+	itemSelect(itm){
+	  	AnnotationsProvider.selectedElement = itm;
+		this.renderCanvas();
+	}
+
+	itemDelete(itm){
+  	    let successfullyRemoved = false;
+  	    switch(this.getSelectedCanvasDirective()) {
+            case CanvasDirectivesEnum.canvas_line:
+                successfullyRemoved = this.annotationsProvider.removeLine(itm as Line);
+                break;
+            case CanvasDirectivesEnum.canvas_rect:
+                successfullyRemoved = this.annotationsProvider.removeBox(itm as Box);
+                break;
+            case CanvasDirectivesEnum.canvas_polygon:
+                successfullyRemoved = this.annotationsProvider.removePolygon(itm as Polygon);
+                break;
+        }
+
+        if (successfullyRemoved) {
+  	        this.renderCanvas();
+        }
+
+	}
+
+	renderCanvas() {
+        this.events.publish('render-canvas');
+    }
+
     selectCanvasDirective(directiveName: CanvasDirectivesEnum){
         this.imageProvider.selectedCanvasDirective = directiveName;
     }
@@ -84,7 +140,6 @@ export class ItemPage extends _DetailPage {
 
     hotkeySetCanvasDirectiveRectangle() {
         this.selectCanvasDirective(this.canvasDirectives.canvas_rect);
-
     }
 
     hotkeySetCanvasDirectivePolygon() {
