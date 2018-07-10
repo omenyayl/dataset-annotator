@@ -12,6 +12,7 @@ export class AnnotationsProvider {
   	private annotations: AnnotationObject[] = [];
   	private actions: ActionObject[] = [];
     public static selectedElement;
+    public static selectedAction;
 
     constructor(private imageProvider: ImageProvider) {
     }
@@ -153,7 +154,19 @@ export class AnnotationsProvider {
 		return this.actions;
 	}
 
+  	//Very stupid method - But very safe
+  	getActionId(){
+	  	let nextId = -1;
+	  	for(let action of this.actions){
+	  		nextId = Math.max(action.object_id, nextId);
+		}
+	  	nextId += 1;
+	  	//console.log(`New ID assigned: ${nextId}`);
+	  	return nextId;
+	}
+
   	addAction(action : ActionObject){
+		action.object_id = this.getActionId();
 		this.actions.push(action);
 	}
 
@@ -166,6 +179,10 @@ export class AnnotationsProvider {
         }
 
         return false;
+	}
+  	
+  	selectAction(action : Action){
+		this.selectedAction = action;	
 	}
 
   	// END - ACTION METHODS

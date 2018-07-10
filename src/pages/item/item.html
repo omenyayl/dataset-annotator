@@ -89,8 +89,13 @@
 					+
 				</button>
 				<div *ngFor="let action of actions">
-					<button ion-item>
-						{{action.label}} | ?
+				  	<div *ngIf="isSelectedAction(action)">
+					  	<ion-input [(ngModel)]="action.label"></ion-input>
+					  	<p>{{action.object_id}}</p>
+					</div>
+					<button ion-item *ngIf="!isSelectedAction(action)"
+					  (click)="actionSelect(action)">
+						{{action.label}} | {{action.object_id}}
 					</button>
 					<button ion-item (click)="actionDelete(action)">
 						X  

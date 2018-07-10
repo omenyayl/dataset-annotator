@@ -130,7 +130,8 @@ export class ItemPage extends _DetailPage {
 
 	actionAdd(){
 		this.annotationsProvider.addAction({
-	  		label : 'New Action',
+		  	label : 'New Action',
+		  	object_id : -1,
 			startTime : 999,
 			endTime : 999
 		} as ActionObject);
@@ -138,6 +139,15 @@ export class ItemPage extends _DetailPage {
 
 	actionDelete(itm){
 		this.annotationsProvider.removeAction(itm);
+	}
+
+  	actionSelect(itm){
+		console.log('Selected new action...');
+		this.annotationsProvider.selectAction(itm);
+	}
+
+	isSelectedAction(itm){
+		return (AnnotationsProvider.selectedAction === itm);
 	}
 
 	renderCanvas() {
