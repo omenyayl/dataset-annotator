@@ -8,6 +8,8 @@ import {ImageProvider} from "../../providers/image/image";
 import { CanvasDirectivesEnum } from "../../enums/canvas-directives-enum";
 import {platform} from 'process';
 import { HotkeyProvider } from '../../providers/hotkeys/hotkeys';
+import { HotkeysService, Hotkey } from 'angular2-hotkeys';
+import { HotkeyObject } from '../../objects/hotkey-object';
 import { DomSanitizer } from "@angular/platform-browser";
 import { AnnotationsProvider, Line, Box, Polygon } from "../../providers/annotations/annotations";
 
@@ -30,6 +32,7 @@ export class ItemPage extends _DetailPage {
   	polys = [];
 
     item: string = null;
+    hotkeys: HotkeyObject;
     canvasDirectives = CanvasDirectivesEnum;
     sanitizer: DomSanitizer;
 
@@ -38,8 +41,10 @@ export class ItemPage extends _DetailPage {
                 private fileProvider: FileProvider,
                 private imageProvider: ImageProvider,
                 private hotkeyProvider: HotkeyProvider,
+                private hotkeyService: HotkeysService,
                 private annotationsProvider: AnnotationsProvider,
                 sanitizer: DomSanitizer) {
+
         super();
         this.item = navParams.data;
         this.sanitizer = sanitizer;
@@ -51,8 +56,18 @@ export class ItemPage extends _DetailPage {
             this.imageProvider.selectedCanvasDirective = this.canvasDirectives.canvas_line;
         }
 
-	  	this.imageProvider.initImage(currentImagePath as string, this.annotationsProvider);
-		this.getCurrentAnnotations();
+        this.hotkeyProvider.hotkeys.subscribe(value => {
+            this.updateHotkeys(value);
+        })
+
+        this.imageProvider.initImage(currentImagePath as string, this.annotationsProvider);
+        this.getCurrentAnnotations();
+
+        this.hotkeyService.add(new Hotkey(["del", "backspace"],
+            (event: KeyboardEvent): boolean => {
+                this.deleteHotkey();
+                return false;
+            }));
 	}
 
     /**
@@ -85,7 +100,11 @@ export class ItemPage extends _DetailPage {
 		this.boxes = this.annotationsProvider.getBoxes();
 		this.lines = this.annotationsProvider.getLines();
 	  	this.polys = this.annotationsProvider.getPolygons();
-	}
+    }
+
+    deleteHotkey() {
+        this.itemDelete(AnnotationsProvider.selectedElement);
+    }
 
 	isSelected(itm){
 		return (AnnotationsProvider.selectedElement === itm);
@@ -124,21 +143,8 @@ export class ItemPage extends _DetailPage {
         this.imageProvider.selectedCanvasDirective = directiveName;
     }
 
-    @HostListener('window:keydown', ['$event'])
-    doAction($event) {
-        if($event.key === this.hotkeyProvider.hotkeys.line) {
-            this.hotkeySetCanvasDirectiveLine();
-        }
-        else if($event.key === this.hotkeyProvider.hotkeys.rectangle) {
-            this.hotkeySetCanvasDirectiveRectangle();
-        }
-        else if($event.key === this.hotkeyProvider.hotkeys.polygon) {
-            this.hotkeySetCanvasDirectivePolygon();
-        }
-    }
-
-  	hotkeySetCanvasDirectiveLine() {
-	  	this.selectCanvasDirective(this.canvasDirectives.canvas_line);
+    hotkeySetCanvasDirectiveLine() {
+        this.selectCanvasDirective(this.canvasDirectives.canvas_line);
     }
 
     hotkeySetCanvasDirectiveRectangle() {
@@ -147,5 +153,30 @@ export class ItemPage extends _DetailPage {
 
     hotkeySetCanvasDirectivePolygon() {
         this.selectCanvasDirective(this.canvasDirectives.canvas_polygon);
+    }
+
+    updateHotkeys(hotkeys) {
+        if(this.hotkeys !== undefined) {
+            this.hotkeyService.remove(new Hotkey(this.hotkeys.line, null));
+            this.hotkeyService.remove(new Hotkey(this.hotkeys.rectangle, null));
+            this.hotkeyService.remove(new Hotkey(this.hotkeys.polygon, null));
+        }
+
+        this.hotkeys = hotkeys;
+        this.hotkeyService.add(new Hotkey(this.hotkeys.line,
+            (event: KeyboardEvent): boolean => {
+                this.hotkeySetCanvasDirectiveLine();
+                return false;
+            }));
+        this.hotkeyService.add(new Hotkey(this.hotkeys.rectangle,
+            (event: KeyboardEvent): boolean => {
+                this.hotkeySetCanvasDirectiveRectangle();
+                return false;
+            }));
+        this.hotkeyService.add(new Hotkey(this.hotkeys.polygon,
+            (event: KeyboardEvent): boolean => {
+                this.hotkeySetCanvasDirectivePolygon();
+                return false;
+            }));
     }
 }

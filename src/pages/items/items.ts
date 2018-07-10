@@ -1,4 +1,4 @@
-import {Component, HostListener, ViewChild} from '@angular/core';
+import {Component, HostListener, ViewChild, Input} from '@angular/core';
 import {
     IonicPage,
     NavController,
@@ -13,6 +13,8 @@ import {_MasterPage} from "../_MasterPage";
 import {FileProvider} from "../../providers/file/file";
 import {HotkeyProvider} from "../../providers/hotkeys/hotkeys";
 import {Observable} from "rxjs/Observable";
+import { HotkeysService, Hotkey } from 'angular2-hotkeys';
+import { HotkeyObject } from '../../objects/hotkey-object';
 
 @IonicPage()
 @Component({
@@ -29,13 +31,19 @@ export class ItemsPage extends _MasterPage {
     files: string[];
     filesLoading$: Observable<boolean>;
     selected: [string, number];
+    hotkeys: HotkeyObject;
 
     constructor(public navCtrl: NavController,
                 public navParams: NavParams,
                 private navProxy: NavProxyService,
                 private fileProvider: FileProvider,
-                private hotkeyProvider: HotkeyProvider) {
+                private hotkeyProvider: HotkeyProvider,
+                private hotkeyService: HotkeysService) {
         super();
+
+        this.hotkeyProvider.hotkeys.subscribe(value => {
+            this.updateHotkeys(value);
+        })
     }
 
     ngOnInit() {
@@ -59,16 +67,6 @@ export class ItemsPage extends _MasterPage {
         this.navProxy.pushDetail(ItemPage, item);
     }
 
-    @HostListener('window:keydown', ['$event'])
-    doAction($event) {
-        if($event.key === this.hotkeyProvider.hotkeys.prevImage) {
-            this.previousItem();
-        }
-        else if($event.key === this.hotkeyProvider.hotkeys.nextImage) {
-            this.nextItem();
-        }
-    }
-
     previousItem() {
         let newIndex = this.selected[1] - 1;
         if(newIndex >= 0) {
@@ -87,5 +85,24 @@ export class ItemsPage extends _MasterPage {
             let yOffset = document.getElementById(`${newIndex}`).offsetTop;
             this.content.scrollTo(0, yOffset, 1);
         }
+    }
+
+    updateHotkeys(hotkeys) {
+        if(this.hotkeys !== undefined) {
+            this.hotkeyService.remove(new Hotkey(this.hotkeys.nextImage, null));
+            this.hotkeyService.remove(new Hotkey(this.hotkeys.prevImage, null));
+        }
+
+        this.hotkeys = hotkeys;
+        this.hotkeyService.add(new Hotkey(this.hotkeys.nextImage,
+            (event: KeyboardEvent): boolean => {
+                this.nextItem();
+                return false;
+            }));
+        this.hotkeyService.add(new Hotkey(this.hotkeys.prevImage,
+            (event: KeyboardEvent): boolean => {
+                this.previousItem();
+                return false;
+            }));
     }
 }
