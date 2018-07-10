@@ -65,7 +65,7 @@
 					<div *ngFor="let itm of boxes">
 					  	<ion-input [(ngModel)]="itm.label" *ngIf="isSelected(itm)"></ion-input>
 						<button ion-item *ngIf="!isSelected(itm)" (click)="itemSelect(itm)">
-					    	{{ itm.label }}
+					    	{{ itm.label }} | ?
 						</button>
 						<button ion-item (click)="itemDelete(itm)">
 						  	X
@@ -90,7 +90,7 @@
 				</button>
 				<div *ngFor="let action of actions">
 					<button ion-item>
-						{{action.label}}
+						{{action.label}} | ?
 					</button>
 					<button ion-item (click)="actionDelete(action)">
 						X  
