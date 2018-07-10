@@ -7,9 +7,31 @@
       Images
     </ion-title>
   </ion-toolbar>
+  <div style="border: 0.1px solid lightgrey">
+      <ion-grid class="button-group">
+          <ion-row>
+              <ion-col style="text-align: center">
+                  <button ion-button (click)="previousItem()">
+                    <ion-icon name="arrow-back"></ion-icon>
+                    <p class="button-text">
+                      {{"Previous image (" + hotkeys.prevImage + ")"}}
+                    </p>
+                  </button>
+              </ion-col>
+              <ion-col style="text-align: center">
+                  <button ion-button (click)="nextItem()">
+                    <p class="button-text">
+                      {{"Next image (" + hotkeys.nextImage + ")"}}
+                    </p>
+                    <ion-icon name="arrow-forward"></ion-icon>
+                  </button>
+              </ion-col>
+          </ion-row>
+      </ion-grid>
+  </div>
 </ion-header>
 
-<ion-content>
+<ion-content class="has-header">
   <ion-spinner padding class="center large-spinner" *ngIf="filesLoading$ | async"></ion-spinner>
   <ion-list>
     <button ion-item [class.highlight]="file == selected[0]"
