@@ -62,8 +62,14 @@ export class ItemPage extends _DetailPage {
             this.updateHotkeys(value);
         })
 
-	  	  this.imageProvider.initImage(currentImagePath as string, this.annotationsProvider);
-		    this.getCurrentAnnotations();
+        this.imageProvider.initImage(currentImagePath as string, this.annotationsProvider);
+        this.getCurrentAnnotations();
+
+        this.hotkeyService.add(new Hotkey(["del", "backspace"],
+            (event: KeyboardEvent): boolean => {
+                this.deleteHotkey();
+                return false;
+            }));
 	}
 
     /**
@@ -97,7 +103,11 @@ export class ItemPage extends _DetailPage {
 		this.lines = this.annotationsProvider.getLines();
 	  	this.polys = this.annotationsProvider.getPolygons();
 	  	this.actions = this.annotationsProvider.getActions();
-	}
+    }
+
+    deleteHotkey() {
+        this.itemDelete(AnnotationsProvider.selectedElement);
+    }
 
 	isSelected(itm){
 		return (AnnotationsProvider.selectedElement === itm);

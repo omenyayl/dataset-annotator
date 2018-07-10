@@ -1,6 +1,6 @@
 import {Drawer} from "./drawer";
 import {CoordinatesObject} from "../objects/CoordinatesObject";
-import {AnnotationsProvider, Polygon} from "../providers/annotations/annotations";
+import {AnnotationsProvider, Line, Polygon} from "../providers/annotations/annotations";
 import {LineDrawer} from "./line-drawer";
 
 const DEFAULT_COLOR = 'red';
@@ -119,6 +119,17 @@ export class PolygonDrawer extends Drawer{
 
     getPoints() {
         return this.points;
+    }
+
+    getHoveringPoint(mouse: CoordinatesObject): CoordinatesObject {
+        for(let i = 0; i < this.polygons.length; i++) {
+            for(let j = 0; j < this.polygons[i].coordinates.length; j++) {
+                if (PolygonDrawer.computeDistance(this.polygons[i].coordinates[j], mouse) < POINT_RADIUS) {
+                    return this.polygons[i].coordinates[j];
+                }
+            }
+        }
+        return null;
     }
 
 }

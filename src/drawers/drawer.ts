@@ -22,9 +22,16 @@ export abstract class Drawer {
     static setSelectedElement(element: any) {
         AnnotationsProvider.selectedElement = element;
     }
+
+    static movePoint(point: CoordinatesObject, mouse: CoordinatesObject) {
+        point.x = mouse.x;
+        point.y = mouse.y;
+    }
+
     abstract saveFromCoordinates(...coordinates: CoordinatesObject[]);
     abstract drawFromCoordinates(...coordinates: CoordinatesObject[]);
     abstract isHovering(coordinates: CoordinatesObject);
     abstract selectElement(coordinates: CoordinatesObject): boolean;
+    abstract getHoveringPoint(mouse: CoordinatesObject): CoordinatesObject;
     abstract render();
 }
