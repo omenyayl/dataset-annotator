@@ -183,18 +183,14 @@ export class AnnotationsProvider {
 
 export class Line {
     label: string = 'unnamed';
-    x1: number;
-    y1: number;
-    x2: number;
-    y2: number
+    start: CoordinatesObject;
+    end: CoordinatesObject;
 }
 
 export class Box {
     label: string = 'unnamed';
-    x1: number;
-    y1: number;
-    x2: number;
-    y2: number
+    start: CoordinatesObject;
+    end: CoordinatesObject;
 }
 
 export class Polygon {
