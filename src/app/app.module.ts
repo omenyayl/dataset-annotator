@@ -14,6 +14,7 @@ import {ImageProvider} from '../providers/image/image';
 import {CanvasEditorDirective} from "../directives/canvas-editor/canvas-editor";
 import { HotkeyProvider } from '../providers/hotkeys/hotkeys';
 import { HotkeysPage } from '../pages/hotkeys/hotkeys';
+import { HotkeyModule } from 'angular2-hotkeys';
 
 @NgModule({
     declarations: [
@@ -27,6 +28,7 @@ import { HotkeysPage } from '../pages/hotkeys/hotkeys';
     imports: [
         BrowserModule,
         IonicModule.forRoot(MyApp),
+        HotkeyModule.forRoot()
     ],
     bootstrap: [IonicApp],
     entryComponents: [

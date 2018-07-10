@@ -20,19 +20,21 @@ export class HotkeysPage {
               private navProxy: NavProxyService,
               private hotkeyProvider: HotkeyProvider) {
 
-    this.hotkeys = this.formBuilder.group({
-      nextImage: [this.hotkeyProvider.hotkeys.nextImage],
-      prevImage: [this.hotkeyProvider.hotkeys.prevImage],
-      line: [this.hotkeyProvider.hotkeys.line],
-      rectangle: [this.hotkeyProvider.hotkeys.rectangle],
-      polygon: [this.hotkeyProvider.hotkeys.polygon]
-    })
+    this.hotkeyProvider.hotkeys.subscribe(value => {
+      this.hotkeys = this.formBuilder.group({
+        nextImage: [value.nextImage],
+        prevImage: [value.prevImage],
+        line: [value.line],
+        rectangle: [value.rectangle],
+        polygon: [value.polygon]
+      });
+    });
 
     this.inputs = [];
   }
 
   updateHotkeys() {
-    this.hotkeyProvider.hotkeys = this.hotkeys.value;
+    this.hotkeyProvider.hotkeys.next(this.hotkeys.value);
     this.navProxy.popMaster(HotkeysPage);
   }
 
@@ -59,11 +61,20 @@ export class HotkeysPage {
   saveCompositeInput($event, name) {
     if(this.inputs !== undefined && this.inputs.length !== 0) {
       const fc = this.hotkeys.controls[name] as FormControl;
-      fc.setValue(this.inputs.join(" + "));
+      fc.setValue(this.cleanInputString(this.inputs.join("+")));
 
       this.inputs = [];
 
       $event.target.select();
     }
+  }
+
+  cleanInputString(str) {
+    return str.replace("Control", "ctrl")
+              .replace("Alt", "alt")
+              .replace("ArrowUp", "up")
+              .replace("ArrowDown", "down")
+              .replace("ArrowLeft", "left")
+              .replace("ArrowRight", "right")
   }
 }

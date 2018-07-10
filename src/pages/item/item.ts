@@ -69,6 +69,7 @@ export class ItemPage extends _DetailPage {
         this.imageProvider.selectedCanvasDirective = directiveName;
     }
 
+    /*
     @HostListener('window:keydown', ['$event'])
     doAction($event) {
         if($event.key === this.hotkeyProvider.hotkeys.line) {
@@ -81,6 +82,7 @@ export class ItemPage extends _DetailPage {
             this.hotkeySetCanvasDirectivePolygon();
         }
     }
+    */
 
     hotkeySetCanvasDirectiveLine() {
         this.selectCanvasDirective(this.canvasDirectives.canvas_line);

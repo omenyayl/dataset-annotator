@@ -1,4 +1,4 @@
-import {Component, HostListener, ViewChild} from '@angular/core';
+import {Component, HostListener, ViewChild, Input} from '@angular/core';
 import {
     IonicPage,
     NavController,
@@ -13,6 +13,8 @@ import {_MasterPage} from "../_MasterPage";
 import {FileProvider} from "../../providers/file/file";
 import {HotkeyProvider} from "../../providers/hotkeys/hotkeys";
 import {Observable} from "rxjs/Observable";
+import { HotkeysService, Hotkey } from 'angular2-hotkeys';
+import { HotkeyObject } from '../../objects/hotkey-object';
 
 @IonicPage()
 @Component({
@@ -29,13 +31,19 @@ export class ItemsPage extends _MasterPage {
     files: string[];
     filesLoading$: Observable<boolean>;
     selected: [string, number];
+    hotkeys: HotkeyObject;
 
     constructor(public navCtrl: NavController,
                 public navParams: NavParams,
                 private navProxy: NavProxyService,
                 private fileProvider: FileProvider,
-                private hotkeyProvider: HotkeyProvider) {
+                private hotkeyProvider: HotkeyProvider,
+                private hotkeysService: HotkeysService) {
         super();
+
+        this.hotkeyProvider.hotkeys.subscribe(value => {
+            this.hotkeys = value;
+        })
     }
 
     ngOnInit() {
@@ -59,6 +67,7 @@ export class ItemsPage extends _MasterPage {
         this.navProxy.pushDetail(ItemPage, item);
     }
 
+    /*
     @HostListener('window:keydown', ['$event'])
     doAction($event) {
         if($event.key === this.hotkeyProvider.hotkeys.prevImage) {
@@ -68,6 +77,7 @@ export class ItemsPage extends _MasterPage {
             this.nextItem();
         }
     }
+    */
 
     previousItem() {
         let newIndex = this.selected[1] - 1;
