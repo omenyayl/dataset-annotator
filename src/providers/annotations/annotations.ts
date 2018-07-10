@@ -181,8 +181,8 @@ export class AnnotationsProvider {
         return false;
 	}
   	
-  	selectAction(action : Action){
-		this.selectedAction = action;	
+  	selectAction(action : ActionObject){
+		AnnotationsProvider.selectedAction = action;
 	}
 
   	// END - ACTION METHODS
