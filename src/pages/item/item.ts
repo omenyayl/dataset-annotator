@@ -42,7 +42,6 @@ export class ItemPage extends _DetailPage {
 				public events: Events,
                 private fileProvider: FileProvider,
                 private imageProvider: ImageProvider,
-                private sanitizer: DomSanitizer,
                 private hotkeyProvider: HotkeyProvider,
                 private hotkeyService: HotkeysService,
                 private annotationsProvider: AnnotationsProvider,
@@ -62,7 +61,7 @@ export class ItemPage extends _DetailPage {
         this.hotkeyProvider.hotkeys.subscribe(value => {
             this.updateHotkeys(value);
         })
-      
+
 	  	  this.imageProvider.initImage(currentImagePath as string, this.annotationsProvider);
 		    this.getCurrentAnnotations();
 	}
