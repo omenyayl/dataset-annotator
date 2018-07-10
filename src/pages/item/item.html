@@ -85,6 +85,17 @@
 		  	</div>
 			<div class="actions-div">
 				<h1>Actions</h1>
+				<button ion-item (click)="actionAdd()">
+					+
+				</button>
+				<div *ngFor="let action of actions">
+					<button ion-item>
+						{{action.label}}
+					</button>
+					<button ion-item (click)="actionDelete(action)">
+						X  
+					</button>
+				</div>
 			</div>
 		</ion-row>
     </ion-grid>

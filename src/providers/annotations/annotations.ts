@@ -2,13 +2,15 @@ import {Injectable} from '@angular/core';
 import {AnnotationObject} from "../../objects/annotation-object";
 import { ImageProvider } from "../image/image"
 import {CoordinatesObject} from "../../objects/CoordinatesObject";
+import {ActionObject} from "../../objects/action-object";
 
 /**
     Provider that deals with getting and setting annotations
  */
 @Injectable()
 export class AnnotationsProvider {
-    private annotations: AnnotationObject[] = [];
+  	private annotations: AnnotationObject[] = [];
+  	private actions: ActionObject[] = [];
     public static selectedElement;
 
     constructor(private imageProvider: ImageProvider) {
@@ -143,7 +145,32 @@ export class AnnotationsProvider {
 
     // END - POLYGON METHODS
 
-    getCurrentAnnotation() {
+	
+	
+	// BEGIN - ACTION METHODS
+
+  	getActions(){
+		return this.actions;
+	}
+
+  	addAction(action : ActionObject){
+		this.actions.push(action);
+	}
+
+	removeAction(action : ActionObject){
+        let i = this.actions.indexOf(action);
+
+        if (i != -1) {
+            this.actions.splice(i, 1);
+            return true;
+        }
+
+        return false;
+	}
+
+  	// END - ACTION METHODS
+  
+  	getCurrentAnnotation() {
         let currentSrc = this.imageProvider.currentImage.src;
         return this.annotations[currentSrc];
     }

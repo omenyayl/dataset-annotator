@@ -10,6 +10,7 @@ import {platform} from 'process';
 import { HotkeyProvider } from '../../providers/hotkeys/hotkeys';
 import { DomSanitizer } from "@angular/platform-browser";
 import { AnnotationsProvider, Line, Box } from "../../providers/annotations/annotations";
+import {ActionObject} from '../../objects/action-object';
 
 //EventListener for deletion
 import { Events } from 'ionic-angular';
@@ -28,6 +29,7 @@ export class ItemPage extends _DetailPage {
 	boxes = [];
 	lines = [];
   	polys = [];
+	actions = [];
 
     item: string = null;
     canvasDirectives = CanvasDirectivesEnum;
@@ -85,6 +87,7 @@ export class ItemPage extends _DetailPage {
 		this.boxes = this.annotationsProvider.getBoxes();
 		this.lines = this.annotationsProvider.getLines();
 	  	this.polys = this.annotationsProvider.getPolygons();
+	  	this.actions = this.annotationsProvider.getActions();
 	}
 
 	isSelected(itm){
@@ -114,6 +117,18 @@ export class ItemPage extends _DetailPage {
   	        this.renderCanvas();
         }
 
+	}
+
+	actionAdd(){
+		this.annotationsProvider.addAction({
+	  		label : 'New Action',
+			startTime : 999,
+			endTime : 999
+		} as ActionObject);
+	}
+
+	actionDelete(itm){
+		this.annotationsProvider.removeAction(itm);
 	}
 
 	renderCanvas() {
