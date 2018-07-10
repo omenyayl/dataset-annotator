@@ -7,7 +7,7 @@ import { HotkeysPage } from './hotkeys';
     HotkeysPage,
   ],
   imports: [
-    IonicPageModule.forChild(HotkeysPage),
+    IonicPageModule.forChild(HotkeysPage)
   ],
 })
 export class HotkeysPageModule {}
