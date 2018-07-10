@@ -9,7 +9,7 @@ import { CanvasDirectivesEnum } from "../../enums/canvas-directives-enum";
 import {platform} from 'process';
 import { HotkeyProvider } from '../../providers/hotkeys/hotkeys';
 import { DomSanitizer } from "@angular/platform-browser";
-import { AnnotationsProvider, Line, Box } from "../../providers/annotations/annotations";
+import { AnnotationsProvider, Line, Box, Polygon } from "../../providers/annotations/annotations";
 
 //EventListener for deletion
 import { Events } from 'ionic-angular';

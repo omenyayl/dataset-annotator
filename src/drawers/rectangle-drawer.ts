@@ -34,15 +34,15 @@ export class RectangleDrawer extends Drawer{
 
     drawBox(box, color = DEFAULT_COLOR): void {
         color = Drawer.getSelectedElement() === box ? SELECTED_COLOR : DEFAULT_COLOR;
-        this.drawLine({x: box.x1, y: box.y1}, {x: box.x1, y: box.y2}, color);
-        this.drawLine({x: box.x1, y: box.y1}, {x: box.x2, y: box.y1}, color);
-        this.drawLine({x: box.x2, y: box.y1}, {x: box.x2, y: box.y2}, color);
-        this.drawLine({x: box.x1, y: box.y2}, {x: box.x2, y: box.y2}, color);
+        this.drawLine({x: box.start.x, y: box.start.y}, {x: box.start.x, y: box.end.y}, color);
+        this.drawLine({x: box.start.x, y: box.start.y}, {x: box.end.x, y: box.start.y}, color);
+        this.drawLine({x: box.end.x, y: box.start.y}, {x: box.end.x, y: box.end.y}, color);
+        this.drawLine({x: box.start.x, y: box.end.y}, {x: box.end.x, y: box.end.y}, color);
 
-        this.drawCircle({x: box.x1, y: box.y1}, color);
-        this.drawCircle({x: box.x2, y: box.y2}, color);
-        this.drawCircle({x: box.x2, y: box.y1}, color);
-        this.drawCircle({x: box.x1, y: box.y2}, color);
+        this.drawCircle({x: box.start.x, y: box.start.y}, color);
+        this.drawCircle({x: box.end.x, y: box.end.y}, color);
+        this.drawCircle({x: box.end.x, y: box.start.y}, color);
+        this.drawCircle({x: box.start.x, y: box.end.y}, color);
     }
 
 
@@ -59,11 +59,9 @@ export class RectangleDrawer extends Drawer{
             throw new RangeError(`RectangleDrawer.drawFromCoordinates expected 2 coordinates, but only received ${coordinates.length}`);
         }
         this.drawBox({
-            x1: coordinates[0].x,
-            y1: coordinates[0].y,
-            x2: coordinates[1].x,
-            y2: coordinates[1].y
-        });
+            start: coordinates[0],
+            end: coordinates[1]
+        } as Box);
     }
 
     render() {
@@ -72,10 +70,8 @@ export class RectangleDrawer extends Drawer{
 
     saveFromCoordinates(...coordinates: CoordinatesObject[]) {
         let newBox = {
-            x1: coordinates[0].x,
-            y1: coordinates[0].y,
-            x2: coordinates[1].x,
-            y2: coordinates[1].y
+            start: coordinates[0],
+            end: coordinates[1]
         } as Box;
 
         if (RectangleDrawer.computeDistance(coordinates[0], coordinates[1]) > POINT_RADIUS * 2){
@@ -105,20 +101,20 @@ export class RectangleDrawer extends Drawer{
     static isNearCoordinates(box: Box, location: CoordinatesObject) : boolean {
         let pointCoordinates = [
             {
-                x: box.x1,
-                y: box.y1
+                x: box.start.x,
+                y: box.start.y
             },
             {
-                x: box.x2,
-                y: box.y2
+                x: box.end.x,
+                y: box.end.y
             },
             {
-                x: box.x2,
-                y: box.y1
+                x: box.end.x,
+                y: box.start.y
             },
             {
-                x: box.x1,
-                y: box.y2
+                x: box.start.x,
+                y: box.end.y
             }];
         for(let point of pointCoordinates){
             if (RectangleDrawer.computeDistance(location, point) < POINT_RADIUS){
