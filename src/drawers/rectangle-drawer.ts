@@ -41,8 +41,8 @@ export class RectangleDrawer extends Drawer{
 
         this.drawCircle({x: box.start.x, y: box.start.y}, color);
         this.drawCircle({x: box.end.x, y: box.end.y}, color);
-        this.drawCircle({x: box.end.x, y: box.start.y}, color);
-        this.drawCircle({x: box.start.x, y: box.end.y}, color);
+        // this.drawCircle({x: box.end.x, y: box.start.y}, color);
+        // this.drawCircle({x: box.start.x, y: box.end.y}, color);
     }
 
 
@@ -132,6 +132,18 @@ export class RectangleDrawer extends Drawer{
             }
         }
         return false;
+    }
+
+    getHoveringPoint(mouse: CoordinatesObject): CoordinatesObject {
+        for(let i = 0; i < this.boxes.length; i++){
+            if (RectangleDrawer.computeDistance(this.boxes[i].start, mouse) < POINT_RADIUS) {
+                return this.boxes[i].start;
+            }
+            else if (RectangleDrawer.computeDistance(this.boxes[i].end, mouse) < POINT_RADIUS) {
+                return this.boxes[i].end;
+            }
+        }
+        return null;
     }
 
 }
