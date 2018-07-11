@@ -112,7 +112,7 @@ export class PolygonDrawer extends Drawer{
     }
 
     isNearStartPoint(mouse: CoordinatesObject): boolean{
-        return this.points[0] && PolygonDrawer.computeDistance(this.points[0], mouse) < POINT_RADIUS;
+        return this.points[0] && PolygonDrawer.computeDistance(this.points[0], mouse) <= POINT_RADIUS;
 
     }
 
@@ -120,15 +120,5 @@ export class PolygonDrawer extends Drawer{
         return this.points;
     }
 
-    getHoveringPoint(mouse: CoordinatesObject): CoordinatesObject {
-        for(let i = 0; i < this.polygons.length; i++) {
-            for(let j = 0; j < this.polygons[i].coordinates.length; j++) {
-                if (PolygonDrawer.computeDistance(this.polygons[i].coordinates[j], mouse) < POINT_RADIUS) {
-                    return this.polygons[i].coordinates[j];
-                }
-            }
-        }
-        return null;
-    }
 
 }

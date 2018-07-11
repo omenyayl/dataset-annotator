@@ -1,7 +1,7 @@
+import {CoordinatesObject} from "../../objects/CoordinatesObject";
 import {Injectable} from '@angular/core';
 import {AnnotationObject} from "../../objects/annotation-object";
 import { ImageProvider } from "../image/image"
-import {CoordinatesObject} from "../../objects/CoordinatesObject";
 import {ActionObject} from "../../objects/action-object";
 
 /**
@@ -11,7 +11,7 @@ import {ActionObject} from "../../objects/action-object";
 export class AnnotationsProvider {
   	private annotations: AnnotationObject[] = [];
   	private actions: ActionObject[] = [];
-    public static selectedElement;
+    public static selectedElement: any;
     public static selectedAction;
 
     constructor(private imageProvider: ImageProvider) {
@@ -24,39 +24,39 @@ export class AnnotationsProvider {
     }
 
 
-    // BEGIN - BOX METHODS
-    getBoxes() {
+    // BEGIN - RECTANGLE METHODS
+    getRectangles() {
         let currentImage = this.imageProvider.currentImage;
         if (currentImage) {
-            return this.annotations[currentImage.src].boxes
+            return this.annotations[currentImage.src].rectangles
         } else {
             return [];
         }
     }
 
-    addBox(box: Box) {
-        if(!(box instanceof Box)) throw new TypeError("Trying to add a box that was not constructed as a new Box!");
+    addRectangle(rectangle: Rectangle) {
+        if(!(rectangle instanceof Rectangle)) throw new TypeError("Trying to add a rectangle that was not constructed as a new Rectangle!");
 
         let currentImage = this.imageProvider.currentImage;
         if (currentImage ) {
-            this.annotations[currentImage.src].boxes.push(box);
+            this.annotations[currentImage.src].rectangles.push(rectangle);
         }
     }
 
-    removeBox(box: Box): boolean {
+    removeRectangle(rectangle: Rectangle): boolean {
         let annotation = this.getCurrentAnnotation();
 
-        let i = annotation.boxes.indexOf(box);
+        let i = annotation.rectangles.indexOf(rectangle);
 
         if (i != -1) {
-            annotation.boxes.splice(i, 1);
+            annotation.rectangles.splice(i, 1);
             return true;
         }
 
         return false;
     }
 
-    // END - BOX METHODS
+    // END - RECTANGLE METHODS
 
 
     // BEGIN - LINE METHODS
@@ -191,13 +191,13 @@ export class Line {
                 public label: string = 'unnamed'){}
 }
 
-export class Box {
+export class Rectangle {
     constructor(public start: CoordinatesObject,
                 public end: CoordinatesObject,
                 public label: string = 'unnamed'){}
 }
 
 export class Polygon {
-    constructor(public coordinates: CoordinatesObject[],
+    constructor(public coordinates: CoordinatesObject[] = [],
                 public label: string = 'unnamed'){}
 }
