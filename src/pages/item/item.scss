@@ -47,3 +47,37 @@ page-item {
 	border-width: 1px;
 	border-color: red;
 }
+
+//Box item formatting
+.box-itm{
+  	//Totally up for debate
+	width: 14em;
+}
+
+.box-div{
+	margin: 0;
+	padding: 10% 0 0 0;
+	float: left;
+}
+
+.box-delete{
+	width: 3em;
+	float: right;
+}
+
+//Box ion-input formatting
+.box-input{
+	width: 9em;
+
+	float: left;
+}
+
+.box-input-label{
+	width: 60%;
+	float: left;
+}
+
+.box-input-id{
+	width: 35%;
+	float: right;
+}

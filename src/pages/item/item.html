@@ -62,15 +62,15 @@
 				</ion-list>
 			  	<ion-list *ngIf="getSelectedCanvasDirective() === canvasDirectives.canvas_rect">
 				  	<h1>Boxes</h1>
-					<div *ngFor="let itm of boxes">
-						<div *ngIf="isSelected(itm)">
-					  		<ion-input [(ngModel)]="itm.label"></ion-input>
-					  		<ion-input [(ngModel)]="itm._id" type="number"></ion-input>
+					<div class="box-itm" *ngFor="let itm of boxes">
+						<div class="box-input" *ngIf="isSelected(itm)">
+						  <ion-input class="box-input-label" [(ngModel)]="itm.label"></ion-input><p class="box-div">|</p>
+					  		<ion-input class="box-input-id" [(ngModel)]="itm._id" type="number"></ion-input>
 						</div>
-						<button ion-item *ngIf="!isSelected(itm)" (click)="itemSelect(itm)">
+						<button class="box-input" ion-item *ngIf="!isSelected(itm)" (click)="itemSelect(itm)">
 							{{ itm.label }} | {{itm._id}}
 						</button>
-						<button ion-item (click)="itemDelete(itm)">
+						<button class="box-delete" ion-item (click)="itemDelete(itm)">
 						  	X
 						</button>
 					</div>
@@ -91,16 +91,16 @@
 				<button ion-item (click)="actionAdd()">
 					+
 				</button>
-				<div *ngFor="let action of actions">
-				  	<div *ngIf="isSelectedAction(action)">
-					  	<ion-input [(ngModel)]="action.label"></ion-input>
-					  	<p>{{action.object_id}}</p>
+				<div class="box-itm" *ngFor="let action of actions">
+				  	<div class="box-input" *ngIf="isSelectedAction(action)">
+					  	<ion-input class="box-input-label" [(ngModel)]="action.label"></ion-input>
+					  	<p class="box-input-id">{{action.object_id}}</p>
 					</div>
-					<button ion-item *ngIf="!isSelectedAction(action)"
+					<button class="box-input" ion-item *ngIf="!isSelectedAction(action)"
 					  (click)="actionSelect(action)">
 						{{action.label}} | {{action.object_id}}
 					</button>
-					<button ion-item (click)="actionDelete(action)">
+					<button class="box-delete" ion-item (click)="actionDelete(action)">
 						X  
 					</button>
 				</div>

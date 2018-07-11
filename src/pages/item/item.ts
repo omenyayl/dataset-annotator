@@ -138,7 +138,6 @@ export class ItemPage extends _DetailPage {
 
 	}
 
-  	//New
   	actionAdd(){
 		this.annotationsProvider.addAction(new ActionObject('New Action'));
 	}
