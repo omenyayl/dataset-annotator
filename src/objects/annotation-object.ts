@@ -4,5 +4,6 @@ export class AnnotationObject{
     constructor(public src: string,
                 public lines: Line[] = [],
                 public boxes: Box[] = [],
-                public polygons: Polygon[] = []){}
+	  			public polygons: Polygon[] = [],
+	  			public _id: number = -1){}
 }

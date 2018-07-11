@@ -63,9 +63,12 @@
 			  	<ion-list *ngIf="getSelectedCanvasDirective() === canvasDirectives.canvas_rect">
 				  	<h1>Boxes</h1>
 					<div *ngFor="let itm of boxes">
-					  	<ion-input [(ngModel)]="itm.label" *ngIf="isSelected(itm)"></ion-input>
+						<div *ngIf="isSelected(itm)">
+					  		<ion-input [(ngModel)]="itm.label"></ion-input>
+					  		<ion-input [(ngModel)]="itm._id" type="number"></ion-input>
+						</div>
 						<button ion-item *ngIf="!isSelected(itm)" (click)="itemSelect(itm)">
-					    	{{ itm.label }} | ?
+							{{ itm.label }} | {{itm._id}}
 						</button>
 						<button ion-item (click)="itemDelete(itm)">
 						  	X

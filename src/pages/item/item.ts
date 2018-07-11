@@ -138,13 +138,9 @@ export class ItemPage extends _DetailPage {
 
 	}
 
-	actionAdd(){
-		this.annotationsProvider.addAction({
-		  	label : 'New Action',
-		  	object_id : -1,
-			startTime : 999,
-			endTime : 999
-		} as ActionObject);
+  	//New
+  	actionAdd(){
+		this.annotationsProvider.addAction(new ActionObject('New Action'));
 	}
 
 	actionDelete(itm){
