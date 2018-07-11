@@ -58,10 +58,10 @@ export class RectangleDrawer extends Drawer{
         if (coordinates.length < 2) {
             throw new RangeError(`RectangleDrawer.drawFromCoordinates expected 2 coordinates, but only received ${coordinates.length}`);
         }
-        this.drawBox({
-            start: coordinates[0],
-            end: coordinates[1]
-        } as Box);
+        this.drawBox(new Box(
+            coordinates[0],
+            coordinates[1]
+        ));
     }
 
     render() {
@@ -69,10 +69,10 @@ export class RectangleDrawer extends Drawer{
     }
 
     saveFromCoordinates(...coordinates: CoordinatesObject[]) {
-        let newBox = {
-            start: coordinates[0],
-            end: coordinates[1]
-        } as Box;
+        let newBox = new Box(
+            coordinates[0],
+            coordinates[1]
+        );
 
         if (RectangleDrawer.computeDistance(coordinates[0], coordinates[1]) > POINT_RADIUS * 2){
             this.getAnnotationsProvider().addBox(newBox);
