@@ -1,13 +1,13 @@
 import {CoordinatesObject} from "../objects/CoordinatesObject";
 import {Drawer} from "./drawer";
-import {AnnotationsProvider, Box} from "../providers/annotations/annotations";
+import {AnnotationsProvider, Rectangle} from "../providers/annotations/annotations";
 
 const DEFAULT_COLOR = 'red';
 const SELECTED_COLOR = 'yellow';
 const POINT_RADIUS = 5;
 
 export class RectangleDrawer extends Drawer{
-    private boxes: Box[];
+    private boxes: Rectangle[];
 
     constructor(context: CanvasRenderingContext2D,
                 annotationsProvider: AnnotationsProvider) {
@@ -56,7 +56,7 @@ export class RectangleDrawer extends Drawer{
         if (coordinates.length < 2) {
             throw new RangeError(`RectangleDrawer.drawFromCoordinates expected 2 coordinates, but only received ${coordinates.length}`);
         }
-        this.drawBox(new Box(
+        this.drawBox(new Rectangle(
             coordinates[0],
             coordinates[1]
         ));
@@ -67,7 +67,7 @@ export class RectangleDrawer extends Drawer{
     }
 
     saveFromCoordinates(...coordinates: CoordinatesObject[]) {
-        let newBox = new Box(
+        let newBox = new Rectangle(
             coordinates[0],
             coordinates[1]
         );
@@ -96,7 +96,7 @@ export class RectangleDrawer extends Drawer{
 
     }
 
-    static isNearCoordinates(box: Box, location: CoordinatesObject) : boolean {
+    static isNearCoordinates(box: Rectangle, location: CoordinatesObject) : boolean {
         let pointCoordinates = [
             {
                 x: box.start.x,

@@ -26,6 +26,7 @@ export class CanvasEditorDirective {
     private readonly element: HTMLCanvasElement;
     private isDrawing: boolean;
     private isPointHeld: boolean;
+    private heldPoint: CoordinatesObject;
     private start: CoordinatesObject;
 
     constructor(el: ElementRef,
@@ -67,6 +68,8 @@ export class CanvasEditorDirective {
 
     @HostListener('click', ['$event']) onMouseClick(event) {
 
+        console.log(this.start);
+
         if (this.isPointHeld && ! this.isDrawing) {
             this.isPointHeld = false;
             Drawer.finishMovingSelectedElement();
@@ -76,6 +79,7 @@ export class CanvasEditorDirective {
         let mouseCoordinates = {x: event.offsetX, y: event.offsetY} as CoordinatesObject;
 
         if (!this.isDrawing) {
+            console.log('just started drawing');
             this.start = {
                 x: event.offsetX,
                 y: event.offsetY
@@ -109,13 +113,13 @@ export class CanvasEditorDirective {
                         this.polygonDrawer.saveFromCoordinates(...this.polygonDrawer.getPoints());
                         this.render();
                         this.isDrawing = false;
+                        console.log('saving coords');
                     } else {
                         this.polygonDrawer.addPoint(mouseCoordinates);
                     }
                     break;
             }
 
-            this.isDrawing = false;
         }
     }
 
@@ -124,7 +128,7 @@ export class CanvasEditorDirective {
         let isDraggingPoint = this.selectElement(mouseCoordinates);
 
         if (isDraggingPoint) {
-            this.start = mouseCoordinates;
+            this.heldPoint = mouseCoordinates;
             this.render(); // re-render the selected element
             this.isPointHeld = true;
         }
@@ -158,7 +162,7 @@ export class CanvasEditorDirective {
             }
         }
         else if (this.isPointHeld) {
-            Drawer.moveSelectedElement(this.start, mouseCoordinates);
+            Drawer.moveSelectedElement(this.heldPoint, mouseCoordinates);
             this.render();
         }
     }

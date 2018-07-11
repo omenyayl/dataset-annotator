@@ -12,7 +12,7 @@ import { HotkeysService, Hotkey } from 'angular2-hotkeys';
 import { HotkeyObject } from '../../objects/hotkey-object';
 import { DomSanitizer } from "@angular/platform-browser";
 import {ActionObject} from '../../objects/action-object';
-import { AnnotationsProvider, Line, Box, Polygon } from "../../providers/annotations/annotations";
+import { AnnotationsProvider, Line, Rectangle, Polygon } from "../../providers/annotations/annotations";
 
 //EventListener for deletion
 import { Events } from 'ionic-angular';
@@ -125,7 +125,7 @@ export class ItemPage extends _DetailPage {
                 successfullyRemoved = this.annotationsProvider.removeLine(itm as Line);
                 break;
             case CanvasDirectivesEnum.canvas_rect:
-                successfullyRemoved = this.annotationsProvider.removeBox(itm as Box);
+                successfullyRemoved = this.annotationsProvider.removeBox(itm as Rectangle);
                 break;
             case CanvasDirectivesEnum.canvas_polygon:
                 successfullyRemoved = this.annotationsProvider.removePolygon(itm as Polygon);

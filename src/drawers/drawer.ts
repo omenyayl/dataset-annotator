@@ -1,5 +1,5 @@
 import {CoordinatesObject} from "../objects/CoordinatesObject";
-import {AnnotationsProvider, Box, Line, Polygon} from "../providers/annotations/annotations";
+import {AnnotationsProvider, Rectangle, Line, Polygon} from "../providers/annotations/annotations";
 
 const POINT_RADIUS = 5;
 
@@ -19,11 +19,11 @@ export abstract class Drawer {
         return this.annotationsProvider;
     }
 
-    static getSelectedElement(): Line | Box | Polygon {
+    static getSelectedElement(): any {
         return AnnotationsProvider.selectedElement;
     }
 
-    static setSelectedElement(element: Line | Box | Polygon) {
+    static setSelectedElement(element: any) {
         AnnotationsProvider.selectedElement = element;
     }
 
@@ -34,53 +34,85 @@ export abstract class Drawer {
     static moveSelectedElement(point: CoordinatesObject, mouse: CoordinatesObject) {
         let selectedElement = Drawer.getSelectedElement();
         if (selectedElement instanceof Line) {
-            if(!Drawer.oldElement) {
-                Drawer.oldElement = new Line(selectedElement.start, selectedElement.end);
-            }
-            if (Drawer.computeDistance(
-                    Drawer.oldElement.start,
-                    point
-                ) <= POINT_RADIUS) {
-                selectedElement.start = mouse;
-            }
-            else if (Drawer.computeDistance(
-                    Drawer.oldElement.end,
-                    point
-                ) <= POINT_RADIUS) {
-                selectedElement.end = mouse;
-            }        }
-        else if (selectedElement instanceof Box) {
-            if(!Drawer.oldElement) {
-                Drawer.oldElement = new Box(selectedElement.start, selectedElement.end);
-            }
-            if (Drawer.computeDistance(
-                    Drawer.oldElement.start,
-                    point
-                ) <= POINT_RADIUS) {
-                selectedElement.start = mouse;
-            }
-            else if (Drawer.computeDistance(
-                    Drawer.oldElement.end,
-                    point
-                ) <= POINT_RADIUS) {
-                selectedElement.end = mouse;
-            }
-            else if (Drawer.computeDistance(
-                    new CoordinatesObject(Drawer.oldElement.end.x, Drawer.oldElement.start.y),
-                    point
-                ) <= POINT_RADIUS) {
-                selectedElement.start = new CoordinatesObject(Drawer.oldElement.start.x, mouse.y);
-                selectedElement.end = new CoordinatesObject(mouse.x, Drawer.oldElement.start.y);
-            }
-            else if (Drawer.computeDistance(
-                    new CoordinatesObject(Drawer.oldElement.start.x, Drawer.oldElement.end.y),
-                    point
-                ) <= POINT_RADIUS) {
-                selectedElement.start = new CoordinatesObject(mouse.x, Drawer.oldElement.start.y);
-                selectedElement.end = new CoordinatesObject(Drawer.oldElement.start.x, mouse.y);
-            }
+            Drawer.moveLine(selectedElement, point, mouse);
+        }
+        else if (selectedElement instanceof Rectangle) {
+            Drawer.moveRectangle(selectedElement, point, mouse);
+        }
+        else if (selectedElement instanceof Polygon) {
+            Drawer.movePolygon(selectedElement, point, mouse);
         }
 
+    }
+
+    static moveLine(selectedElement: any, point: CoordinatesObject, mouse: CoordinatesObject) {
+        if(!Drawer.oldElement) {
+            Drawer.oldElement = new Line(
+                new CoordinatesObject(selectedElement.start.x, selectedElement.start.y),
+                new CoordinatesObject(selectedElement.end.x, selectedElement.end.y));
+        }
+        if (Drawer.computeDistance(
+            Drawer.oldElement.start,
+            point
+        ) <= POINT_RADIUS) {
+            selectedElement.start = mouse;
+        }
+        else if (Drawer.computeDistance(
+            Drawer.oldElement.end,
+            point
+        ) <= POINT_RADIUS) {
+            selectedElement.end = mouse;
+        }
+    }
+
+    static moveRectangle(selectedElement: any, point: CoordinatesObject, mouse: CoordinatesObject){
+        if(!Drawer.oldElement) {
+            Drawer.oldElement = new Rectangle(
+                new CoordinatesObject(selectedElement.start.x, selectedElement.start.y),
+                new CoordinatesObject(selectedElement.end.x, selectedElement.end.y));
+        }
+        if (Drawer.computeDistance(
+            Drawer.oldElement.start,
+            point
+        ) <= POINT_RADIUS) {
+            selectedElement.start = mouse;
+        }
+        else if (Drawer.computeDistance(
+            Drawer.oldElement.end,
+            point
+        ) <= POINT_RADIUS) {
+            selectedElement.end = mouse;
+        }
+        else if (Drawer.computeDistance(
+            new CoordinatesObject(Drawer.oldElement.end.x, Drawer.oldElement.start.y),
+            point
+        ) <= POINT_RADIUS) {
+            selectedElement.start.y = mouse.y;
+            selectedElement.end.x = mouse.x;
+        }
+        else if (Drawer.computeDistance(
+            new CoordinatesObject(Drawer.oldElement.start.x, Drawer.oldElement.end.y),
+            point
+        ) <= POINT_RADIUS) {
+            selectedElement.start.x = mouse.x;
+            selectedElement.end.y = mouse.y;
+        }
+    }
+
+    static movePolygon(selectedElement: any, point: CoordinatesObject, mouse: CoordinatesObject) {
+        if(!Drawer.oldElement){
+            Drawer.oldElement = new Polygon();
+            for(let coordinate of selectedElement.coordinates){
+                this.oldElement.coordinates.push(
+                    new CoordinatesObject(coordinate.x, coordinate.y)
+                );
+            }
+        }
+        for(let i = 0; i < Drawer.oldElement.coordinates.length; i++) {
+            if (Drawer.computeDistance(Drawer.oldElement.coordinates[i], point) <= POINT_RADIUS){
+                selectedElement.coordinates[i] = mouse;
+            }
+        }
     }
 
     static finishMovingSelectedElement() {

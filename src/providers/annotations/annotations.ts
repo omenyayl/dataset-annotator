@@ -11,7 +11,7 @@ import {ActionObject} from "../../objects/action-object";
 export class AnnotationsProvider {
   	private annotations: AnnotationObject[] = [];
   	private actions: ActionObject[] = [];
-    public static selectedElement: Box | Line | Polygon;
+    public static selectedElement: Rectangle | Line | Polygon;
     public static selectedAction;
 
     constructor(private imageProvider: ImageProvider) {
@@ -34,8 +34,8 @@ export class AnnotationsProvider {
         }
     }
 
-    addBox(box: Box) {
-        if(!(box instanceof Box)) throw new TypeError("Trying to add a box that was not constructed as a new Box!");
+    addBox(box: Rectangle) {
+        if(!(box instanceof Rectangle)) throw new TypeError("Trying to add a box that was not constructed as a new Rectangle!");
 
         let currentImage = this.imageProvider.currentImage;
         if (currentImage ) {
@@ -43,7 +43,7 @@ export class AnnotationsProvider {
         }
     }
 
-    removeBox(box: Box): boolean {
+    removeBox(box: Rectangle): boolean {
         let annotation = this.getCurrentAnnotation();
 
         let i = annotation.boxes.indexOf(box);
@@ -191,13 +191,13 @@ export class Line {
                 public label: string = 'unnamed'){}
 }
 
-export class Box {
+export class Rectangle {
     constructor(public start: CoordinatesObject,
                 public end: CoordinatesObject,
                 public label: string = 'unnamed'){}
 }
 
 export class Polygon {
-    constructor(public coordinates: CoordinatesObject[],
+    constructor(public coordinates: CoordinatesObject[] = [],
                 public label: string = 'unnamed'){}
 }
