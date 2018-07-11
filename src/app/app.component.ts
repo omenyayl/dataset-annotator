@@ -7,6 +7,7 @@ import { ItemsPage } from '../pages/items/items';
 import { PlaceholderPage } from '../pages/placeholder/placeholder';
 import { FileProvider } from "../providers/file/file";
 import {ImageProvider} from "../providers/image/image";
+import {AnnotationsProvider} from "../providers/annotations/annotations";
 import { HotkeysPage } from '../pages/hotkeys/hotkeys';
 
 const SUPPORTED_EXTENSIONS = [
@@ -38,6 +39,7 @@ export class MyApp {
     private navProxy: NavProxyService,
     private fileProvider: FileProvider,
     private imageProvider: ImageProvider,
+	private annotationProvider: AnnotationsProvider,
     private menuCtrl: MenuController) {
 
     platform.ready().then(() => {
@@ -79,7 +81,7 @@ export class MyApp {
 	   .subscribe((value) => {
 		  this.fileProvider.selectedSaveFolder = value;
 		  console.log(`Saving in ${this.fileProvider.selectedSaveFolder}`);
-		  this.imageProvider.generateSaveData().subscribe((data) => {
+		  this.annotationProvider.generateSaveData().subscribe((data) => {
 			  //console.log(`${data}`);
 			  this.fileProvider.saveFiles(data).subscribe(() => {})
 		  })

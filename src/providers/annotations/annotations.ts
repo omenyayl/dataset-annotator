@@ -1,5 +1,6 @@
 import {CoordinatesObject} from "../../objects/CoordinatesObject";
 import {Injectable} from '@angular/core';
+import {Observable} from "rxjs/Observable";
 import {AnnotationObject} from "../../objects/annotation-object";
 import { ImageProvider } from "../image/image"
 import {ActionObject} from "../../objects/action-object";
@@ -181,7 +182,15 @@ export class AnnotationsProvider {
 
     public getAnnotations() {
         return this.annotations;
-    }
+	}
+
+  	generateSaveData(): Observable<any> {
+	  	return new Observable<any>((observer) => {
+			let dataObject = this.getAnnotations();
+			observer.next(dataObject);
+			observer.complete();
+		})
+	}
 
 }
 
