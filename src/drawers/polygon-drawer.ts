@@ -32,12 +32,17 @@ export class PolygonDrawer extends Drawer{
 
     drawPolygon(polygon: Polygon) {
         let color = polygon === Drawer.getSelectedElement() ? Drawer.SELECTED_COLOR : Drawer.DEFAULT_COLOR;
+
         for (let i = 0; i < polygon.coordinates.length; i++){
             if (polygon.coordinates[i+1]) {
                 super.drawCircle(polygon.coordinates[i], color);
                 super.drawLine(polygon.coordinates[i], polygon.coordinates[i+1], color);
             }
         }
+        super.drawText(polygon.label, new CoordinatesObject(
+            polygon.coordinates[0].x,
+            polygon.coordinates[0].y - 10
+        ), color);
     }
 
     addPoint(point: CoordinatesObject){

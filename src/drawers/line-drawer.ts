@@ -39,6 +39,10 @@ export class LineDrawer extends Drawer{
     renderLines(lines: Line[]){
         for(let line of lines){
             let color = line == Drawer.getSelectedElement() ? Drawer.SELECTED_COLOR : Drawer.DEFAULT_COLOR;
+            super.drawText(line.label, new CoordinatesObject(
+                (line.start.x + line.end.x) / 2,
+                (line.start.y + line.end.y) / 2 - 10
+            ), color);
             super.drawLine(line.start, line.end, color);
             super.drawCircle(line.start, color);
             super.drawCircle(line.end, color);

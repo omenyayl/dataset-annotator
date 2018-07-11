@@ -13,7 +13,12 @@ export class RectangleDrawer extends Drawer{
 
     drawAllRectangles(): void {
         for (let rectangle of this.rectangles) {
-            this.drawRectangle(rectangle, rectangle === Drawer.getSelectedElement() ? Drawer.SELECTED_COLOR : Drawer.DEFAULT_COLOR);
+            let color = rectangle === Drawer.getSelectedElement() ? Drawer.SELECTED_COLOR : Drawer.DEFAULT_COLOR;
+            super.drawText(rectangle.label, new CoordinatesObject(
+                (rectangle.start.x + rectangle.end.x) / 2,
+                Math.min(rectangle.end.y, rectangle.start.y) - 10
+            ), color);
+            this.drawRectangle(rectangle, color);
         }
     }
 

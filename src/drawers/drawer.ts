@@ -5,6 +5,7 @@ export abstract class Drawer {
     public static readonly POINT_RADIUS: number = 5;
     public static readonly SELECTED_COLOR: string = 'yellow';
     public static readonly DEFAULT_COLOR: string = 'red';
+    public static readonly FONT_SIZE: number = 15;
 
     private static oldElement: any;
 
@@ -34,6 +35,13 @@ export abstract class Drawer {
         this.context.moveTo(start.x, start.y);
         this.context.lineTo(end.x, end.y);
         this.context.stroke();
+    }
+
+    public drawText(text, location, color) {
+        this.context.font = `${Drawer.FONT_SIZE}px Arial`;
+        this.context.fillStyle = color;
+        this.context.textAlign = 'center';
+        this.context.fillText(text, location.x, location.y);
     }
 
     static getSelectedElement(): any {
