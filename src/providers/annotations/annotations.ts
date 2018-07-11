@@ -16,12 +16,7 @@ export class AnnotationsProvider {
 
     public initAnnotations(imageSrc: string) {
         if (! this.annotations[imageSrc]) {
-            this.annotations[imageSrc] = {
-                src: imageSrc,
-                lines: [],
-                boxes: [],
-                polygons: []
-            } as AnnotationObject;
+            this.annotations[imageSrc] = new AnnotationObject(imageSrc);
         }
     }
 
@@ -37,10 +32,7 @@ export class AnnotationsProvider {
     }
 
     addBox(box: Box) {
-
-        if (! box.hasOwnProperty('label')){
-            box.label = 'unnamed';
-        }
+        if(!(box instanceof Box)) throw new TypeError("Trying to add a box that was not constructed as a new Box!");
 
         let currentImage = this.imageProvider.currentImage;
         if (currentImage ) {
@@ -77,10 +69,7 @@ export class AnnotationsProvider {
     }
 
     addLine(line: Line) {
-
-        if (! line.hasOwnProperty('label')){
-            line.label = 'unnamed';
-        }
+        if(!(line instanceof Line)) throw new TypeError("Trying to add a line that was not constructed as a new Line!");
 
         let currentImage = this.imageProvider.currentImage;
         if( currentImage ) {
@@ -109,9 +98,7 @@ export class AnnotationsProvider {
     // BEGIN - POLYGON METHODS
 
     addPolygon(polygon: Polygon) {
-        if (! polygon.hasOwnProperty('label')){
-            polygon.label = 'unnamed';
-        }
+        if(!(polygon instanceof Polygon)) throw new TypeError("Trying to add a polygon that was not constructed as a new Polygon!");
 
         let currentImage = this.imageProvider.currentImage;
         if( currentImage ) {
@@ -155,18 +142,18 @@ export class AnnotationsProvider {
 }
 
 export class Line {
-    label: string = 'unnamed';
-    start: CoordinatesObject;
-    end: CoordinatesObject;
+    constructor(public start: CoordinatesObject,
+                public end: CoordinatesObject,
+                public label: string = 'unnamed'){}
 }
 
 export class Box {
-    label: string = 'unnamed';
-    start: CoordinatesObject;
-    end: CoordinatesObject;
+    constructor(public start: CoordinatesObject,
+                public end: CoordinatesObject,
+                public label: string = 'unnamed'){}
 }
 
 export class Polygon {
-    label: string = 'unnamed';
-    coordinates: CoordinatesObject[];
+    constructor(public coordinates: CoordinatesObject[],
+                public label: string = 'unnamed'){}
 }

@@ -1,6 +1,6 @@
 export class ImageObject {
-    src: string;
-    width: number;
-    height: number;
-    scale: number;
+    constructor(public src: string,
+                public width: number,
+                public height: number,
+                public scale: number){}
 }

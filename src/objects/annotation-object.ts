@@ -1,5 +1,8 @@
+import {Box, Line, Polygon} from "../providers/annotations/annotations";
+
 export class AnnotationObject{
-    lines: any[] = [];
-    boxes: any[] = [];
-    polygons: any[] = [];
+    constructor(public src: string,
+                public lines: Line[] = [],
+                public boxes: Box[] = [],
+                public polygons: Polygon[] = []){}
 }

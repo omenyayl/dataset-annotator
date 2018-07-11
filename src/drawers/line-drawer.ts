@@ -70,28 +70,14 @@ export class LineDrawer extends Drawer{
     }
 
     static isNearCoordinates(line: Line, coordinates: CoordinatesObject): boolean{
-        let distanceFromPoint1 = LineDrawer.computeLineLength({
-            start: {
-                x: line.start.x,
-                y: line.start.y
-            },
-            end: {
-                x: coordinates.x,
-                y: coordinates.y
-            }
-        } as Line);
-
-        let distanceFromPoint2 = LineDrawer.computeLineLength({
-            start: {
-                x: line.end.x,
-                y: line.end.y
-            },
-            end: {
-                x: coordinates.x,
-                y: coordinates.y
-            }
-        } as Line);
-
+        let distanceFromPoint1 = LineDrawer.computeLineLength(new Line(
+                new CoordinatesObject(line.start.x, line.start.y),
+                new CoordinatesObject(coordinates.x, coordinates.y))
+            );
+        let distanceFromPoint2 = LineDrawer.computeLineLength(new Line(
+            new CoordinatesObject(line.end.x, line.end.y),
+            new CoordinatesObject(coordinates.x, coordinates.y)
+        ));
         return distanceFromPoint1 <= POINT_RADIUS || distanceFromPoint2 <= POINT_RADIUS;
     }
 
@@ -107,10 +93,7 @@ export class LineDrawer extends Drawer{
 
 
     static getLineFromCoordinates(start: CoordinatesObject, end: CoordinatesObject): Line {
-        return {
-            start: start,
-            end: end
-        } as Line
+        return new Line(start, end);
     }
 
     selectElement(location: CoordinatesObject) : boolean {
@@ -125,16 +108,16 @@ export class LineDrawer extends Drawer{
 
     getHoveringPoint(mouse: CoordinatesObject): CoordinatesObject {
         for(let i = 0; i < this.lines.length; i++) {
-            if (LineDrawer.computeLineLength({
-                start: this.lines[i].start,
-                end: mouse
-            } as Line) < POINT_RADIUS) {
+            if (LineDrawer.computeLineLength(new Line(
+                    this.lines[i].start,
+                    mouse
+                )) <= POINT_RADIUS) {
                 return this.lines[i].start
             }
-            else if (LineDrawer.computeLineLength({
-                start: this.lines[i].end,
-                end: mouse
-            } as Line) < POINT_RADIUS) {
+            else if (LineDrawer.computeLineLength(new Line(
+                        this.lines[i].end,
+                        mouse
+                    )) <= POINT_RADIUS) {
                 return this.lines[i].end
             }
         }

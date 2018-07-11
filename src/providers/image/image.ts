@@ -47,12 +47,9 @@ export class ImageProvider {
             width *= ratio;
             height = MAX_IMAGE_HEIGHT;
         }
-        this.currentImage = {
-            src: path,
-            scale: ratio,
-            width: width,
-            height: height
-        } as ImageObject;
+        this.currentImage = new ImageObject(
+            path, width, height, ratio
+        );
 
         this.annotationsProvider.initAnnotations(this.currentImage.src);
 

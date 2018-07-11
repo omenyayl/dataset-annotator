@@ -1,7 +1,6 @@
 import {Drawer} from "./drawer";
 import {CoordinatesObject} from "../objects/CoordinatesObject";
-import {AnnotationsProvider, Line, Polygon} from "../providers/annotations/annotations";
-import {LineDrawer} from "./line-drawer";
+import {AnnotationsProvider, Polygon} from "../providers/annotations/annotations";
 
 const DEFAULT_COLOR = 'red';
 const SELECTED_COLOR = 'yellow';
@@ -49,7 +48,7 @@ export class PolygonDrawer extends Drawer{
     }
 
     isHovering(coordinates: CoordinatesObject) {
-        for (let polygon of this.polygons.concat({coordinates: this.points} as Polygon)) {
+        for (let polygon of this.polygons.concat(new Polygon(this.points))) {
             if (PolygonDrawer.isNearCoordinates(polygon, coordinates)) {
                 return true;
             }
@@ -65,9 +64,9 @@ export class PolygonDrawer extends Drawer{
 
     saveFromCoordinates(...coordinates: CoordinatesObject[]) {
         if (coordinates.length > 3) {
-            this.getAnnotationsProvider().addPolygon({
-                coordinates: coordinates
-            } as Polygon);
+            this.getAnnotationsProvider().addPolygon(new Polygon(
+                coordinates
+            ));
         }
         this.points = [];
     }
