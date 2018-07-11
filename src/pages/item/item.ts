@@ -99,7 +99,7 @@ export class ItemPage extends _DetailPage {
 	 */
   	getCurrentAnnotations(){
 	  	//let allAnnotations = [];
-		this.boxes = this.annotationsProvider.getBoxes();
+		this.boxes = this.annotationsProvider.getRectangles();
 		this.lines = this.annotationsProvider.getLines();
 	  	this.polys = this.annotationsProvider.getPolygons();
 	  	this.actions = this.annotationsProvider.getActions();
@@ -125,7 +125,7 @@ export class ItemPage extends _DetailPage {
                 successfullyRemoved = this.annotationsProvider.removeLine(itm as Line);
                 break;
             case CanvasDirectivesEnum.canvas_rect:
-                successfullyRemoved = this.annotationsProvider.removeBox(itm as Rectangle);
+                successfullyRemoved = this.annotationsProvider.removeRectangle(itm as Rectangle);
                 break;
             case CanvasDirectivesEnum.canvas_polygon:
                 successfullyRemoved = this.annotationsProvider.removePolygon(itm as Polygon);
