@@ -3,12 +3,6 @@ import {Drawer} from "./drawer";
 import {AnnotationsProvider, Line} from "../providers/annotations/annotations";
 
 
-const MIN_LINE_LENGTH = 10;
-const POINT_RADIUS = 5;
-
-const DEFAULT_COLOR = 'red';
-const SELECTED_COLOR = 'yellow';
-
 export class LineDrawer extends Drawer{
     private lines: Line[] = [];
 
@@ -24,39 +18,18 @@ export class LineDrawer extends Drawer{
     }
 
     drawFromCoordinates(start: CoordinatesObject, end: CoordinatesObject){
-        let line = LineDrawer.getLineFromCoordinates(start, end);
-        this.drawLine(line);
+        let color = LineDrawer.getLineFromCoordinates(start, end) == Drawer.getSelectedElement() ? Drawer.SELECTED_COLOR : Drawer.DEFAULT_COLOR;
+        super.drawLine(start, end, color);
+        super.drawCircle(start, color);
+        super.drawCircle(end, color);
     }
 
     saveLine(line: Line){
-        if (LineDrawer.computeLineLength(line) > MIN_LINE_LENGTH){
+        if (Drawer.computeDistance(line.start, line.end) > Drawer.POINT_RADIUS * 2){
             this.getAnnotationsProvider().addLine(line);
-            this.drawLine(line);
+            let color = line == Drawer.getSelectedElement() ? Drawer.SELECTED_COLOR : Drawer.DEFAULT_COLOR;
+            super.drawLine(line.start, line.end, color);
         }
-    }
-
-    drawLine(line: Line){
-        let color = line == Drawer.getSelectedElement() ? SELECTED_COLOR : DEFAULT_COLOR;
-
-        this.drawCircle(line.start.x, line.start.y, color);
-        super.getContext().beginPath();
-        super.getContext().moveTo(line.start.x, line.start.y);
-        super.getContext().lineTo(line.end.x, line.end.y);
-        super.getContext().strokeStyle = color;
-        super.getContext().stroke();
-        this.drawCircle(line.end.x, line.end.y, color);
-    }
-
-    drawCircle(x: number, y: number, color = DEFAULT_COLOR){
-        super.getContext().beginPath();
-        super.getContext().fillStyle = color;
-        super.getContext().arc(x, y, POINT_RADIUS, 0, 2 * Math.PI);
-        super.getContext().fill();
-        super.getContext().stroke();
-    }
-
-    static computeLineLength(line: Line){
-        return Math.sqrt(Math.pow(line.end.x - line.start.x, 2) + Math.pow(line.end.y - line.start.y, 2));
     }
 
     render(){
@@ -65,20 +38,17 @@ export class LineDrawer extends Drawer{
 
     renderLines(lines: Line[]){
         for(let line of lines){
-            this.drawLine(line);
+            let color = line == Drawer.getSelectedElement() ? Drawer.SELECTED_COLOR : Drawer.DEFAULT_COLOR;
+            super.drawLine(line.start, line.end, color);
+            super.drawCircle(line.start, color);
+            super.drawCircle(line.end, color);
         }
     }
 
     static isNearCoordinates(line: Line, coordinates: CoordinatesObject): boolean{
-        let distanceFromPoint1 = LineDrawer.computeLineLength(new Line(
-                new CoordinatesObject(line.start.x, line.start.y),
-                new CoordinatesObject(coordinates.x, coordinates.y))
-            );
-        let distanceFromPoint2 = LineDrawer.computeLineLength(new Line(
-            new CoordinatesObject(line.end.x, line.end.y),
-            new CoordinatesObject(coordinates.x, coordinates.y)
-        ));
-        return distanceFromPoint1 <= POINT_RADIUS || distanceFromPoint2 <= POINT_RADIUS;
+        let distanceFromPoint1 = Drawer.computeDistance(line.start, coordinates);
+        let distanceFromPoint2 = Drawer.computeDistance(line.end, coordinates);
+        return distanceFromPoint1 <= Drawer.POINT_RADIUS || distanceFromPoint2 <= Drawer.POINT_RADIUS;
     }
 
     isHovering(coordinates: CoordinatesObject): boolean {
