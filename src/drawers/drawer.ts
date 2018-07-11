@@ -1,9 +1,10 @@
 import {CoordinatesObject} from "../objects/CoordinatesObject";
 import {AnnotationsProvider, Rectangle, Line, Polygon} from "../providers/annotations/annotations";
 
-const POINT_RADIUS = 5;
-
 export abstract class Drawer {
+    public static readonly POINT_RADIUS: number = 5;
+    public static readonly SELECTED_COLOR: string = 'yellow';
+    public static readonly DEFAULT_COLOR: string = 'red';
 
     private static oldElement: any;
 
@@ -17,6 +18,22 @@ export abstract class Drawer {
 
     public getAnnotationsProvider() {
         return this.annotationsProvider;
+    }
+
+    public drawCircle(point: CoordinatesObject, color = Drawer.DEFAULT_COLOR){
+        this.context.beginPath();
+        this.context.fillStyle = color;
+        this.context.arc(point.x, point.y, Drawer.POINT_RADIUS, 0, 2 * Math.PI);
+        this.context.fill();
+        this.context.stroke();
+    }
+
+    public drawLine(start, end, color = Drawer.DEFAULT_COLOR): void {
+        this.context.beginPath();
+        this.context.strokeStyle = color;
+        this.context.moveTo(start.x, start.y);
+        this.context.lineTo(end.x, end.y);
+        this.context.stroke();
     }
 
     static getSelectedElement(): any {
@@ -54,13 +71,13 @@ export abstract class Drawer {
         if (Drawer.computeDistance(
             Drawer.oldElement.start,
             point
-        ) <= POINT_RADIUS) {
+        ) <= Drawer.POINT_RADIUS) {
             selectedElement.start = mouse;
         }
         else if (Drawer.computeDistance(
             Drawer.oldElement.end,
             point
-        ) <= POINT_RADIUS) {
+        ) <= Drawer.POINT_RADIUS) {
             selectedElement.end = mouse;
         }
     }
@@ -74,26 +91,26 @@ export abstract class Drawer {
         if (Drawer.computeDistance(
             Drawer.oldElement.start,
             point
-        ) <= POINT_RADIUS) {
+        ) <= Drawer.POINT_RADIUS) {
             selectedElement.start = mouse;
         }
         else if (Drawer.computeDistance(
             Drawer.oldElement.end,
             point
-        ) <= POINT_RADIUS) {
+        ) <= Drawer.POINT_RADIUS) {
             selectedElement.end = mouse;
         }
         else if (Drawer.computeDistance(
             new CoordinatesObject(Drawer.oldElement.end.x, Drawer.oldElement.start.y),
             point
-        ) <= POINT_RADIUS) {
+        ) <= Drawer.POINT_RADIUS) {
             selectedElement.start.y = mouse.y;
             selectedElement.end.x = mouse.x;
         }
         else if (Drawer.computeDistance(
             new CoordinatesObject(Drawer.oldElement.start.x, Drawer.oldElement.end.y),
             point
-        ) <= POINT_RADIUS) {
+        ) <= Drawer.POINT_RADIUS) {
             selectedElement.start.x = mouse.x;
             selectedElement.end.y = mouse.y;
         }
@@ -109,7 +126,7 @@ export abstract class Drawer {
             }
         }
         for(let i = 0; i < Drawer.oldElement.coordinates.length; i++) {
-            if (Drawer.computeDistance(Drawer.oldElement.coordinates[i], point) <= POINT_RADIUS){
+            if (Drawer.computeDistance(Drawer.oldElement.coordinates[i], point) <= Drawer.POINT_RADIUS){
                 selectedElement.coordinates[i] = mouse;
             }
         }

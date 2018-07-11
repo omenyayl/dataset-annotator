@@ -37,6 +37,7 @@ export class CanvasEditorDirective {
         this.element = (<HTMLCanvasElement>el.nativeElement);
         this.context = this.element.getContext('2d');
 
+        // Initialize our drawing tools
         this.lineDrawer = new LineDrawer(this.context, annotationsProvider);
         this.rectangleDrawer = new RectangleDrawer(this.context, annotationsProvider);
         this.polygonDrawer = new PolygonDrawer(this.context, annotationsProvider);
@@ -49,6 +50,9 @@ export class CanvasEditorDirective {
         this.subscribeToEvents();
     }
 
+    /**
+     * Subscriber that re-renders the canvas.
+     */
     subscribeToEvents() {
 	  	this.events.subscribe('render-canvas', () => {
             this.render();
@@ -68,8 +72,7 @@ export class CanvasEditorDirective {
 
     @HostListener('click', ['$event']) onMouseClick(event) {
 
-        console.log(this.start);
-
+        // The user releases the mouse button to stop dragging the held point
         if (this.isPointHeld && ! this.isDrawing) {
             this.isPointHeld = false;
             Drawer.finishMovingSelectedElement();
@@ -78,8 +81,8 @@ export class CanvasEditorDirective {
 
         let mouseCoordinates = {x: event.offsetX, y: event.offsetY} as CoordinatesObject;
 
+        // initializes the starting position when the first click is found
         if (!this.isDrawing) {
-            console.log('just started drawing');
             this.start = {
                 x: event.offsetX,
                 y: event.offsetY
@@ -87,6 +90,7 @@ export class CanvasEditorDirective {
 
             this.isDrawing = true;
 
+            // Adding the initial starting point to the polygon
             if (this.imageProvider.selectedCanvasDirective === CanvasDirectivesEnum.canvas_polygon) {
                 this.polygonDrawer.addPoint(this.start);
             }
@@ -94,6 +98,8 @@ export class CanvasEditorDirective {
             this.render(); // re-render whatever was selected
         }
 
+
+        // Save point when clicked the second time
         else {
 
             switch (this.imageProvider.selectedCanvasDirective){
@@ -113,7 +119,6 @@ export class CanvasEditorDirective {
                         this.polygonDrawer.saveFromCoordinates(...this.polygonDrawer.getPoints());
                         this.render();
                         this.isDrawing = false;
-                        console.log('saving coords');
                     } else {
                         this.polygonDrawer.addPoint(mouseCoordinates);
                     }
@@ -125,8 +130,12 @@ export class CanvasEditorDirective {
 
     @HostListener('mousedown', ['$event']) onMouseDown(event) {
         let mouseCoordinates = {x: event.offsetX, y: event.offsetY};
+
+        // Select the potentially hovering element
         let isDraggingPoint = this.selectElement(mouseCoordinates);
 
+
+        // if an element is selected, initialize the initial held point
         if (isDraggingPoint) {
             this.heldPoint = mouseCoordinates;
             this.render(); // re-render the selected element
@@ -145,6 +154,7 @@ export class CanvasEditorDirective {
             this.renderer.setStyle(this.element, 'cursor', 'default');
         }
 
+        // Draw the element as the mouse moves
         if (this.isDrawing) {
 
             this.render();
@@ -161,22 +171,30 @@ export class CanvasEditorDirective {
                     break;
             }
         }
+
+        // if the user is not drawing but instead is holding a point, then move the point
         else if (this.isPointHeld) {
             Drawer.moveSelectedElement(this.heldPoint, mouseCoordinates);
             this.render();
         }
     }
 
-    @HostListener('mouseup', ['$event']) onMouseUp(event) {
-
-    }
-
+    /**
+     * Checks if there is an element under the mouse cursor
+     * @param mouseCoordinates
+     * @returns {boolean}
+     */
     checkIfHovering(mouseCoordinates): boolean {
         return this.lineDrawer.isHovering(mouseCoordinates) ||
             this.rectangleDrawer.isHovering(mouseCoordinates) ||
             this.polygonDrawer.isHovering(mouseCoordinates);
     }
 
+    /**
+     * If there is an element under the cursor, selects that element.
+     * @param mouseCoordinates
+     * @returns {boolean}
+     */
     selectElement(mouseCoordinates): boolean {
         return this.lineDrawer.selectElement(mouseCoordinates) ||
             this.rectangleDrawer.selectElement(mouseCoordinates) ||
