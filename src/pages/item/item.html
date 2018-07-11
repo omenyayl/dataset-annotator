@@ -64,8 +64,9 @@
 				  	<h1>Boxes</h1>
 					<div class="box-itm" *ngFor="let itm of boxes">
 						<div class="box-input" *ngIf="isSelected(itm)">
-						  <ion-input class="box-input-label" [(ngModel)]="itm.label"></ion-input><p class="box-div">|</p>
-					  		<ion-input class="box-input-id" [(ngModel)]="itm._id" type="number"></ion-input>
+						  	<ion-input class="box-input-label" [(ngModel)]="itm.label"></ion-input>
+							<p class="box-div">|</p>
+							<ion-input class="box-input-id" [(ngModel)]="itm._id" type="number" placeholder=`${itm._id}`></ion-input>
 						</div>
 						<button class="box-input" ion-item *ngIf="!isSelected(itm)" (click)="itemSelect(itm)">
 							{{ itm.label }} | {{itm._id}}
