@@ -1,7 +1,7 @@
+import {CoordinatesObject} from "../../objects/CoordinatesObject";
 import {Injectable} from '@angular/core';
 import {AnnotationObject} from "../../objects/annotation-object";
 import { ImageProvider } from "../image/image"
-import {CoordinatesObject} from "../../objects/CoordinatesObject";
 import {ActionObject} from "../../objects/action-object";
 
 /**
@@ -11,7 +11,7 @@ import {ActionObject} from "../../objects/action-object";
 export class AnnotationsProvider {
   	private annotations: AnnotationObject[] = [];
   	private actions: ActionObject[] = [];
-    public static selectedElement;
+    public static selectedElement: Box | Line | Polygon;
     public static selectedAction;
 
     constructor(private imageProvider: ImageProvider) {

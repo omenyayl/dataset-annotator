@@ -2,8 +2,6 @@ import {CoordinatesObject} from "../objects/CoordinatesObject";
 import {Drawer} from "./drawer";
 import {AnnotationsProvider, Box} from "../providers/annotations/annotations";
 
-
-
 const DEFAULT_COLOR = 'red';
 const SELECTED_COLOR = 'yellow';
 const POINT_RADIUS = 5;
@@ -41,8 +39,8 @@ export class RectangleDrawer extends Drawer{
 
         this.drawCircle({x: box.start.x, y: box.start.y}, color);
         this.drawCircle({x: box.end.x, y: box.end.y}, color);
-        // this.drawCircle({x: box.end.x, y: box.start.y}, color);
-        // this.drawCircle({x: box.start.x, y: box.end.y}, color);
+        this.drawCircle({x: box.end.x, y: box.start.y}, color);
+        this.drawCircle({x: box.start.x, y: box.end.y}, color);
     }
 
 
