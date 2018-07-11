@@ -106,22 +106,5 @@ export class LineDrawer extends Drawer{
         return false;
     }
 
-    getHoveringPoint(mouse: CoordinatesObject): CoordinatesObject {
-        for(let i = 0; i < this.lines.length; i++) {
-            if (LineDrawer.computeLineLength(new Line(
-                    this.lines[i].start,
-                    mouse
-                )) <= POINT_RADIUS) {
-                return this.lines[i].start
-            }
-            else if (LineDrawer.computeLineLength(new Line(
-                        this.lines[i].end,
-                        mouse
-                    )) <= POINT_RADIUS) {
-                return this.lines[i].end
-            }
-        }
-        return null;
-    }
 
 }

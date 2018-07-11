@@ -1,20 +1,18 @@
 import {CoordinatesObject} from "../objects/CoordinatesObject";
 import {Drawer} from "./drawer";
-import {AnnotationsProvider, Box} from "../providers/annotations/annotations";
-
-
+import {AnnotationsProvider, Rectangle} from "../providers/annotations/annotations";
 
 const DEFAULT_COLOR = 'red';
 const SELECTED_COLOR = 'yellow';
 const POINT_RADIUS = 5;
 
 export class RectangleDrawer extends Drawer{
-    private boxes: Box[];
+    private rectangles: Rectangle[];
 
     constructor(context: CanvasRenderingContext2D,
                 annotationsProvider: AnnotationsProvider) {
         super(context, annotationsProvider);
-        this.boxes = super.getAnnotationsProvider().getBoxes() // reference!
+        this.rectangles = super.getAnnotationsProvider().getRectangles() // reference!
     }
 
     drawLine(start, end, color = DEFAULT_COLOR): void {
@@ -26,23 +24,23 @@ export class RectangleDrawer extends Drawer{
 
     }
 
-    drawAllBoxes(): void {
-        for (let box of this.boxes) {
-            this.drawBox(box, box === Drawer.getSelectedElement() ? SELECTED_COLOR : DEFAULT_COLOR);
+    drawAllRectangles(): void {
+        for (let rectangle of this.rectangles) {
+            this.drawRectangle(rectangle, rectangle === Drawer.getSelectedElement() ? SELECTED_COLOR : DEFAULT_COLOR);
         }
     }
 
-    drawBox(box, color = DEFAULT_COLOR): void {
-        color = Drawer.getSelectedElement() === box ? SELECTED_COLOR : DEFAULT_COLOR;
-        this.drawLine({x: box.start.x, y: box.start.y}, {x: box.start.x, y: box.end.y}, color);
-        this.drawLine({x: box.start.x, y: box.start.y}, {x: box.end.x, y: box.start.y}, color);
-        this.drawLine({x: box.end.x, y: box.start.y}, {x: box.end.x, y: box.end.y}, color);
-        this.drawLine({x: box.start.x, y: box.end.y}, {x: box.end.x, y: box.end.y}, color);
+    drawRectangle(rectangle: Rectangle, color = DEFAULT_COLOR): void {
+        color = Drawer.getSelectedElement() === rectangle ? SELECTED_COLOR : DEFAULT_COLOR;
+        this.drawLine({x: rectangle.start.x, y: rectangle.start.y}, {x: rectangle.start.x, y: rectangle.end.y}, color);
+        this.drawLine({x: rectangle.start.x, y: rectangle.start.y}, {x: rectangle.end.x, y: rectangle.start.y}, color);
+        this.drawLine({x: rectangle.end.x, y: rectangle.start.y}, {x: rectangle.end.x, y: rectangle.end.y}, color);
+        this.drawLine({x: rectangle.start.x, y: rectangle.end.y}, {x: rectangle.end.x, y: rectangle.end.y}, color);
 
-        this.drawCircle({x: box.start.x, y: box.start.y}, color);
-        this.drawCircle({x: box.end.x, y: box.end.y}, color);
-        // this.drawCircle({x: box.end.x, y: box.start.y}, color);
-        // this.drawCircle({x: box.start.x, y: box.end.y}, color);
+        this.drawCircle({x: rectangle.start.x, y: rectangle.start.y}, color);
+        this.drawCircle({x: rectangle.end.x, y: rectangle.end.y}, color);
+        this.drawCircle({x: rectangle.end.x, y: rectangle.start.y}, color);
+        this.drawCircle({x: rectangle.start.x, y: rectangle.end.y}, color);
     }
 
 
@@ -58,25 +56,25 @@ export class RectangleDrawer extends Drawer{
         if (coordinates.length < 2) {
             throw new RangeError(`RectangleDrawer.drawFromCoordinates expected 2 coordinates, but only received ${coordinates.length}`);
         }
-        this.drawBox(new Box(
+        this.drawRectangle(new Rectangle(
             coordinates[0],
             coordinates[1]
         ));
     }
 
     render() {
-        this.drawAllBoxes();
+        this.drawAllRectangles();
     }
 
     saveFromCoordinates(...coordinates: CoordinatesObject[]) {
-        let newBox = new Box(
+        let newRectangle = new Rectangle(
             coordinates[0],
             coordinates[1]
         );
 
         if (RectangleDrawer.computeDistance(coordinates[0], coordinates[1]) > POINT_RADIUS * 2){
-            this.getAnnotationsProvider().addBox(newBox);
-            this.drawBox(newBox);
+            this.getAnnotationsProvider().addRectangle(newRectangle);
+            this.drawRectangle(newRectangle);
         }
 
     }
@@ -88,8 +86,8 @@ export class RectangleDrawer extends Drawer{
     isHovering(coordinates: CoordinatesObject){
 
         let hovering = false;
-        for(let box of this.boxes){
-            if(RectangleDrawer.isNearCoordinates(box, coordinates)) {
+        for(let rectangle of this.rectangles){
+            if(RectangleDrawer.isNearCoordinates(rectangle, coordinates)) {
                 hovering = true;
             }
         }
@@ -98,23 +96,23 @@ export class RectangleDrawer extends Drawer{
 
     }
 
-    static isNearCoordinates(box: Box, location: CoordinatesObject) : boolean {
+    static isNearCoordinates(rectangle: Rectangle, location: CoordinatesObject) : boolean {
         let pointCoordinates = [
             {
-                x: box.start.x,
-                y: box.start.y
+                x: rectangle.start.x,
+                y: rectangle.start.y
             },
             {
-                x: box.end.x,
-                y: box.end.y
+                x: rectangle.end.x,
+                y: rectangle.end.y
             },
             {
-                x: box.end.x,
-                y: box.start.y
+                x: rectangle.end.x,
+                y: rectangle.start.y
             },
             {
-                x: box.start.x,
-                y: box.end.y
+                x: rectangle.start.x,
+                y: rectangle.end.y
             }];
         for(let point of pointCoordinates){
             if (RectangleDrawer.computeDistance(location, point) < POINT_RADIUS){
@@ -125,25 +123,15 @@ export class RectangleDrawer extends Drawer{
     }
 
     selectElement(coordinates: CoordinatesObject): boolean {
-        for (let box of this.boxes) {
-            if (RectangleDrawer.isNearCoordinates(box, coordinates)) {
-                Drawer.setSelectedElement(box);
+        for (let rectangle of this.rectangles) {
+            if (RectangleDrawer.isNearCoordinates(rectangle, coordinates)) {
+                Drawer.setSelectedElement(rectangle);
                 return true;
             }
         }
         return false;
     }
 
-    getHoveringPoint(mouse: CoordinatesObject): CoordinatesObject {
-        for(let i = 0; i < this.boxes.length; i++){
-            if (RectangleDrawer.computeDistance(this.boxes[i].start, mouse) < POINT_RADIUS) {
-                return this.boxes[i].start;
-            }
-            else if (RectangleDrawer.computeDistance(this.boxes[i].end, mouse) < POINT_RADIUS) {
-                return this.boxes[i].end;
-            }
-        }
-        return null;
-    }
+
 
 }

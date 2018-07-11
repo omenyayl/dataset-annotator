@@ -26,9 +26,8 @@ export class CanvasEditorDirective {
     private readonly element: HTMLCanvasElement;
     private isDrawing: boolean;
     private isPointHeld: boolean;
+    private heldPoint: CoordinatesObject;
     private start: CoordinatesObject;
-    private hoveringPoint = null;
-
 
     constructor(el: ElementRef,
                 annotationsProvider: AnnotationsProvider,
@@ -69,32 +68,30 @@ export class CanvasEditorDirective {
 
     @HostListener('click', ['$event']) onMouseClick(event) {
 
-        if (this.isPointHeld) return; // Don't draw anything if the user is trying to move points
+        console.log(this.start);
+
+        if (this.isPointHeld && ! this.isDrawing) {
+            this.isPointHeld = false;
+            Drawer.finishMovingSelectedElement();
+            return;
+        }
 
         let mouseCoordinates = {x: event.offsetX, y: event.offsetY} as CoordinatesObject;
 
-        if (this.isDrawing === false) {
+        if (!this.isDrawing) {
+            console.log('just started drawing');
+            this.start = {
+                x: event.offsetX,
+                y: event.offsetY
+            };
 
-            let selectedElement = this.lineDrawer.selectElement(mouseCoordinates) ||
-                                    this.rectangleDrawer.selectElement(mouseCoordinates) ||
-                                    this.polygonDrawer.selectElement(mouseCoordinates);
+            this.isDrawing = true;
 
-            if (!selectedElement) {
-                this.start = {
-                    x: event.offsetX,
-                    y: event.offsetY
-                };
-
-                this.isDrawing = true;
-
-                if (this.imageProvider.selectedCanvasDirective === CanvasDirectivesEnum.canvas_polygon) {
-                    this.polygonDrawer.addPoint(this.start);
-                }
-
-            } else {
-                this.render(); // re-render whatever was selected
+            if (this.imageProvider.selectedCanvasDirective === CanvasDirectivesEnum.canvas_polygon) {
+                this.polygonDrawer.addPoint(this.start);
             }
 
+            this.render(); // re-render whatever was selected
         }
 
         else {
@@ -116,36 +113,37 @@ export class CanvasEditorDirective {
                         this.polygonDrawer.saveFromCoordinates(...this.polygonDrawer.getPoints());
                         this.render();
                         this.isDrawing = false;
+                        console.log('saving coords');
                     } else {
                         this.polygonDrawer.addPoint(mouseCoordinates);
                     }
                     break;
             }
+
         }
     }
 
     @HostListener('mousedown', ['$event']) onMouseDown(event) {
         let mouseCoordinates = {x: event.offsetX, y: event.offsetY};
-        let isDraggingPoint = (this.hoveringPoint = this.lineDrawer.getHoveringPoint(mouseCoordinates)) ||
-                                (this.hoveringPoint = this.rectangleDrawer.getHoveringPoint(mouseCoordinates)) ||
-                                (this.hoveringPoint = this.polygonDrawer.getHoveringPoint(mouseCoordinates));
+        let isDraggingPoint = this.selectElement(mouseCoordinates);
 
         if (isDraggingPoint) {
+            this.heldPoint = mouseCoordinates;
+            this.render(); // re-render the selected element
             this.isPointHeld = true;
         }
     }
 
     @HostListener('mousemove', ['$event']) onMouseMove(event) {
+        let mouseCoordinates = {x: event.offsetX, y: event.offsetY} as CoordinatesObject;
 
-        let hovering = this.checkIfHovering(event);
+        let hovering = this.checkIfHovering(mouseCoordinates);
 
         if (hovering) {
             this.renderer.setStyle(this.element, 'cursor', 'pointer');
         } else {
             this.renderer.setStyle(this.element, 'cursor', 'default');
         }
-
-        let mouseCoordinates = {x: event.offsetX, y: event.offsetY} as CoordinatesObject;
 
         if (this.isDrawing) {
 
@@ -164,21 +162,25 @@ export class CanvasEditorDirective {
             }
         }
         else if (this.isPointHeld) {
-            Drawer.movePoint(this.hoveringPoint, mouseCoordinates);
+            Drawer.moveSelectedElement(this.heldPoint, mouseCoordinates);
             this.render();
         }
     }
 
     @HostListener('mouseup', ['$event']) onMouseUp(event) {
-        if (this.isPointHeld && ! this.isDrawing) {
-            this.isPointHeld = false;
-        }
+
     }
 
-    checkIfHovering(event): boolean {
-        return this.lineDrawer.isHovering({x: event.offsetX, y: event.offsetY}) ||
-            this.rectangleDrawer.isHovering({x: event.offsetX, y: event.offsetY}) ||
-            this.polygonDrawer.isHovering({x: event.offsetX, y: event.offsetY});
+    checkIfHovering(mouseCoordinates): boolean {
+        return this.lineDrawer.isHovering(mouseCoordinates) ||
+            this.rectangleDrawer.isHovering(mouseCoordinates) ||
+            this.polygonDrawer.isHovering(mouseCoordinates);
+    }
+
+    selectElement(mouseCoordinates): boolean {
+        return this.lineDrawer.selectElement(mouseCoordinates) ||
+            this.rectangleDrawer.selectElement(mouseCoordinates) ||
+            this.polygonDrawer.selectElement(mouseCoordinates);
     }
 
 }
