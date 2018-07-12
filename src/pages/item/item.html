@@ -36,27 +36,26 @@
 
 	<div class="row">
 		<div class="col" class="image-canvas-div">
-			<img class="img-position"
-				 src="{{getImageSrc()}}"
-				 [src]="sanitizer.bypassSecurityTrustResourceUrl(getImageSrc())"
-				 width="{{getCurrentImage().width}}"
-				 height="{{getCurrentImage().height}}"/>
-			<canvas
-					class="canvas-position"
-					width="{{getCurrentImage().width}}"
-					height="{{getCurrentImage().height}}"
-					canvas-editor></canvas>
+			<!--<img class="img-position"-->
+				 <!--src="{{getImageSrc()}}"-->
+				 <!--[src]="sanitizer.bypassSecurityTrustResourceUrl(getImageSrc())"-->
+				 <!--width="{{getCurrentImage().width}}"-->
+				 <!--height="{{getCurrentImage().height}}"/>-->
+			<!--<canvas-->
+					<!--class="canvas-position"-->
+					<!--width="{{getCurrentImage().width}}"-->
+					<!--height="{{getCurrentImage().height}}"-->
+					<!--canvas-editor></canvas>-->
+            <annotator></annotator>
 		</div>
 
 		<div class="col">
-			<ion-list-header>Objects</ion-list-header>
+			<ion-list-header>{{getSelectedCanvasDirective().toString()}}</ion-list-header>
 			<ion-scroll scrollY="true" style="height:40%">
 				<ion-list scroll="true">
-					<ion-item *ngFor="let itm of lines">
-						<ion-label>
-							{{itm.label}}
-						</ion-label>
-						<ion-icon class="icon-button" name="trash" (click)="itemDelete(itm)" item-end></ion-icon>
+					<ion-item *ngFor="let itm of getObjects()">
+                        <inplace-input [(value)]="itm.label"></inplace-input>
+                        <ion-icon class="icon-button" name="trash" (click)="itemDelete(itm)" item-end></ion-icon>
 					</ion-item>
 				</ion-list>
 			</ion-scroll>

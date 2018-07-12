@@ -154,6 +154,17 @@ export class ItemPage extends _DetailPage {
 		return (AnnotationsProvider.selectedAction === itm);
 	}
 
+	getObjects() {
+        switch (this.getSelectedCanvasDirective()){
+            case CanvasDirectivesEnum.canvas_line:
+                return this.annotationsProvider.getLines();
+            case CanvasDirectivesEnum.canvas_rect:
+                return this.annotationsProvider.getRectangles();
+            case CanvasDirectivesEnum.canvas_polygon:
+                return this.annotationsProvider.getPolygons();
+        }
+    }
+
 	renderCanvas() {
         this.events.publish('render-canvas');
     }

@@ -17,6 +17,7 @@ import { HotkeysPage } from '../pages/hotkeys/hotkeys';
 import { HotkeyModule } from 'angular2-hotkeys';
 import { AnnotationsProvider } from '../providers/annotations/annotations';
 import {InplaceInputComponent} from "../components/inplace-input/inplace-input";
+import {AnnotatorComponent} from "../components/annotator/annotator";
 
 @NgModule({
     declarations: [
@@ -26,7 +27,8 @@ import {InplaceInputComponent} from "../components/inplace-input/inplace-input";
         PlaceholderPage,
         CanvasEditorDirective,
         HotkeysPage,
-        InplaceInputComponent
+        InplaceInputComponent,
+        AnnotatorComponent
     ],
     imports: [
         BrowserModule,
