@@ -60,7 +60,7 @@ export class ItemPage extends _DetailPage {
 
         this.hotkeyProvider.hotkeys.subscribe(value => {
             this.updateHotkeys(value);
-        })
+        });
 
         this.imageProvider.initImage(currentImagePath as string, this.annotationsProvider);
         this.getCurrentAnnotations();
@@ -120,16 +120,14 @@ export class ItemPage extends _DetailPage {
 
 	itemDelete(itm){
   	    let successfullyRemoved = false;
-  	    switch(this.getSelectedCanvasDirective()) {
-            case CanvasDirectivesEnum.canvas_line:
-                successfullyRemoved = this.annotationsProvider.removeLine(itm as Line);
-                break;
-            case CanvasDirectivesEnum.canvas_rect:
-                successfullyRemoved = this.annotationsProvider.removeRectangle(itm as Rectangle);
-                break;
-            case CanvasDirectivesEnum.canvas_polygon:
-                successfullyRemoved = this.annotationsProvider.removePolygon(itm as Polygon);
-                break;
+  	    if (itm instanceof Line) {
+  	        successfullyRemoved = this.annotationsProvider.removeLine(itm);
+        }
+        else if(itm instanceof Rectangle) {
+            successfullyRemoved = this.annotationsProvider.removeRectangle(itm);
+        }
+        else if(itm instanceof Polygon) {
+            successfullyRemoved = this.annotationsProvider.removePolygon(itm);
         }
 
         if (successfullyRemoved) {
@@ -147,7 +145,6 @@ export class ItemPage extends _DetailPage {
 	}
 
   	actionSelect(itm){
-		console.log('Selected new action...');
 		this.annotationsProvider.selectAction(itm);
 	}
 

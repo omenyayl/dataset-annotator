@@ -2,14 +2,10 @@ import {Drawer} from "./drawer";
 import {CoordinatesObject} from "../objects/CoordinatesObject";
 import {AnnotationsProvider, Polygon} from "../providers/annotations/annotations";
 
-const DEFAULT_COLOR = 'red';
-const SELECTED_COLOR = 'yellow';
-const POINT_RADIUS = 5;
-
 export class PolygonDrawer extends Drawer{
     private polygons: Polygon[];
 
-    private points: CoordinatesObject[] = [];
+    private points: CoordinatesObject[] = []; // currently drawing polygon's points
 
     constructor(context: CanvasRenderingContext2D,
                 annotationsProvider: AnnotationsProvider){
@@ -20,13 +16,14 @@ export class PolygonDrawer extends Drawer{
     drawFromCoordinates(start: CoordinatesObject, mouse: CoordinatesObject) {
 
         for (let i = 0; i < this.points.length; i++){
+            let color = i === 0 ? 'white' : Drawer.DEFAULT_COLOR;
             if (this.points[i+1]) {
-                this.drawCircle(this.points[i]);
-                this.drawLine(this.points[i], this.points[i+1]);
+                super.drawCircle(this.points[i], color);
+                super.drawLine(this.points[i], this.points[i+1]);
             }
             else {
-                this.drawCircle(this.points[i]);
-                this.drawLine(this.points[i], mouse);
+                super.drawCircle(this.points[i], color);
+                super.drawLine(this.points[i], mouse);
             }
         }
 
@@ -34,13 +31,18 @@ export class PolygonDrawer extends Drawer{
     }
 
     drawPolygon(polygon: Polygon) {
-        let color = polygon === Drawer.getSelectedElement() ? SELECTED_COLOR : DEFAULT_COLOR;
+        let color = polygon === Drawer.getSelectedElement() ? Drawer.SELECTED_COLOR : Drawer.DEFAULT_COLOR;
+
         for (let i = 0; i < polygon.coordinates.length; i++){
             if (polygon.coordinates[i+1]) {
-                this.drawCircle(polygon.coordinates[i], color);
-                this.drawLine(polygon.coordinates[i], polygon.coordinates[i+1], color);
+                super.drawCircle(polygon.coordinates[i], color);
+                super.drawLine(polygon.coordinates[i], polygon.coordinates[i+1], color);
             }
         }
+        super.drawText(polygon.label, new CoordinatesObject(
+            polygon.coordinates[0].x,
+            polygon.coordinates[0].y - 10
+        ), color);
     }
 
     addPoint(point: CoordinatesObject){
@@ -81,30 +83,9 @@ export class PolygonDrawer extends Drawer{
         return false;
     }
 
-    drawLine(start, end, color = DEFAULT_COLOR): void {
-        super.getContext().beginPath();
-        super.getContext().strokeStyle = color;
-        super.getContext().moveTo(start.x, start.y);
-        super.getContext().lineTo(end.x, end.y);
-        super.getContext().stroke();
-
-    }
-
-    drawCircle(coordinates: CoordinatesObject, color = DEFAULT_COLOR){
-        super.getContext().beginPath();
-        super.getContext().fillStyle = color;
-        super.getContext().arc(coordinates.x, coordinates.y, POINT_RADIUS, 0, 2 * Math.PI);
-        super.getContext().fill();
-        super.getContext().stroke();
-    }
-
-    static computeDistance(from: CoordinatesObject, to: CoordinatesObject){
-        return Math.sqrt(Math.pow(to.x - from.x, 2) + Math.pow(to.y - from.y, 2));
-    }
-
     static isNearCoordinates(polygon: Polygon, coords: CoordinatesObject) {
         for (let point of polygon.coordinates) {
-            if (PolygonDrawer.computeDistance(point, coords) < POINT_RADIUS) {
+            if (Drawer.computeDistance(point, coords) < Drawer.POINT_RADIUS) {
                 return true;
             }
         }
@@ -112,7 +93,7 @@ export class PolygonDrawer extends Drawer{
     }
 
     isNearStartPoint(mouse: CoordinatesObject): boolean{
-        return this.points[0] && PolygonDrawer.computeDistance(this.points[0], mouse) <= POINT_RADIUS;
+        return this.points[0] && Drawer.computeDistance(this.points[0], mouse) <= Drawer.POINT_RADIUS;
 
     }
 
