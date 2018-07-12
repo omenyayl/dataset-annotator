@@ -3,8 +3,8 @@ import {AnnotationsProvider, Rectangle, Line, Polygon} from "../providers/annota
 
 export abstract class Drawer {
     public static readonly POINT_RADIUS: number = 5;
-    public static readonly SELECTED_COLOR: string = 'yellow';
-    public static readonly DEFAULT_COLOR: string = 'red';
+    public static readonly SELECTED_COLOR: string = '#05b7f3';
+    public static readonly DEFAULT_COLOR: string = '#4c50ed';
     public static readonly FONT_SIZE: number = 15;
 
     private static oldElement: any;

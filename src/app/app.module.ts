@@ -18,6 +18,7 @@ import { HotkeyModule } from 'angular2-hotkeys';
 import { AnnotationsProvider } from '../providers/annotations/annotations';
 import {InplaceInputComponent} from "../components/inplace-input/inplace-input";
 import {AnnotatorComponent} from "../components/annotator/annotator";
+import {ObjectInputComponent} from "../components/object-input/object-input";
 
 @NgModule({
     declarations: [
@@ -28,6 +29,7 @@ import {AnnotatorComponent} from "../components/annotator/annotator";
         CanvasEditorDirective,
         HotkeysPage,
         InplaceInputComponent,
+        ObjectInputComponent,
         AnnotatorComponent
     ],
     imports: [

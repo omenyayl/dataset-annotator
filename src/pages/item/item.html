@@ -52,9 +52,9 @@
 		<div class="col" [ngStyle]="{'height': getCurrentImage().height - 65 + 'px'}">
 			<ion-list-header class="labels-list-header">{{getSelectedCanvasDirective().toString()}}</ion-list-header>
 			<ion-scroll scrollY="true" style="height:40%">
-				<ion-list scroll="true">
+				<ion-list no-border scroll="true">
 					<ion-item *ngFor="let itm of getObjects()">
-                        <inplace-input [(value)]="itm.label"></inplace-input>
+                        <object-input (click)="itemSelect(itm)" [(value)]="itm.label" [(id)]="itm.action_id"></object-input>
                         <ion-icon class="icon-button" name="trash" (click)="itemDelete(itm)" item-end></ion-icon>
 					</ion-item>
 				</ion-list>
@@ -62,10 +62,10 @@
 
 			<ion-list-header class="labels-list-header">Actions</ion-list-header>
 			<ion-scroll scrollY="true" style="height:40%">
-				<ion-list scroll="true">
+				<ion-list no-border scroll="true">
 					<ion-item *ngFor="let action of actions">
-						<inplace-input [(id)]="action.object_id" [(value)]="action.label"></inplace-input>
-						<ion-icon class="icon-button" name="trash" (click)="actionDelete(action)" item-end></ion-icon>
+                        <object-input [(value)]="action.label" [(id)]="action.action_id"></object-input>
+                        <ion-icon class="icon-button" name="trash" (click)="actionDelete(action)" item-end></ion-icon>
 					</ion-item>
 				</ion-list>
 			</ion-scroll>

@@ -1,0 +1,24 @@
+<button ion-item *ngIf="!editing" (click)="startEditing()">
+    <ion-label>{{getId()}}{{value}}</ion-label>
+</button>
+<ion-item *ngIf="editing">
+    <div (ionBlur)="accept()">
+        <ion-row>
+            <ion-col col-2>
+                <input class="id-label-input" placeholder="id" [(ngModel)]="newId"/>
+            </ion-col>
+
+            <ion-col col-10>
+                <input class="id-label-input" placeholder="name" [(ngModel)]="newValue"/>
+            </ion-col>
+        </ion-row>
+    </div>
+    <!--<div class="buttons" item-right>-->
+    <!--<button ion-button (click)="accept()">-->
+    <!--<ion-icon name="checkmark"></ion-icon>-->
+    <!--</button>-->
+    <!--<button ion-button (click)="cancel()">-->
+    <!--<ion-icon name="close"></ion-icon>-->
+    <!--</button>-->
+    <!--</div>-->
+</ion-item>

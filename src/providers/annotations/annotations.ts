@@ -146,7 +146,7 @@ export class AnnotationsProvider {
   	getActionId(){
 	  	let nextId = -1;
 	  	for(let action of this.actions){
-	  		nextId = Math.max(action.object_id, nextId);
+	  		nextId = Math.max(action.action_id, nextId);
 		}
 	  	nextId += 1;
 	  	//console.log(`New ID assigned: ${nextId}`);
@@ -154,7 +154,7 @@ export class AnnotationsProvider {
 	}
 
   	addAction(action : ActionObject){
-		action.object_id = this.getActionId();
+		action.action_id = this.getActionId();
 		this.actions.push(action);
 	}
 
