@@ -12,19 +12,19 @@
 			<ion-row text-center>
 				<!--<h2 style="transform: translateY(15px)">Tools: </h2>-->
 				<ion-col>
-					<button ion-button [ngClass]="{'activated-button': getSelectedCanvasDirective() === canvasDirectives.canvas_line}" block
+					<button ion-button [ngClass]="{'activated-button': getSelectedCanvasDirective() === canvasDirectives.canvas_line}" color="dark" block
 							(click)="selectCanvasDirective(canvasDirectives.canvas_line)">
 						<p class="button-text">{{"Line (" + hotkeys.line + ")"}}</p>
 						<ion-icon name="md-create"></ion-icon></button>
 				</ion-col>
 				<ion-col>
-					<button ion-button [ngClass]="{'activated-button': getSelectedCanvasDirective() === canvasDirectives.canvas_rect}" color="primary" block
+					<button ion-button [ngClass]="{'activated-button': getSelectedCanvasDirective() === canvasDirectives.canvas_rect}" color="dark" block
 							(click)="selectCanvasDirective(canvasDirectives.canvas_rect)">
 						<p class="button-text">{{"Rectangle (" + hotkeys.rectangle + ")"}}</p>
 						<ion-icon name="ios-square"></ion-icon></button>
 				</ion-col>
 				<ion-col>
-					<button ion-button [ngClass]="{'activated-button': getSelectedCanvasDirective() === canvasDirectives.canvas_polygon}" color="primary" block
+					<button ion-button [ngClass]="{'activated-button': getSelectedCanvasDirective() === canvasDirectives.canvas_polygon}" color="dark" block
 							(click)="selectCanvasDirective(canvasDirectives.canvas_polygon)">
 						<p class="button-text">{{"POLYGON (" + hotkeys.polygon + ")"}}</p>
 						<ion-icon name="star"></ion-icon></button>
@@ -35,7 +35,7 @@
 
 
 	<div class="row">
-		<div class="col" class="image-canvas-div">
+		<div class="col">
 			<!--<img class="img-position"-->
 				 <!--src="{{getImageSrc()}}"-->
 				 <!--[src]="sanitizer.bypassSecurityTrustResourceUrl(getImageSrc())"-->
@@ -49,8 +49,8 @@
             <annotator></annotator>
 		</div>
 
-		<div class="col">
-			<ion-list-header>{{getSelectedCanvasDirective().toString()}}</ion-list-header>
+		<div class="col" [ngStyle]="{'height': getCurrentImage().height - 65 + 'px'}">
+			<ion-list-header class="labels-list-header">{{getSelectedCanvasDirective().toString()}}</ion-list-header>
 			<ion-scroll scrollY="true" style="height:40%">
 				<ion-list scroll="true">
 					<ion-item *ngFor="let itm of getObjects()">
@@ -60,7 +60,7 @@
 				</ion-list>
 			</ion-scroll>
 
-			<ion-list-header>Actions</ion-list-header>
+			<ion-list-header class="labels-list-header">Actions</ion-list-header>
 			<ion-scroll scrollY="true" style="height:40%">
 				<ion-list scroll="true">
 					<ion-item *ngFor="let action of actions">
@@ -69,7 +69,7 @@
 					</ion-item>
 				</ion-list>
 			</ion-scroll>
-			<button ion-button block (click)="actionAdd()">new action</button>
+			<button color="dark" ion-button block (click)="actionAdd()">new action</button>
 		</div>
 	</div>
 </ion-content>

@@ -1,3 +1,5 @@
+@import "../../theme/variables";
+
 page-item {
 
 }
@@ -30,7 +32,7 @@ page-item {
 }
 
 .activated-button {
-  background: #f3ab01;
+  background: map-get($colors, secondary)
 }
 
 .labels-div {
@@ -39,9 +41,7 @@ page-item {
 
   margin: 0;
 
-  border: solid;
-  border-width: 1px;
-  border-color: red;
+  border: 1px solid red;
 }
 
 //Box item formatting
@@ -84,4 +84,10 @@ page-item {
 
 .icon-button:hover {
   color: lightcoral;
+}
+
+.labels-list-header {
+  background-color: map-get($colors, primary);
+  color: white;
+  text-align: center!important;
 }

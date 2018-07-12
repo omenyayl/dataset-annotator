@@ -5,8 +5,8 @@ import {Observable} from "rxjs/Observable";
 import {CanvasDirectivesEnum} from "../../enums/canvas-directives-enum";
 import {AnnotationsProvider} from "../annotations/annotations";
 
-const MAX_IMAGE_WIDTH = 1000;
-const MAX_IMAGE_HEIGHT = 1000;
+const MAX_IMAGE_WIDTH = 800;
+const MAX_IMAGE_HEIGHT = 800;
 
 /**
  Provider that contains image information and methods
@@ -36,7 +36,7 @@ export class ImageProvider {
         const sizeOfCurrentImage = imageSize(path);
         let width = sizeOfCurrentImage.width;
         let height = sizeOfCurrentImage.height;
-        let ratio;
+        let ratio = 1;
         if (width > MAX_IMAGE_WIDTH) {
             ratio = MAX_IMAGE_WIDTH / width;
             width = MAX_IMAGE_WIDTH;
