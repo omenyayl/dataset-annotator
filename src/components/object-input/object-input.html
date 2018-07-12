@@ -1,15 +1,12 @@
-<button ion-item *ngIf="!editing" (click)="startEditing()">
-    <ion-label>{{getId()}}{{value}}</ion-label>
-</button>
-<ion-item *ngIf="editing">
+<ion-item>
     <div (ionBlur)="accept()">
         <ion-row>
             <ion-col col-2>
-                <input class="id-label-input" placeholder="id" [(ngModel)]="newId"/>
+                <input (focus)="onFocus()" class="id-label-input" placeholder="id" [(ngModel)]="newId"/>
             </ion-col>
 
             <ion-col col-10>
-                <input class="id-label-input" placeholder="name" [(ngModel)]="newValue"/>
+                <input (focus)="onFocus()" class="id-label-input" placeholder="name" [(ngModel)]="newValue"/>
             </ion-col>
         </ion-row>
     </div>

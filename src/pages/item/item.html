@@ -54,7 +54,7 @@
 			<ion-scroll scrollY="true" style="height:40%">
 				<ion-list no-border scroll="true">
 					<ion-item *ngFor="let itm of getObjects()">
-                        <object-input (click)="itemSelect(itm)" [(value)]="itm.label" [(id)]="itm.action_id"></object-input>
+                        <object-input [obj]="itm" (click)="itemSelect(itm)" [(value)]="itm.label" [(id)]="itm.action_id"></object-input>
                         <ion-icon class="icon-button" name="trash" (click)="itemDelete(itm)" item-end></ion-icon>
 					</ion-item>
 				</ion-list>

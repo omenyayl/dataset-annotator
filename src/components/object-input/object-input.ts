@@ -1,5 +1,6 @@
 import {Component, EventEmitter, HostListener, Input, Output} from "@angular/core";
 import {Events} from "ionic-angular";
+import {AnnotationsProvider} from "../../providers/annotations/annotations";
 
 const KEYCODE_ENTER = 13;
 const KEYCODE_ESCAPE = 27;
@@ -11,6 +12,7 @@ const KEYCODE_ESCAPE = 27;
 export class ObjectInputComponent {
     @Input() value: string;
     @Input() id: string;
+    @Input() obj: Object;
     newValue: string;
     newId: string;
     @Output() valueChange = new EventEmitter<string>();
@@ -22,6 +24,9 @@ export class ObjectInputComponent {
     }
 
     ngOnInit() {
+        console.log('Object: ');
+        console.log(this.obj);
+        this.editing = true;
         this.idProvided = this.id !== undefined;
     }
     ngOnChanges(): void {
@@ -39,7 +44,7 @@ export class ObjectInputComponent {
         this.valueChange.emit(this.newValue);
         this.idChange.emit(this.newId);
         this.editing = false;
-        this.events.publish('render-canvas');
+        this.renderCanvas();
     }
 
     cancel(): void {
@@ -59,5 +64,16 @@ export class ObjectInputComponent {
 
     getId() {
         return this.id != undefined ? `${this.id}: ` : '';
+    }
+
+    onFocus() {
+        if(this.obj) {
+            AnnotationsProvider.selectedElement = this.obj;
+            this.renderCanvas();
+        }
+    }
+
+    renderCanvas() {
+        this.events.publish('render-canvas');
     }
 }
