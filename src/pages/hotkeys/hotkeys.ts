@@ -13,6 +13,13 @@ export class HotkeysPage {
 
   private hotkeys: FormGroup;
   private inputs: string[];
+  private duplicates = {
+    nextImage: [],
+    prevImage: [],
+    line: [],
+    rectangle: [],
+    polygon: [],
+  };
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
@@ -26,7 +33,9 @@ export class HotkeysPage {
         prevImage: [value.prevImage],
         line: [value.line],
         rectangle: [value.rectangle],
-        polygon: [value.polygon]
+        polygon: [value.polygon],
+      }, {
+        validator: this.duplicateHotkeyValidator.bind(this)
       });
     });
 
@@ -75,5 +84,30 @@ export class HotkeysPage {
               .replace("ArrowDown", "down")
               .replace("ArrowLeft", "left")
               .replace("ArrowRight", "right")
+  }
+
+  duplicateHotkeyValidator(control: FormControl): {[key: string]: any} | null {
+    let keys = Object.keys(control.value);
+    let duplicate = false;
+    this.duplicates = {
+      nextImage: [],
+      prevImage: [],
+      line: [],
+      rectangle: [],
+      polygon: [],
+    };
+
+    for(var i=0;i<keys.length;i++){
+      for(var j=i+1;j<keys.length;j++){
+        if(control.value[keys[i]] === control.value[keys[j]]){
+          duplicate = true;
+          this.duplicates[keys[i]].push(keys[j]);
+          this.duplicates[keys[j]].push(keys[i]);
+        }
+      }
+    }
+
+    console.log(this.duplicates);
+    return duplicate ? {'duplicateHotkey': true} : null;
   }
 }
