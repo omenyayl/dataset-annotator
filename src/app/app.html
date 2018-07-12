@@ -13,7 +13,7 @@
   </ion-content>
 </ion-menu>
 <ion-split-pane when="(min-width: 1px)" (ionChange)="navProxy.onSplitPaneChanged($event._visible);">
-  <ion-nav [root]="masterPage" #masterNav></ion-nav>
+  <ion-nav style="max-width: 10%!important;" [root]="masterPage" #masterNav></ion-nav>
   <ion-nav [root]="detailPage" #detailNav main></ion-nav>
 
 
