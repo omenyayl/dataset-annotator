@@ -5,8 +5,8 @@ import {Observable} from "rxjs/Observable";
 import {CanvasDirectivesEnum} from "../../enums/canvas-directives-enum";
 import {AnnotationsProvider} from "../annotations/annotations";
 
-const MAX_IMAGE_WIDTH = 700;
-const MAX_IMAGE_HEIGHT = 700;
+const MAX_IMAGE_WIDTH = 1000;
+const MAX_IMAGE_HEIGHT = 1000;
 
 /**
  Provider that contains image information and methods
@@ -50,9 +50,7 @@ export class ImageProvider {
         this.currentImage = new ImageObject(
             path, width, height, ratio
         );
-
         this.annotationsProvider.initAnnotations(this.currentImage.src);
-
     }
 
 	/*generateSaveData(): Observable<any> {

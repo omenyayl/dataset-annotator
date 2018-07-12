@@ -33,6 +33,7 @@ export class ItemPage extends _DetailPage {
   	polys = [];
 	actions = [];
 
+	name: string;
     item: string = null;
     hotkeys: HotkeyObject;
     canvasDirectives = CanvasDirectivesEnum;
@@ -145,6 +146,7 @@ export class ItemPage extends _DetailPage {
 	}
 
   	actionSelect(itm){
+  	    console.log('selected!');
 		this.annotationsProvider.selectAction(itm);
 	}
 

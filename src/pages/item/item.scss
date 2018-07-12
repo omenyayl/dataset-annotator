@@ -8,76 +8,80 @@ page-item {
 }
 
 .image-canvas-div {
-  display:inline-block;
+  display: inline-block;
   margin: 0 auto;
   background: black;
-  position:relative;
-  border:5px solid black;
-  border-radius: 10px;
-  box-shadow: 0 5px 50px #333
+  position: relative;
+  border: 1px solid lightgrey;
 }
 
 .canvas-position {
-  position:relative;
-  z-index:20;
+  position: relative;
+  z-index: 20;
 }
 
 .img-position {
-  position:absolute;
-  z-index:1;
+  position: absolute;
+  z-index: 1;
 }
 
 .button-text {
   padding: 10px;
 }
 
-
 .activated-button {
   background: #f3ab01;
 }
 
 .labels-div {
-	position: relative;
-	float: left;
+  position: relative;
+  float: left;
 
-	margin: 0;
+  margin: 0;
 
-
-	border: solid;
-	border-width: 1px;
-	border-color: red;
+  border: solid;
+  border-width: 1px;
+  border-color: red;
 }
 
 //Box item formatting
-.box-itm{
-  	//Totally up for debate
-	width: 14em;
+.box-itm {
+  //Totally up for debate
+  width: 14em;
 }
 
-.box-div{
-	margin: 0;
-	padding: 10% 0 0 0;
-	float: left;
+.box-div {
+  margin: 0;
+  padding: 10% 0 0 0;
+  float: left;
 }
 
-.box-delete{
-	width: 3em;
-	float: right;
+.box-delete {
+  width: 3em;
+  float: right;
 }
 
 //Box ion-input formatting
-.box-input{
-	width: 9em;
+.box-input {
+  width: 9em;
 
-	float: left;
+  float: left;
 }
 
-.box-input-label{
-	width: 60%;
-	float: left;
+.box-input-label {
+  width: 60%;
+  float: left;
 }
 
-.box-input-id{
-	width: 35%;
-	float: right;
+.box-input-id {
+  width: 35%;
+  float: right;
+}
+
+.icon-button {
+  color: darkred;
+}
+
+.icon-button:hover {
+  color: lightcoral;
 }
