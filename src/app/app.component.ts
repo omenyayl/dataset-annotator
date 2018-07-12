@@ -83,7 +83,7 @@ export class MyApp {
 		  console.log(`Saving in ${this.fileProvider.selectedSaveFolder}`);
 		  this.annotationProvider.generateSaveData().subscribe((data) => {
 			  //console.log(`${data}`);
-			  this.fileProvider.saveFiles(data).subscribe(() => {})
+			  this.fileProvider.saveFile(data).subscribe(() => {})
 		  })
     })
   }

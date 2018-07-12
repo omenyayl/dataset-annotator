@@ -8,6 +8,7 @@ import * as path from 'path';
 import {Subject} from "rxjs/Subject";
 
 let {dialog} = remote;
+let actionOutputName = 'actions.json';
 
 @Injectable()
 export class FileProvider {
@@ -105,8 +106,8 @@ export class FileProvider {
 	saveFiles(data: Object): Observable<any> {
 		return new Observable<any>((observer) => {
 		    console.log('saving the following: ');
-		  	console.log(data);
-		  	for(let imageFile in data){
+		  	console.log(data['frames']);
+		  	for(let imageFile in data['frames']){
 			  	if(data.hasOwnProperty(imageFile)){
 				  	let _imageFile = path.basename(imageFile);
 					let outputName = _imageFile.replace(path.extname(_imageFile), ".json");
@@ -121,16 +122,50 @@ export class FileProvider {
 						} else {
 						    observer.next();
                         }
-                        observer.complete();
 					});
 				}
 			}
+		  	console.log('saving the following: ');
+			let _data = JSON.stringify(data['actions'], null, 4);
+		  	console.log(_data);
+			fs.writeFile(path.join(this.selectedSaveFolder, actionOutputName), _data, 'utf8', (err) => {
+				if(err){
+					observer.error(err);
+				}else{
+					observer.next();
+				}
+			});
+		  	observer.complete();
+		}).pipe(
+		    catchError(this.handleError('File.saveFile', null))
+        )
+  	}
+
+	/**
+	 * Handle saving of data from annotator - New version
+	 * Data is to be taken from the data defining directive(s)
+	 * ***This method saves all annotations into a single file***
+	 * @param data - The data to be saved
+	 */
+	saveFile(data: Object): Observable<any> {
+		return new Observable<any>((observer) => {
+		  	console.log('saving the following: ');
+			let _data = JSON.stringify(data, null, 4);
+		  	console.log(_data);
+			fs.writeFile(path.join(this.selectedSaveFolder, 'saveFile_TEST.json'), _data, 'utf8', (err) => {
+				if(err){
+					observer.error(err);
+				}else{
+					observer.next();
+		  			observer.complete();
+				}
+			});
 		}).pipe(
 		    catchError(this.handleError('File.saveFiles', null))
         )
   	}
-
-    /**
+  
+  	/**
      * Handle an operation that failed.
      * Let the app continue.
      * @param operation - name of the operation that failed

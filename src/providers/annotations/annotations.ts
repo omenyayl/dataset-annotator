@@ -186,7 +186,17 @@ export class AnnotationsProvider {
 
   	generateSaveData(): Observable<any> {
 	  	return new Observable<any>((observer) => {
-			let dataObject = this.getAnnotations();
+		  console.log(`Generating save data for: ${Object.keys(this.getAnnotations())}`);
+		  	let _a = [];
+		  	console.log('Individual frames...');
+		  	for(let a of Object.keys(this.getAnnotations())){
+				console.log('Adding ANNOTATION');
+			  	_a.push(this.annotations[a]);
+			}
+		  	let dataObject = {
+				'frames': _a,
+			  	'actions': this.getActions()
+			}
 			observer.next(dataObject);
 			observer.complete();
 		})
