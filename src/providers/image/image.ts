@@ -7,6 +7,7 @@ import {AnnotationsProvider} from "../annotations/annotations";
 
 const MAX_IMAGE_WIDTH = 750;
 const MAX_IMAGE_HEIGHT = 1000;
+
 /**
  Provider that contains image information and methods
  */

@@ -1,3 +1,18 @@
 annotator {
 
 }
+
+#container{
+  display:inline-block;
+  margin: 0 auto;
+  background: black;
+  position:relative;
+}
+
+#gameCanvas{
+  position:relative;
+  z-index:20;
+}
+
+body{text-align: center;background: #f2f6f8;}
+.img{position:absolute;z-index:1;}

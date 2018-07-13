@@ -70,7 +70,7 @@ export class AnnotatorComponent {
 
     afterLoading() {
         this.context.clearRect(0, 0, this.imgWidth, this.imgHeight);
-        this.context.drawImage(this.imageElement, 0, 0, this.imgWidth, this.imgHeight);
+        // this.context.drawImage(this.imageElement, 0, 0, this.imgWidth, this.imgHeight);
         this.render();
     }
 
@@ -85,7 +85,7 @@ export class AnnotatorComponent {
 
     render() {
         this.context.clearRect(0, 0, this.imageElement.width, this.imageElement.height);
-        this.context.drawImage(this.imageElement, 0, 0, this.imgWidth, this.imgHeight);
+        // this.context.drawImage(this.imageElement, 0, 0, this.imgWidth, this.imgHeight);
         this.lineDrawer.render();
         this.rectangleDrawer.render();
         this.polygonDrawer.render();

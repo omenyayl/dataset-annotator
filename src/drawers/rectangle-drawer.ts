@@ -111,6 +111,4 @@ export class RectangleDrawer extends Drawer{
         return false;
     }
 
-
-
 }

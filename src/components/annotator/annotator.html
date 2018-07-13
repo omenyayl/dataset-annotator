@@ -1,2 +1,4 @@
-<img #img src="{{src}}" (load)="afterLoading()" style='display: none;' />
-<canvas #visualization width={{imgWidth}} height="{{imgHeight}}"></canvas>
+<div id="container">
+    <img #img class='img' src="{{src}}" alt="" (load)="afterLoading()"/>
+    <canvas #visualization id="gameCanvas" width={{imgWidth}} height="{{imgHeight}}"></canvas>
+</div>

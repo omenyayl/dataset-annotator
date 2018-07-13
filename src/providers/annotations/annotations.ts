@@ -196,7 +196,7 @@ export class AnnotationsProvider {
 		  	let dataObject = {
 				'frames': _a,
 			  	'actions': this.getActions()
-			}
+			};
 			observer.next(dataObject);
 			observer.complete();
 		})
@@ -204,19 +204,55 @@ export class AnnotationsProvider {
 
 }
 
+/**
+ * Defines line shape
+ */
 export class Line {
+
+    /**
+     * @param {CoordinatesObject} start The start point
+     * @param {CoordinatesObject} end The end point
+     * @param {string} label Name of the object
+     */
     constructor(public start: CoordinatesObject,
                 public end: CoordinatesObject,
                 public label: string = 'unnamed'){}
+    rescale(scale: number){
+        this.start.x *= scale;
+        this.start.y *= scale;
+        this.end.x *= scale;
+        this.end.y *= scale;
+    }
 }
 
 export class Rectangle {
+
+    /**
+     * @param {CoordinatesObject} start The top left point
+     * @param {CoordinatesObject} end The bottom right point
+     * @param {string} label
+     */
     constructor(public start: CoordinatesObject,
                 public end: CoordinatesObject,
                 public label: string = 'unnamed'){}
+    rescale(scale: number){
+        this.start.x *= scale;
+        this.start.y *= scale;
+        this.end.x *= scale;
+        this.end.y *= scale;
+    }
 }
 
+/**
+ * Defines the polygon shape
+ */
 export class Polygon {
     constructor(public coordinates: CoordinatesObject[] = [],
                 public label: string = 'unnamed'){}
+    rescale(scale: number){
+        for (let point of this.coordinates) {
+            point.x *= scale;
+            point.y *= scale;
+        }
+    }
 }
