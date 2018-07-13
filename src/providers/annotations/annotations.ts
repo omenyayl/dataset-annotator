@@ -187,6 +187,9 @@ export class AnnotationsProvider {
   	generateSaveData(): any {
         let annotations = [];
         for (let image in this.annotations) {
+
+            if(this.isAnnotationsEmpty(this.annotations[image])) continue;
+
             let scale = this.imageProvider.images[image].scale;
             let copyOfAnnotations = JSON.parse(JSON.stringify(this.annotations[image]));
             this.unscaleAnnotations(copyOfAnnotations, scale);
@@ -197,6 +200,12 @@ export class AnnotationsProvider {
             'actions': this.actions
         };
 	}
+
+	isAnnotationsEmpty(annotations: AnnotationObject) {
+        return annotations.lines.length === 0 &&
+                annotations.rectangles.length === 0 &&
+                annotations.polygons.length === 0
+    }
 
 	unscaleAnnotations(annotations: AnnotationObject, scale: number) {
         for(let i = 0; i < annotations.lines.length; i++) {
