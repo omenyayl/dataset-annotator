@@ -1,11 +1,18 @@
 object-input {
-
 }
 
 .id-label-input {
+  transform: translateY(5px);
+  width: stretch;
   border: 1px solid rgba(161, 211, 255, 0.42);
 }
 
 .id-label-input:focus {
+  transform: translateY(5px);
+  width: stretch;
   border: 1px solid rgba(56, 255, 59, 0.67);
+}
+
+.label-md {
+  margin: 0!important;
 }
