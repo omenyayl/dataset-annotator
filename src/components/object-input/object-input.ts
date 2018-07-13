@@ -1,4 +1,4 @@
-import {Component, EventEmitter, HostListener, Input, Output} from "@angular/core";
+import {Component, EventEmitter, HostListener, Input, Output, Renderer2} from "@angular/core";
 import {Events} from "ionic-angular";
 import {AnnotationsProvider} from "../../providers/annotations/annotations";
 
@@ -20,20 +20,17 @@ export class ObjectInputComponent {
     editing: boolean;
     idProvided: boolean;
 
-    constructor(public events: Events){
+    constructor(public events: Events,
+                private renderer: Renderer2){
     }
 
     ngOnInit() {
-        this.editing = true;
         this.idProvided = this.id !== undefined;
+        this.editing = true;
     }
     ngOnChanges(): void {
         this.newValue = this.value;
         this.newId = this.id;
-    }
-
-    startEditing(): void {
-        this.editing = true;
     }
 
     accept(): void {
@@ -52,24 +49,15 @@ export class ObjectInputComponent {
         this.editing = false;
     }
 
-    // @HostListener('keydown', ['$event']) onEnterPressed(e) {
-    //     if (e.keyCode === KEYCODE_ENTER) {
-    //         this.accept();
-    //     }
-    //     else if (e.keyCode === KEYCODE_ESCAPE) {
-    //         this.cancel();
-    //     }
-    // }
-
-    @HostListener('keyup', ['$event']) onKeyUp(e) {
+    @HostListener('keydown', ['$event']) onEnterPressed(e) {
         if (e.keyCode === KEYCODE_ENTER) {
             this.accept();
+            this.renderer.removeClass(e.srcElement, 'editing');
         }
         else if (e.keyCode === KEYCODE_ESCAPE) {
             this.cancel();
-        }
-        else {
-            this.accept();
+        } else {
+            this.renderer.addClass(e.srcElement, 'editing');
         }
     }
 
@@ -78,6 +66,7 @@ export class ObjectInputComponent {
             AnnotationsProvider.selectedElement = this.obj;
             this.renderCanvas();
         }
+
     }
 
     renderCanvas() {

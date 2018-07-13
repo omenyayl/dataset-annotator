@@ -1,4 +1,4 @@
-import {Component, EventEmitter, HostListener, Input, Output} from "@angular/core";
+import {Component, EventEmitter, HostListener, Input, Output, Renderer2} from "@angular/core";
 
 const KEYCODE_ENTER = 13;
 const KEYCODE_ESCAPE = 27;
@@ -24,7 +24,7 @@ export class ActionInputComponent {
     editing: boolean;
     idProvided: boolean;
 
-    constructor(){
+    constructor(private renderer: Renderer2){
     }
 
     ngOnInit() {
@@ -57,9 +57,13 @@ export class ActionInputComponent {
     @HostListener('keydown', ['$event']) onEnterPressed(e) {
         if (e.keyCode === KEYCODE_ENTER) {
             this.accept();
+            this.renderer.removeClass(e.srcElement, 'editing');
         }
         else if (e.keyCode === KEYCODE_ESCAPE) {
             this.cancel();
+        }
+        else {
+            this.renderer.addClass(e.srcElement, 'editing');
         }
     }
 
