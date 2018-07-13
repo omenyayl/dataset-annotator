@@ -43,7 +43,7 @@ export class HotkeysPage {
   }
 
   updateHotkeys() {
-    this.hotkeyProvider.hotkeys.next(this.hotkeys.value);
+    this.hotkeyProvider.update(this.hotkeys.value);
     this.navProxy.popMaster(HotkeysPage);
   }
 
@@ -107,7 +107,6 @@ export class HotkeysPage {
       }
     }
 
-    console.log(this.duplicates);
     return duplicate ? {'duplicateHotkey': true} : null;
   }
 }
