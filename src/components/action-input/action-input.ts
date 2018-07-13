@@ -2,6 +2,9 @@ import {Component, EventEmitter, HostListener, Input, Output, Renderer2} from "@
 
 const KEYCODE_ENTER = 13;
 const KEYCODE_ESCAPE = 27;
+const KEYCODE_TAB = 9;
+const KEYCODE_SHIFT = 16;
+
 
 /**
  * Generated class for the ActionInputComponent component.
@@ -62,7 +65,7 @@ export class ActionInputComponent {
         else if (e.keyCode === KEYCODE_ESCAPE) {
             this.cancel();
         }
-        else {
+        else if (e.keyCode !== KEYCODE_TAB && e.keyCode !== KEYCODE_SHIFT){
             this.renderer.addClass(e.srcElement, 'editing');
         }
     }

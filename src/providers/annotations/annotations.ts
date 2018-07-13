@@ -1,6 +1,5 @@
 import {CoordinatesObject} from "../../objects/CoordinatesObject";
 import {Injectable} from '@angular/core';
-import {Observable} from "rxjs/Observable";
 import {AnnotationObject} from "../../objects/annotation-object";
 import { ImageProvider } from "../image/image"
 import {ActionObject} from "../../objects/action-object";
@@ -188,7 +187,10 @@ export class AnnotationsProvider {
   	generateSaveData(): any {
         let annotations = [];
         for (let image in this.annotations) {
-            annotations.push(this.annotations[image]);
+            let scale = this.imageProvider.images[image].scale;
+            let copyOfAnnotations = JSON.parse(JSON.stringify(this.annotations[image]));
+            this.unscaleAnnotations(copyOfAnnotations, scale);
+            annotations.push(copyOfAnnotations);
         }
         return {
             'frames': annotations,
@@ -196,6 +198,39 @@ export class AnnotationsProvider {
         };
 	}
 
+	unscaleAnnotations(annotations: AnnotationObject, scale: number) {
+        for(let i = 0; i < annotations.lines.length; i++) {
+            AnnotationsProvider.unscaleLine(annotations.lines[i], scale);
+        }
+        for(let i = 0; i < annotations.rectangles.length; i++) {
+            console.log(annotations.rectangles[i]);
+            AnnotationsProvider.unscaleRectangle(annotations.rectangles[i], scale);
+            console.log(annotations.rectangles[i]);
+        }
+        for(let i = 0; i < annotations.polygons.length; i++) {
+            AnnotationsProvider.unscalePolygon(annotations.polygons[i], scale);
+        }
+    }
+
+    public static unscaleLine(line: Line, scale: number){
+        line.start.x = Math.round(line.start.x / scale);
+        line.start.y = Math.round(line.start.y / scale);
+        line.end.x = Math.round(line.end.x / scale);
+        line.end.y = Math.round(line.end.y / scale);
+    }
+    public static unscaleRectangle(rectangle: Rectangle, scale: number){
+        rectangle.start.x = Math.round(rectangle.start.x / scale);
+        rectangle.start.y = Math.round(rectangle.start.y / scale);
+        rectangle.end.x = Math.round(rectangle.end.x / scale);
+        rectangle.end.y = Math.round(rectangle.end.y / scale);
+    }
+
+    public static unscalePolygon(polygon: Polygon, scale: number) {
+        for (let point of polygon.coordinates) {
+            point.x = Math.round(point.x / scale);
+            point.y = Math.round(point.y / scale);
+        }
+    }
 }
 
 /**
@@ -211,13 +246,9 @@ export class Line {
     constructor(public start: CoordinatesObject,
                 public end: CoordinatesObject,
                 public label: string = 'unnamed'){}
-    rescale(scale: number){
-        this.start.x *= scale;
-        this.start.y *= scale;
-        this.end.x *= scale;
-        this.end.y *= scale;
-    }
 }
+
+
 
 export class Rectangle {
 
@@ -229,12 +260,6 @@ export class Rectangle {
     constructor(public start: CoordinatesObject,
                 public end: CoordinatesObject,
                 public label: string = 'unnamed'){}
-    rescale(scale: number){
-        this.start.x *= scale;
-        this.start.y *= scale;
-        this.end.x *= scale;
-        this.end.y *= scale;
-    }
 }
 
 /**
@@ -243,10 +268,5 @@ export class Rectangle {
 export class Polygon {
     constructor(public coordinates: CoordinatesObject[] = [],
                 public label: string = 'unnamed'){}
-    rescale(scale: number){
-        for (let point of this.coordinates) {
-            point.x *= scale;
-            point.y *= scale;
-        }
-    }
+
 }

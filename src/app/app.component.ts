@@ -91,14 +91,15 @@ export class MyApp {
             .subscribe((file) => {
                 console.log(`Saving to ${file}`);
                 let saveJson = this.annotationProvider.generateSaveData();
-                this.fileProvider.saveFile(saveJson, file).subscribe(() => {
-                    console.log('Done saving.');
-                    let toast = this.toastCtrl.create({
-                        message: 'Successfully saved the annotations.',
-                        duration: 3000,
-                        position: 'bottom'
-                    });
-                    toast.present();
+                this.fileProvider.saveFile(saveJson, file).subscribe((success) => {
+                    if (success) {
+                        let toast = this.toastCtrl.create({
+                            message: 'Successfully saved the annotations.',
+                            duration: 3000,
+                            position: 'bottom'
+                        });
+                        toast.present();
+                    }
                 })
             })
     }

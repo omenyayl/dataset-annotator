@@ -4,6 +4,9 @@ import {AnnotationsProvider} from "../../providers/annotations/annotations";
 
 const KEYCODE_ENTER = 13;
 const KEYCODE_ESCAPE = 27;
+const KEYCODE_TAB = 9;
+const KEYCODE_SHIFT = 16;
+
 
 @Component({
     selector: "object-input",
@@ -56,7 +59,8 @@ export class ObjectInputComponent {
         }
         else if (e.keyCode === KEYCODE_ESCAPE) {
             this.cancel();
-        } else {
+        }
+        else if (e.keyCode !== KEYCODE_TAB && e.keyCode !== KEYCODE_SHIFT){
             this.renderer.addClass(e.srcElement, 'editing');
         }
     }

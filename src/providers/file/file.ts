@@ -170,22 +170,19 @@ export class FileProvider {
      * @param {string} location
      * @returns {Observable<any>}
      */
-	saveFile(data: any, location: string): Observable<any> {
+	saveFile(data: any, location: string): Observable<boolean> {
 		return new Observable<any>((observer) => {
-		  	console.log('saving the following: ');
 			let _data = JSON.stringify(data, null, 4);
-		  	console.log(_data);
 			fs.writeFile(location, _data, 'utf8', (err) => {
 				if(err){
 					observer.error(err);
 				}else{
-					observer.next();
-					console.log('saved successfully.');
-		  			observer.complete();
+					observer.next(true);
 				}
-			});
+                observer.complete();
+            });
 		}).pipe(
-		    catchError(this.handleError('File.saveFiles', null))
+		    catchError(this.handleError('File.saveFiles', false))
         )
   	}
   

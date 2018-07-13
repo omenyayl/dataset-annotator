@@ -15,6 +15,7 @@ const MAX_IMAGE_HEIGHT = 1000;
 export class ImageProvider {
 
     public currentImage: ImageObject;
+    public images: ImageObject[] = [];
     public selectedCanvasDirective: CanvasDirectivesEnum;
     private annotationsProvider: AnnotationsProvider;
 
@@ -47,9 +48,11 @@ export class ImageProvider {
             width *= ratio;
             height = MAX_IMAGE_HEIGHT;
         }
-        this.currentImage = new ImageObject(
+        let newImage = new ImageObject(
             path, width, height, ratio
         );
+        this.currentImage = newImage;
+        this.images[path] = newImage;
         this.annotationsProvider.initAnnotations(this.currentImage.src);
     }
 
