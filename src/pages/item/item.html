@@ -65,7 +65,7 @@
 			<ion-scroll scrollY="true" style="height:40%">
 				<ion-list no-border scroll="true">
 					<ion-item no-lines no-padding *ngFor="let action of actions">
-                        <object-input [(value)]="action.label" [(id)]="action.action_id"></object-input>
+                        <action-input [(value)]="action.label" [(id)]="action.action_id"></action-input>
                         <ion-icon class="icon-button" name="trash" (click)="actionDelete(action)" item-end></ion-icon>
                         <hr>
 					</ion-item>

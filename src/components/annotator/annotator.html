@@ -1,4 +1,4 @@
 <div id="container">
-    <img #img class='img' src="{{src}}" alt="" (load)="afterLoading()"/>
+    <img #img class='img' src="{{getImageSrc()}}" alt="" (load)="afterLoading()"/>
     <canvas #visualization id="gameCanvas" width={{imgWidth}} height="{{imgHeight}}"></canvas>
 </div>

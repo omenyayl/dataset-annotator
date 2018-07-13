@@ -4,12 +4,15 @@ import { LineDrawer } from "../../drawers/line-drawer";
 import {CanvasDirectivesEnum} from "../../enums/canvas-directives-enum";
 import {RectangleDrawer} from "../../drawers/rectangle-drawer";
 import { CoordinatesObject } from "../../objects/CoordinatesObject";
+import {DomSanitizer} from "@angular/platform-browser";
 
 //EventListener for deletion
 import { Events } from 'ionic-angular';
 import {AnnotationsProvider} from "../../providers/annotations/annotations";
 import {PolygonDrawer} from "../../drawers/polygon-drawer";
 import {Drawer} from "../../drawers/drawer";
+import * as path from "path";
+import {platform} from "process";
 
 /**
  * Generated class for the AnnotatorComponent component.
@@ -40,9 +43,11 @@ export class AnnotatorComponent {
     private heldPoint: CoordinatesObject;
     private start: CoordinatesObject;
     private renderer: Renderer2;
+    sanitizer: DomSanitizer;
 
     constructor(private annotationsProvider: AnnotationsProvider,
                 renderer: Renderer2,
+                sanitizer: DomSanitizer,
                 private events: Events,
                 private imageProvider: ImageProvider) {
         let imageObj = imageProvider.currentImage;
@@ -50,6 +55,7 @@ export class AnnotatorComponent {
         this.imgHeight = imageObj.height;
         this.src = imageObj.src;
         this.renderer = renderer;
+        this.sanitizer = sanitizer;
     }
 
     ngAfterViewInit() {
@@ -220,6 +226,15 @@ export class AnnotatorComponent {
         return this.lineDrawer.selectElement(mouseCoordinates) ||
             this.rectangleDrawer.selectElement(mouseCoordinates) ||
             this.polygonDrawer.selectElement(mouseCoordinates);
+    }
+
+    getImageSrc(): string {
+        let imgPath = this.src;
+        if (platform == 'win32'){
+            return `file:///${imgPath}`;
+        } else {
+            return imgPath;
+        }
     }
 
 }

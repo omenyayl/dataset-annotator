@@ -52,7 +52,8 @@ export class RectangleDrawer extends Drawer{
     saveFromCoordinates(...coordinates: CoordinatesObject[]) {
         let newRectangle = new Rectangle(
             coordinates[0],
-            coordinates[1]
+            coordinates[1],
+            AnnotationsProvider.lastLabel ? AnnotationsProvider.lastLabel : 'unnamed'
         );
 
         if (Drawer.computeDistance(coordinates[0], coordinates[1]) > Drawer.POINT_RADIUS * 2){

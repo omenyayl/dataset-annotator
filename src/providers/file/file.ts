@@ -25,13 +25,17 @@ export class FileProvider {
 
     /**
      * Opens a directory dialog box handled by the OS.
+     * @param {"openFile" | "openDirectory"} properties
      * @returns {Observable<string>}
      */
-    showOpenDialog(): Observable<string> {
+    showOpenDialog(properties?: "openFile" | "openDirectory"): Observable<string> {
 
         return new Observable<string>((observer) => {
+            if (!properties) {
+                properties = 'openDirectory';
+            }
             dialog.showOpenDialog({
-                properties: ['openDirectory']
+                properties: [properties]
             }, (path) => {
                 if (!path) {
                     observer.error();
@@ -44,6 +48,23 @@ export class FileProvider {
             catchError(this.handleError('showOpenDialog()', ''))
         )
 
+    }
+
+    showSaveDialog(): Observable<string> {
+        return new Observable<string>((observer) => {
+            dialog.showSaveDialog(undefined, {
+                title: 'Save annotations'
+            }, filename => {
+                if (!filename) {
+                    observer.error();
+                } else {
+                    observer.next(filename);
+                }
+                observer.complete();
+            })
+        }).pipe(
+            catchError(this.handleError('showSaveDialog()', ''))
+        );
     }
 
     /**
@@ -141,22 +162,25 @@ export class FileProvider {
         )
   	}
 
-	/**
-	 * Handle saving of data from annotator - New version
-	 * Data is to be taken from the data defining directive(s)
-	 * ***This method saves all annotations into a single file***
-	 * @param data - The data to be saved
-	 */
-	saveFile(data: Object): Observable<any> {
+    /**
+     * Handle saving of data from annotator - New version
+     * Data is to be taken from the data defining directive(s)
+     * ***This method saves all annotations into a single file***
+     * @param data
+     * @param {string} location
+     * @returns {Observable<any>}
+     */
+	saveFile(data: any, location: string): Observable<any> {
 		return new Observable<any>((observer) => {
 		  	console.log('saving the following: ');
 			let _data = JSON.stringify(data, null, 4);
 		  	console.log(_data);
-			fs.writeFile(path.join(this.selectedSaveFolder, 'saveFile_TEST.json'), _data, 'utf8', (err) => {
+			fs.writeFile(location, _data, 'utf8', (err) => {
 				if(err){
 					observer.error(err);
 				}else{
 					observer.next();
+					console.log('saved successfully.');
 		  			observer.complete();
 				}
 			});
