@@ -24,8 +24,6 @@ export class ObjectInputComponent {
     }
 
     ngOnInit() {
-        console.log('Object: ');
-        console.log(this.obj);
         this.editing = true;
         this.idProvided = this.id !== undefined;
     }
@@ -60,10 +58,6 @@ export class ObjectInputComponent {
         else if (e.keyCode === KEYCODE_ESCAPE) {
             this.cancel();
         }
-    }
-
-    getId() {
-        return this.id != undefined ? `${this.id}: ` : '';
     }
 
     onFocus() {
