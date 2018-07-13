@@ -1,4 +1,4 @@
-import {Component, HostListener, ViewChild, Input} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {
     IonicPage,
     NavController,
