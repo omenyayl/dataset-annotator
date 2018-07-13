@@ -67,7 +67,8 @@ export class PolygonDrawer extends Drawer{
     saveFromCoordinates(...coordinates: CoordinatesObject[]) {
         if (coordinates.length > 3) {
             this.getAnnotationsProvider().addPolygon(new Polygon(
-                coordinates
+                coordinates,
+            AnnotationsProvider.lastLabel ? AnnotationsProvider.lastLabel : 'unnamed'
             ));
         }
         this.points = [];

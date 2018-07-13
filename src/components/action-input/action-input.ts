@@ -1,15 +1,19 @@
 import {Component, EventEmitter, HostListener, Input, Output} from "@angular/core";
-import {Events} from "ionic-angular";
-import {AnnotationsProvider} from "../../providers/annotations/annotations";
 
 const KEYCODE_ENTER = 13;
 const KEYCODE_ESCAPE = 27;
 
+/**
+ * Generated class for the ActionInputComponent component.
+ *
+ * See https://angular.io/api/core/Component for more info on Angular
+ * Components.
+ */
 @Component({
-    selector: "object-input",
-    templateUrl: "object-input.html",
+  selector: 'action-input',
+  templateUrl: 'action-input.html'
 })
-export class ObjectInputComponent {
+export class ActionInputComponent {
     @Input() value: string;
     @Input() id: string;
     @Input() obj: Object;
@@ -20,7 +24,7 @@ export class ObjectInputComponent {
     editing: boolean;
     idProvided: boolean;
 
-    constructor(public events: Events){
+    constructor(){
     }
 
     ngOnInit() {
@@ -42,8 +46,6 @@ export class ObjectInputComponent {
         this.valueChange.emit(this.newValue);
         this.idChange.emit(this.newId);
         this.editing = false;
-        AnnotationsProvider.lastLabel = this.value;
-        this.renderCanvas();
     }
 
     cancel(): void {
@@ -52,36 +54,13 @@ export class ObjectInputComponent {
         this.editing = false;
     }
 
-    // @HostListener('keydown', ['$event']) onEnterPressed(e) {
-    //     if (e.keyCode === KEYCODE_ENTER) {
-    //         this.accept();
-    //     }
-    //     else if (e.keyCode === KEYCODE_ESCAPE) {
-    //         this.cancel();
-    //     }
-    // }
-
-    @HostListener('keyup', ['$event']) onKeyUp(e) {
+    @HostListener('keydown', ['$event']) onEnterPressed(e) {
         if (e.keyCode === KEYCODE_ENTER) {
             this.accept();
         }
         else if (e.keyCode === KEYCODE_ESCAPE) {
             this.cancel();
         }
-        else {
-            this.accept();
-        }
-    }
-
-    onFocus() {
-        if(this.obj) {
-            AnnotationsProvider.selectedElement = this.obj;
-            this.renderCanvas();
-        }
-    }
-
-    renderCanvas() {
-        this.events.publish('render-canvas');
     }
 
 

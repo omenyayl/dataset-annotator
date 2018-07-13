@@ -14,6 +14,7 @@ export class AnnotationsProvider {
   	private actions: ActionObject[] = [];
     public static selectedElement: any;
     public static selectedAction;
+    public static lastLabel: string;
 
     constructor(private imageProvider: ImageProvider) {
     }
@@ -184,22 +185,15 @@ export class AnnotationsProvider {
         return this.annotations;
 	}
 
-  	generateSaveData(): Observable<any> {
-	  	return new Observable<any>((observer) => {
-		  console.log(`Generating save data for: ${Object.keys(this.getAnnotations())}`);
-		  	let _a = [];
-		  	console.log('Individual frames...');
-		  	for(let a of Object.keys(this.getAnnotations())){
-				console.log('Adding ANNOTATION');
-			  	_a.push(this.annotations[a]);
-			}
-		  	let dataObject = {
-				'frames': _a,
-			  	'actions': this.getActions()
-			};
-			observer.next(dataObject);
-			observer.complete();
-		})
+  	generateSaveData(): any {
+        let annotations = [];
+        for (let image in this.annotations) {
+            annotations.push(this.annotations[image]);
+        }
+        return {
+            'frames': annotations,
+            'actions': this.actions
+        };
 	}
 
 }

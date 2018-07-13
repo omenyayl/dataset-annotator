@@ -67,7 +67,7 @@ export class LineDrawer extends Drawer{
 
 
     static getLineFromCoordinates(start: CoordinatesObject, end: CoordinatesObject): Line {
-        return new Line(start, end);
+        return new Line(start, end, AnnotationsProvider.lastLabel ? AnnotationsProvider.lastLabel : 'unnamed');
     }
 
     selectElement(location: CoordinatesObject) : boolean {

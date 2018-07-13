@@ -19,6 +19,7 @@ import { AnnotationsProvider } from '../providers/annotations/annotations';
 import {InplaceInputComponent} from "../components/inplace-input/inplace-input";
 import {AnnotatorComponent} from "../components/annotator/annotator";
 import {ObjectInputComponent} from "../components/object-input/object-input";
+import {ActionInputComponent} from "../components/action-input/action-input";
 
 @NgModule({
     declarations: [
@@ -30,7 +31,8 @@ import {ObjectInputComponent} from "../components/object-input/object-input";
         HotkeysPage,
         InplaceInputComponent,
         ObjectInputComponent,
-        AnnotatorComponent
+        AnnotatorComponent,
+        ActionInputComponent
     ],
     imports: [
         BrowserModule,
