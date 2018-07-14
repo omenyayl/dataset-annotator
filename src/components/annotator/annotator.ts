@@ -1,7 +1,7 @@
 import {ImageProvider} from "../../providers/image/image";
 import {Component, ElementRef, ViewChild, HostListener, Renderer2} from '@angular/core';
 import { LineDrawer } from "../../drawers/line-drawer";
-import {CanvasDirectivesEnum} from "../../enums/canvas-directives-enum";
+import {DrawerNamesEnum} from "../../enums/drawer-names-enum";
 import {RectangleDrawer} from "../../drawers/rectangle-drawer";
 import { CoordinatesObject } from "../../objects/CoordinatesObject";
 import {DomSanitizer} from "@angular/platform-browser";
@@ -11,7 +11,6 @@ import { Events } from 'ionic-angular';
 import {AnnotationsProvider} from "../../providers/annotations/annotations";
 import {PolygonDrawer} from "../../drawers/polygon-drawer";
 import {Drawer} from "../../drawers/drawer";
-import * as path from "path";
 import {platform} from "process";
 
 /**
@@ -119,7 +118,7 @@ export class AnnotatorComponent {
             this.isDrawing = true;
 
             // Adding the initial starting point to the polygon
-            if (this.imageProvider.selectedCanvasDirective === CanvasDirectivesEnum.canvas_polygon) {
+            if (this.imageProvider.selectedCanvasDirective === DrawerNamesEnum.canvas_polygon) {
                 this.polygonDrawer.addPoint(this.start);
             }
 
@@ -131,17 +130,17 @@ export class AnnotatorComponent {
         else {
 
             switch (this.imageProvider.selectedCanvasDirective){
-                case CanvasDirectivesEnum.canvas_line:
+                case DrawerNamesEnum.canvas_line:
                     this.lineDrawer.saveFromCoordinates(this.start, mouseCoordinates);
                     this.isDrawing = false;
                     this.render();
                     break;
-                case CanvasDirectivesEnum.canvas_rect:
+                case DrawerNamesEnum.canvas_rect:
                     this.rectangleDrawer.saveFromCoordinates(this.start, mouseCoordinates);
                     this.isDrawing = false;
                     this.render();
                     break;
-                case CanvasDirectivesEnum.canvas_polygon:
+                case DrawerNamesEnum.canvas_polygon:
                     if(this.polygonDrawer.isNearStartPoint(mouseCoordinates)) {
                         this.polygonDrawer.addPoint(this.start);
                         this.polygonDrawer.saveFromCoordinates(...this.polygonDrawer.getPoints());
@@ -157,6 +156,8 @@ export class AnnotatorComponent {
     }
 
     @HostListener('mousedown', ['$event']) onMouseDown(event) {
+        if(this.isDrawing) return;
+
         let mouseCoordinates = {x: event.offsetX, y: event.offsetY};
 
         // Select the potentially hovering imageElement
@@ -187,13 +188,13 @@ export class AnnotatorComponent {
             this.render();
 
             switch (this.imageProvider.selectedCanvasDirective){
-                case CanvasDirectivesEnum.canvas_line:
+                case DrawerNamesEnum.canvas_line:
                     this.lineDrawer.drawFromCoordinates(this.start, mouseCoordinates);
                     break;
-                case CanvasDirectivesEnum.canvas_rect:
+                case DrawerNamesEnum.canvas_rect:
                     this.rectangleDrawer.drawFromCoordinates(this.start, mouseCoordinates);
                     break;
-                case CanvasDirectivesEnum.canvas_polygon:
+                case DrawerNamesEnum.canvas_polygon:
                     this.polygonDrawer.drawFromCoordinates(this.start, mouseCoordinates);
                     break;
             }

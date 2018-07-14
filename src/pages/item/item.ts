@@ -5,7 +5,7 @@ import {FileProvider} from "../../providers/file/file";
 import * as path from 'path';
 import {ImageObject} from '../../objects/image-object';
 import {ImageProvider} from "../../providers/image/image";
-import { CanvasDirectivesEnum } from "../../enums/canvas-directives-enum";
+import { DrawerNamesEnum } from "../../enums/drawer-names-enum";
 import {platform} from 'process';
 import { HotkeyProvider } from '../../providers/hotkeys/hotkeys';
 import { HotkeysService, Hotkey } from 'angular2-hotkeys';
@@ -36,7 +36,7 @@ export class ItemPage extends _DetailPage {
 	name: string;
     item: string = null;
     hotkeys: HotkeyObject;
-    canvasDirectives = CanvasDirectivesEnum;
+    canvasDirectives = DrawerNamesEnum;
     sanitizer: DomSanitizer;
 
     constructor(public navParams: NavParams,
@@ -156,11 +156,11 @@ export class ItemPage extends _DetailPage {
 
 	getObjects() {
         switch (this.getSelectedCanvasDirective()){
-            case CanvasDirectivesEnum.canvas_line:
+            case DrawerNamesEnum.canvas_line:
                 return this.annotationsProvider.getLines();
-            case CanvasDirectivesEnum.canvas_rect:
+            case DrawerNamesEnum.canvas_rect:
                 return this.annotationsProvider.getRectangles();
-            case CanvasDirectivesEnum.canvas_polygon:
+            case DrawerNamesEnum.canvas_polygon:
                 return this.annotationsProvider.getPolygons();
         }
     }
@@ -169,7 +169,7 @@ export class ItemPage extends _DetailPage {
         this.events.publish('render-canvas');
     }
 
-    selectCanvasDirective(directiveName: CanvasDirectivesEnum){
+    selectCanvasDirective(directiveName: DrawerNamesEnum){
         this.imageProvider.selectedCanvasDirective = directiveName;
     }
 

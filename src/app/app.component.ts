@@ -6,9 +6,9 @@ import {NavProxyService} from '../providers/nav-proxy/nav-proxy';
 import {ItemsPage} from '../pages/items/items';
 import {PlaceholderPage} from '../pages/placeholder/placeholder';
 import {FileProvider} from "../providers/file/file";
-import {ImageProvider} from "../providers/image/image";
 import {AnnotationsProvider} from "../providers/annotations/annotations";
 import {HotkeysPage} from '../pages/hotkeys/hotkeys';
+import FileFilter = Electron.FileFilter;
 
 const SUPPORTED_EXTENSIONS = [
     '.jpg',
@@ -38,7 +38,6 @@ export class MyApp {
         splashScreen: SplashScreen,
         private navProxy: NavProxyService,
         private fileProvider: FileProvider,
-        private imageProvider: ImageProvider,
         private annotationProvider: AnnotationsProvider,
         private menuCtrl: MenuController,
         private toastCtrl: ToastController) {
@@ -87,7 +86,12 @@ export class MyApp {
 
     saveFile() {
         console.log('Saving file...');
-        this.fileProvider.showSaveDialog()
+        let filters: FileFilter[] = [];
+        filters.push({
+            name: 'JSON',
+            extensions: ['json']
+        });
+        this.fileProvider.showSaveDialog(filters)
             .subscribe((file) => {
                 console.log(`Saving to ${file}`);
                 let saveJson = this.annotationProvider.generateSaveData();

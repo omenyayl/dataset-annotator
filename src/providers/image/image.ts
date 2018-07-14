@@ -1,8 +1,7 @@
 import {Injectable} from '@angular/core';
 import {ImageObject} from "../../objects/image-object";
 import * as imageSize from 'image-size';
-import {Observable} from "rxjs/Observable";
-import {CanvasDirectivesEnum} from "../../enums/canvas-directives-enum";
+import {DrawerNamesEnum} from "../../enums/drawer-names-enum";
 import {AnnotationsProvider} from "../annotations/annotations";
 
 const MAX_IMAGE_WIDTH = 750;
@@ -16,7 +15,7 @@ export class ImageProvider {
 
     public currentImage: ImageObject;
     public images: ImageObject[] = [];
-    public selectedCanvasDirective: CanvasDirectivesEnum;
+    public selectedCanvasDirective: DrawerNamesEnum;
     private annotationsProvider: AnnotationsProvider;
 
     constructor() {

@@ -11,7 +11,6 @@ import {ItemsPage} from "../pages/items/items";
 import {ItemPage} from "../pages/item/item";
 import {PlaceholderPage} from "../pages/placeholder/placeholder";
 import {ImageProvider} from '../providers/image/image';
-import {CanvasEditorDirective} from "../directives/canvas-editor/canvas-editor";
 import { HotkeyProvider } from '../providers/hotkeys/hotkeys';
 import { HotkeysPage } from '../pages/hotkeys/hotkeys';
 import { HotkeyModule } from 'angular2-hotkeys';
@@ -27,7 +26,6 @@ import {ActionInputComponent} from "../components/action-input/action-input";
         ItemsPage,
         ItemPage,
         PlaceholderPage,
-        CanvasEditorDirective,
         HotkeysPage,
         InplaceInputComponent,
         ObjectInputComponent,

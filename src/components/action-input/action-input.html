@@ -2,11 +2,11 @@
   <div (ionBlur)="accept()">
     <ion-row>
       <ion-col col-2>
-        <input class="id-label-input" placeholder="id" [(ngModel)]="newId"/>
+        <input (blur)="onBlur($event)" class="id-label-input" placeholder="id" [(ngModel)]="newId"/>
       </ion-col>
 
       <ion-col col-10>
-        <input class="id-label-input" placeholder="name" [(ngModel)]="newValue"/>
+        <input (blur)="onBlur($event)" class="id-label-input" placeholder="name" [(ngModel)]="newValue"/>
       </ion-col>
     </ion-row>
   </div>

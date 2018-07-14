@@ -15,8 +15,8 @@ export class RectangleDrawer extends Drawer{
         for (let rectangle of this.rectangles) {
             let color = rectangle === Drawer.getSelectedElement() ? Drawer.SELECTED_COLOR : Drawer.DEFAULT_COLOR;
             super.drawText(rectangle.label, new CoordinatesObject(
-                (rectangle.start.x + rectangle.end.x) / 2,
-                Math.min(rectangle.end.y, rectangle.start.y) - 10
+                (rectangle.topLeft.x + rectangle.bottomRight.x) / 2,
+                Math.min(rectangle.bottomRight.y, rectangle.topLeft.y) - 10
             ), color);
             this.drawRectangle(rectangle, color);
         }
@@ -24,15 +24,15 @@ export class RectangleDrawer extends Drawer{
 
     drawRectangle(rectangle: Rectangle, color = Drawer.DEFAULT_COLOR): void {
         color = Drawer.getSelectedElement() === rectangle ? Drawer.SELECTED_COLOR : Drawer.DEFAULT_COLOR;
-        super.drawLine({x: rectangle.start.x, y: rectangle.start.y}, {x: rectangle.start.x, y: rectangle.end.y}, color);
-        super.drawLine({x: rectangle.start.x, y: rectangle.start.y}, {x: rectangle.end.x, y: rectangle.start.y}, color);
-        super.drawLine({x: rectangle.end.x, y: rectangle.start.y}, {x: rectangle.end.x, y: rectangle.end.y}, color);
-        super.drawLine({x: rectangle.start.x, y: rectangle.end.y}, {x: rectangle.end.x, y: rectangle.end.y}, color);
+        super.drawLine({x: rectangle.topLeft.x, y: rectangle.topLeft.y}, {x: rectangle.topLeft.x, y: rectangle.bottomRight.y}, color);
+        super.drawLine({x: rectangle.topLeft.x, y: rectangle.topLeft.y}, {x: rectangle.bottomRight.x, y: rectangle.topLeft.y}, color);
+        super.drawLine({x: rectangle.bottomRight.x, y: rectangle.topLeft.y}, {x: rectangle.bottomRight.x, y: rectangle.bottomRight.y}, color);
+        super.drawLine({x: rectangle.topLeft.x, y: rectangle.bottomRight.y}, {x: rectangle.bottomRight.x, y: rectangle.bottomRight.y}, color);
 
-        super.drawCircle({x: rectangle.start.x, y: rectangle.start.y}, color);
-        super.drawCircle({x: rectangle.end.x, y: rectangle.end.y}, color);
-        super.drawCircle({x: rectangle.end.x, y: rectangle.start.y}, color);
-        super.drawCircle({x: rectangle.start.x, y: rectangle.end.y}, color);
+        super.drawCircle({x: rectangle.topLeft.x, y: rectangle.topLeft.y}, color);
+        super.drawCircle({x: rectangle.bottomRight.x, y: rectangle.bottomRight.y}, color);
+        super.drawCircle({x: rectangle.bottomRight.x, y: rectangle.topLeft.y}, color);
+        super.drawCircle({x: rectangle.topLeft.x, y: rectangle.bottomRight.y}, color);
     }
 
     drawFromCoordinates(...coordinates: CoordinatesObject[]) {
@@ -79,20 +79,20 @@ export class RectangleDrawer extends Drawer{
     static isNearCoordinates(rectangle: Rectangle, location: CoordinatesObject) : boolean {
         let pointCoordinates = [
             {
-                x: rectangle.start.x,
-                y: rectangle.start.y
+                x: rectangle.topLeft.x,
+                y: rectangle.topLeft.y
             },
             {
-                x: rectangle.end.x,
-                y: rectangle.end.y
+                x: rectangle.bottomRight.x,
+                y: rectangle.bottomRight.y
             },
             {
-                x: rectangle.end.x,
-                y: rectangle.start.y
+                x: rectangle.bottomRight.x,
+                y: rectangle.topLeft.y
             },
             {
-                x: rectangle.start.x,
-                y: rectangle.end.y
+                x: rectangle.topLeft.x,
+                y: rectangle.bottomRight.y
             }];
         for(let point of pointCoordinates){
             if (Drawer.computeDistance(location, point) < Drawer.POINT_RADIUS){

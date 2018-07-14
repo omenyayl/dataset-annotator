@@ -228,10 +228,10 @@ export class AnnotationsProvider {
         line.end.y = Math.round(line.end.y / scale);
     }
     public static unscaleRectangle(rectangle: Rectangle, scale: number){
-        rectangle.start.x = Math.round(rectangle.start.x / scale);
-        rectangle.start.y = Math.round(rectangle.start.y / scale);
-        rectangle.end.x = Math.round(rectangle.end.x / scale);
-        rectangle.end.y = Math.round(rectangle.end.y / scale);
+        rectangle.topLeft.x = Math.round(rectangle.topLeft.x / scale);
+        rectangle.topLeft.y = Math.round(rectangle.topLeft.y / scale);
+        rectangle.bottomRight.x = Math.round(rectangle.bottomRight.x / scale);
+        rectangle.bottomRight.y = Math.round(rectangle.bottomRight.y / scale);
     }
 
     public static unscalePolygon(polygon: Polygon, scale: number) {
@@ -248,8 +248,8 @@ export class AnnotationsProvider {
 export class Line {
 
     /**
-     * @param {CoordinatesObject} start The start point
-     * @param {CoordinatesObject} end The end point
+     * @param {CoordinatesObject} start The topLeft point
+     * @param {CoordinatesObject} end The bottomRight point
      * @param {string} label Name of the object
      */
     constructor(public start: CoordinatesObject,
@@ -262,12 +262,12 @@ export class Line {
 export class Rectangle {
 
     /**
-     * @param {CoordinatesObject} start The top left point
-     * @param {CoordinatesObject} end The bottom right point
+     * @param {CoordinatesObject} topLeft The top left point
+     * @param {CoordinatesObject} bottomRight The bottom right point
      * @param {string} label
      */
-    constructor(public start: CoordinatesObject,
-                public end: CoordinatesObject,
+    constructor(public topLeft: CoordinatesObject,
+                public bottomRight: CoordinatesObject,
                 public label: string = 'unnamed'){}
 }
 

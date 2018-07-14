@@ -6,6 +6,7 @@ import {of} from "rxjs/observable/of";
 import * as fs from 'fs';
 import * as path from 'path';
 import {Subject} from "rxjs/Subject";
+import FileFilter = Electron.FileFilter;
 
 let {dialog} = remote;
 let actionOutputName = 'actions.json';
@@ -50,10 +51,13 @@ export class FileProvider {
 
     }
 
-    showSaveDialog(): Observable<string> {
+    showSaveDialog(filters?: FileFilter[]): Observable<string> {
         return new Observable<string>((observer) => {
             dialog.showSaveDialog(undefined, {
-                title: 'Save annotations'
+                title: 'Save annotations',
+                ...(filters && {
+                    filters: filters
+                })
             }, filename => {
                 if (!filename) {
                     observer.error();

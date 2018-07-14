@@ -73,6 +73,11 @@ export class ObjectInputComponent {
 
     }
 
+    onBlur(e: Event){
+        this.accept();
+        this.renderer.removeClass(e.srcElement, 'editing');
+    }
+
     renderCanvas() {
         this.events.publish('render-canvas');
     }

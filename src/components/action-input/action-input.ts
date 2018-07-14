@@ -70,5 +70,10 @@ export class ActionInputComponent {
         }
     }
 
+    onBlur(e: Event){
+        this.accept();
+        this.renderer.removeClass(e.srcElement, 'editing');
+    }
+
 
 }
