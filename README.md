@@ -4,7 +4,6 @@ Tool for annotating image datasets.
 ![alt text](https://s3.amazonaws.com/olegpublicbucket/Screen+Shot+2018-07-14+at+12.26.19+PM.png)
 
 ## Installing and Running as a user
-Go to https://github.com/omenyayl/dataset-annotator/releases and if you're on
 * Windows: 
   * Download the .exe file [here](https://github.com/omenyayl/dataset-annotator/releases/download/v0.2.0/dataset-annotator-setup-0.2.0.exe) and install it.
   * Run the app from your desktop
