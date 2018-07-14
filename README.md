@@ -10,7 +10,7 @@ Go to https://github.com/omenyayl/dataset-annotator/releases and if you're on
   * Download the .dmg file and install it
   * Run it from Applications
 * Linux:
-  * Download the .snap or .AppImage file and run it
+  * Download the .AppImage file and run it - don't forget to add executable permissions to the file with chmod +x 
 
 ## Developing
 ### Installing
