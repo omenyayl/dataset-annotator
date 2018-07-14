@@ -9,7 +9,6 @@ import {FileProvider} from "../providers/file/file";
 import {AnnotationsProvider} from "../providers/annotations/annotations";
 import {HotkeysPage} from '../pages/hotkeys/hotkeys';
 import FileFilter = Electron.FileFilter;
-import {autoUpdater} from "electron-updater";
 
 const SUPPORTED_EXTENSIONS = [
     '.jpg',
@@ -60,20 +59,6 @@ export class MyApp {
 
         });
 
-    }
-
-    ngOnInit(){
-        autoUpdater.checkForUpdatesAndNotify()
-            .then((fulfilled) => {
-                if (fulfilled) {
-                    let toast = this.toastCtrl.create({
-                        message: 'Program automatically updated!',
-                        duration: 3000,
-                        position: 'bottom'
-                    });
-                    toast.present();
-                }
-            })
     }
 
     /**

@@ -1,6 +1,8 @@
 'use strict';
 const electron = require('electron');
 const globalShortcut = electron.globalShortcut;
+const {autoUpdater} = require("electron-updater");
+
 
 // Module to control application life.
 const {
@@ -45,7 +47,9 @@ function createWindow() {
     globalShortcut.register('CommandOrControl+R', function () {
         console.log('CommandOrControl+R is pressed');
         win.reload()
-    })
+    });
+
+    autoUpdater.checkForUpdatesAndNotify();
 }
 
 // This method will be called when Electron has finished
