@@ -1,7 +1,7 @@
 # Dataset Annotator
 Tool for annotating image datasets.
 ## Demo
-![alt text](https://s3.amazonaws.com/olegpublicbucket/Screen+Shot+2018-07-14+at+12.23.25+PM.png)
+![alt text](https://s3.amazonaws.com/olegpublicbucket/Screen+Shot+2018-07-14+at+12.26.19+PM.png)
 
 ## Installing and Running as a user
 Go to https://github.com/omenyayl/dataset-annotator/releases and if you're on
