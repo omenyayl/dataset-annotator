@@ -162,7 +162,7 @@ export class FileProvider {
 			});
 		  	observer.complete();
 		}).pipe(
-		    catchError(this.handleError('File.saveFile', null))
+		    catchError(this.handleError('File.saveFile()', null))
         )
   	}
 
@@ -186,10 +186,25 @@ export class FileProvider {
                 observer.complete();
             });
 		}).pipe(
-		    catchError(this.handleError('File.saveFiles', false))
+		    catchError(this.handleError('File.saveFiles()', false))
         )
   	}
-  
+
+  	loadJSON(path: string): Observable<any> {
+	    return new Observable<any>((observer) => {
+	       fs.readFile(path, (err, data) => {
+	           if (err) {
+	               observer.error(err);
+               } else {
+	               observer.next(JSON.parse(data.toString()));
+               }
+               observer.complete();
+           })
+        }).pipe(
+            catchError(this.handleError('loadJSON()', null))
+        );
+    }
+
   	/**
      * Handle an operation that failed.
      * Let the app continue.

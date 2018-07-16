@@ -70,7 +70,7 @@ export abstract class Drawer {
 
     }
 
-    static moveLine(selectedElement: any, point: CoordinatesObject, mouse: CoordinatesObject) {
+    static moveLine(selectedElement: Line, point: CoordinatesObject, mouse: CoordinatesObject) {
         if(!Drawer.oldElement) {
             Drawer.oldElement = new Line(
                 new CoordinatesObject(selectedElement.start.x, selectedElement.start.y),
@@ -90,41 +90,41 @@ export abstract class Drawer {
         }
     }
 
-    static moveRectangle(selectedElement: any, point: CoordinatesObject, mouse: CoordinatesObject){
+    static moveRectangle(selectedElement: Rectangle, point: CoordinatesObject, mouse: CoordinatesObject){
         if(!Drawer.oldElement) {
             Drawer.oldElement = new Rectangle(
-                new CoordinatesObject(selectedElement.start.x, selectedElement.start.y),
-                new CoordinatesObject(selectedElement.end.x, selectedElement.end.y));
+                new CoordinatesObject(selectedElement.topLeft.x, selectedElement.topLeft.y),
+                new CoordinatesObject(selectedElement.bottomRight.x, selectedElement.bottomRight.y));
         }
         if (Drawer.computeDistance(
-            Drawer.oldElement.start,
+            Drawer.oldElement.topLeft,
             point
         ) <= Drawer.POINT_RADIUS) {
-            selectedElement.start = mouse;
+            selectedElement.topLeft = mouse;
         }
         else if (Drawer.computeDistance(
-            Drawer.oldElement.end,
+            Drawer.oldElement.bottomRight,
             point
         ) <= Drawer.POINT_RADIUS) {
-            selectedElement.end = mouse;
+            selectedElement.bottomRight = mouse;
         }
         else if (Drawer.computeDistance(
-            new CoordinatesObject(Drawer.oldElement.end.x, Drawer.oldElement.start.y),
+            new CoordinatesObject(Drawer.oldElement.bottomRight.x, Drawer.oldElement.topLeft.y),
             point
         ) <= Drawer.POINT_RADIUS) {
-            selectedElement.start.y = mouse.y;
-            selectedElement.end.x = mouse.x;
+            selectedElement.topLeft.y = mouse.y;
+            selectedElement.bottomRight.x = mouse.x;
         }
         else if (Drawer.computeDistance(
-            new CoordinatesObject(Drawer.oldElement.start.x, Drawer.oldElement.end.y),
+            new CoordinatesObject(Drawer.oldElement.topLeft.x, Drawer.oldElement.bottomRight.y),
             point
         ) <= Drawer.POINT_RADIUS) {
-            selectedElement.start.x = mouse.x;
-            selectedElement.end.y = mouse.y;
+            selectedElement.topLeft.x = mouse.x;
+            selectedElement.bottomRight.y = mouse.y;
         }
     }
 
-    static movePolygon(selectedElement: any, point: CoordinatesObject, mouse: CoordinatesObject) {
+    static movePolygon(selectedElement: Polygon, point: CoordinatesObject, mouse: CoordinatesObject) {
         if(!Drawer.oldElement){
             Drawer.oldElement = new Polygon();
             for(let coordinate of selectedElement.coordinates){

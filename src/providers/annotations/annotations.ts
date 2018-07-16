@@ -3,6 +3,7 @@ import {Injectable} from '@angular/core';
 import {AnnotationObject} from "../../objects/annotation-object";
 import { ImageProvider } from "../image/image"
 import {ActionObject} from "../../objects/action-object";
+import {Events} from "ionic-angular";
 
 /**
     Provider that deals with getting and setting annotations
@@ -10,18 +11,25 @@ import {ActionObject} from "../../objects/action-object";
 @Injectable()
 export class AnnotationsProvider {
   	private annotations: AnnotationObject[] = [];
+
   	private actions: ActionObject[] = [];
     public static selectedElement: any;
     public static selectedAction;
     public static lastLabel: string;
 
-    constructor(private imageProvider: ImageProvider) {
+    constructor(private imageProvider: ImageProvider,
+                private events: Events) {
     }
 
     public initAnnotations(imageSrc: string) {
         if (! this.annotations[imageSrc]) {
             this.annotations[imageSrc] = new AnnotationObject(imageSrc);
         }
+
+    }
+
+    renderCanvas() {
+        this.events.publish('render-canvas');
     }
 
 
@@ -53,6 +61,8 @@ export class AnnotationsProvider {
             annotation.rectangles.splice(i, 1);
             return true;
         }
+
+        console.log('failed to remove rect');
 
         return false;
     }
@@ -192,7 +202,7 @@ export class AnnotationsProvider {
 
             let scale = this.imageProvider.images[image].scale;
             let copyOfAnnotations = JSON.parse(JSON.stringify(this.annotations[image]));
-            this.unscaleAnnotations(copyOfAnnotations, scale);
+            AnnotationsProvider.unscaleAnnotation(copyOfAnnotations, scale);
             annotations.push(copyOfAnnotations);
         }
         return {
@@ -201,43 +211,96 @@ export class AnnotationsProvider {
         };
 	}
 
+	loadAnnotations(json_from_annotations_file: any): boolean {
+        for (let annotation of json_from_annotations_file['frames']) {
+            if (this.isAnnotationsEmpty(this.annotations[annotation.src])) {
+                if (this.imageProvider.images[annotation.src]) {
+                    let scale = this.imageProvider.images[annotation.src].scale;
+                    if (scale != 1) {
+                        AnnotationsProvider.rescaleAnnotation(annotation, scale);
+                    }
+                }
+
+                this.annotations[annotation.src] = this.deepCopyAnnotations(annotation);
+            }
+        }
+        this.renderCanvas();
+        return false;
+    }
+
+    deepCopyAnnotations(annotations: AnnotationObject) {
+        let newAnnotations = new AnnotationObject(annotations.src);
+        for (let line of annotations.lines) {
+            newAnnotations.lines.push(new Line(
+                new CoordinatesObject(line.start.x, line.start.y),
+                new CoordinatesObject(line.end.x, line.end.y),
+                line.label));
+        }
+        for (let rectangle of annotations.rectangles) {
+            newAnnotations.rectangles.push(new Rectangle(
+                new CoordinatesObject(rectangle.topLeft.x, rectangle.topLeft.y),
+                new CoordinatesObject(rectangle.bottomRight.x, rectangle.bottomRight.y),
+                rectangle.label));
+        }
+        for (let polygon of annotations.polygons) {
+            let coordinates = [];
+            for (let coordinate of polygon.coordinates) {
+                coordinates.push(new CoordinatesObject(coordinate.x, coordinate.y));
+            }
+            newAnnotations.polygons.push(new Polygon(coordinates, polygon.label));
+        }
+        return newAnnotations;
+    }
+
 	isAnnotationsEmpty(annotations: AnnotationObject) {
-        return annotations.lines.length === 0 &&
+        return  ! annotations ||
+                annotations.lines.length === 0 &&
                 annotations.rectangles.length === 0 &&
                 annotations.polygons.length === 0
     }
 
-	unscaleAnnotations(annotations: AnnotationObject, scale: number) {
-        for(let i = 0; i < annotations.lines.length; i++) {
-            AnnotationsProvider.unscaleLine(annotations.lines[i], scale);
+	static unscaleAnnotation(annotation: AnnotationObject, scale: number) {
+        for(let i = 0; i < annotation.lines.length; i++) {
+            annotation.lines[i].start.x = Math.round(annotation.lines[i].start.x / scale);
+            annotation.lines[i].start.y = Math.round(annotation.lines[i].start.y / scale);
+            annotation.lines[i].end.x = Math.round(annotation.lines[i].end.x / scale);
+            annotation.lines[i].end.y = Math.round(annotation.lines[i].end.y / scale);
         }
-        for(let i = 0; i < annotations.rectangles.length; i++) {
-            AnnotationsProvider.unscaleRectangle(annotations.rectangles[i], scale);
+        for(let i = 0; i < annotation.rectangles.length; i++) {
+            annotation.rectangles[i].topLeft.x = Math.round(annotation.rectangles[i].topLeft.x / scale);
+            annotation.rectangles[i].topLeft.y = Math.round(annotation.rectangles[i].topLeft.y / scale);
+            annotation.rectangles[i].bottomRight.x = Math.round(annotation.rectangles[i].bottomRight.x / scale);
+            annotation.rectangles[i].bottomRight.y = Math.round(annotation.rectangles[i].bottomRight.y / scale);
         }
-        for(let i = 0; i < annotations.polygons.length; i++) {
-            AnnotationsProvider.unscalePolygon(annotations.polygons[i], scale);
+        for(let i = 0; i < annotation.polygons.length; i++) {
+            for (let point of annotation.polygons[i].coordinates) {
+                point.x = Math.round(point.x / scale);
+                point.y = Math.round(point.y / scale);
+            }
         }
     }
 
-    public static unscaleLine(line: Line, scale: number){
-        line.start.x = Math.round(line.start.x / scale);
-        line.start.y = Math.round(line.start.y / scale);
-        line.end.x = Math.round(line.end.x / scale);
-        line.end.y = Math.round(line.end.y / scale);
-    }
-    public static unscaleRectangle(rectangle: Rectangle, scale: number){
-        rectangle.topLeft.x = Math.round(rectangle.topLeft.x / scale);
-        rectangle.topLeft.y = Math.round(rectangle.topLeft.y / scale);
-        rectangle.bottomRight.x = Math.round(rectangle.bottomRight.x / scale);
-        rectangle.bottomRight.y = Math.round(rectangle.bottomRight.y / scale);
-    }
-
-    public static unscalePolygon(polygon: Polygon, scale: number) {
-        for (let point of polygon.coordinates) {
-            point.x = Math.round(point.x / scale);
-            point.y = Math.round(point.y / scale);
+    static rescaleAnnotation(annotation: AnnotationObject, scale: number) {
+        for(let i = 0; i < annotation.lines.length; i++) {
+            annotation.lines[i].start.x = Math.round(annotation.lines[i].start.x * scale);
+            annotation.lines[i].start.y = Math.round(annotation.lines[i].start.y * scale);
+            annotation.lines[i].end.x = Math.round(annotation.lines[i].end.x * scale);
+            annotation.lines[i].end.y = Math.round(annotation.lines[i].end.y * scale);
+        }
+        for(let i = 0; i < annotation.rectangles.length; i++) {
+            annotation.rectangles[i].topLeft.x = Math.round(annotation.rectangles[i].topLeft.x * scale);
+            annotation.rectangles[i].topLeft.y = Math.round(annotation.rectangles[i].topLeft.y * scale);
+            annotation.rectangles[i].bottomRight.x = Math.round(annotation.rectangles[i].bottomRight.x * scale);
+            annotation.rectangles[i].bottomRight.y = Math.round(annotation.rectangles[i].bottomRight.y * scale);
+        }
+        for(let i = 0; i < annotation.polygons.length; i++) {
+            for (let point of annotation.polygons[i].coordinates) {
+                point.x = Math.round(point.x * scale);
+                point.y = Math.round(point.y * scale);
+            }
         }
     }
+
 }
 
 /**
