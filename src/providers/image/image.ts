@@ -22,18 +22,19 @@ export class ImageProvider {
     }
 
     /**
-     * Takes in the path of the image, scales it down if it has to, and returns a new ImageObject object with
+     * Takes in the name of the image, scales it down if it has to, and returns a new ImageObject object with
      * width, height, src, and scaling factor
-     * @param path The Path of the image
+     * @param name The name of the image
      * @param annotationsProvider the AnnotationsProvider
      * @returns {ImageObject} the ImageObject object with width, height, src, and scale
      */
-    initImage(path: string,
-              annotationsProvider: AnnotationsProvider) {
+    initImage(name: string,
+              annotationsProvider: AnnotationsProvider,
+              fullPath: string) {
 
         this.annotationsProvider = annotationsProvider;
 
-        const sizeOfCurrentImage = imageSize(path);
+        const sizeOfCurrentImage = imageSize(fullPath);
         let width = sizeOfCurrentImage.width;
         let height = sizeOfCurrentImage.height;
         let ratio = 1;
@@ -48,13 +49,13 @@ export class ImageProvider {
             height = MAX_IMAGE_HEIGHT;
         }
         let newImage = new ImageObject(
-            path, width, height, ratio
+            name, width, height, ratio
         );
         this.currentImage = newImage;
 
-        if (! this.images[path]) {
+        if (! this.images[name]) {
             this.annotationsProvider.initAnnotations(this.currentImage.src, ratio);
-            this.images[path] = newImage;
+            this.images[name] = newImage;
         }
 
     }

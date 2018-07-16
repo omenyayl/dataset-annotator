@@ -5,6 +5,7 @@ import {DrawerNamesEnum} from "../../enums/drawer-names-enum";
 import {RectangleDrawer} from "../../drawers/rectangle-drawer";
 import { CoordinatesObject } from "../../objects/CoordinatesObject";
 import {DomSanitizer} from "@angular/platform-browser";
+import * as path from 'path';
 
 //EventListener for deletion
 import { Events } from 'ionic-angular';
@@ -12,6 +13,7 @@ import {AnnotationsProvider} from "../../providers/annotations/annotations";
 import {PolygonDrawer} from "../../drawers/polygon-drawer";
 import {Drawer} from "../../drawers/drawer";
 import {platform} from "process";
+import {FileProvider} from "../../providers/file/file";
 
 /**
  * Generated class for the AnnotatorComponent component.
@@ -48,11 +50,12 @@ export class AnnotatorComponent {
                 renderer: Renderer2,
                 sanitizer: DomSanitizer,
                 private events: Events,
-                private imageProvider: ImageProvider) {
+                private imageProvider: ImageProvider,
+                private fileProvider: FileProvider) {
         let imageObj = imageProvider.currentImage;
         this.imgWidth = imageObj.width;
         this.imgHeight = imageObj.height;
-        this.src = imageObj.src;
+        this.src = path.join(this.fileProvider.selectedFolder, imageObj.src);
         this.renderer = renderer;
         this.sanitizer = sanitizer;
     }

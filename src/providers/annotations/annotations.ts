@@ -202,10 +202,11 @@ export class AnnotationsProvider {
         for (let image in this.annotations) {
 
             if(this.isAnnotationsEmpty(this.annotations[image])) continue;
-
-            let scale = this.imageProvider.images[image].scale;
             let copyOfAnnotations = JSON.parse(JSON.stringify(this.annotations[image]));
-            AnnotationsProvider.unscaleAnnotation(copyOfAnnotations, scale);
+
+            if (this.imageProvider.images[image]) {
+                AnnotationsProvider.unscaleAnnotation(copyOfAnnotations, this.imageProvider.images[image].scale);
+            }
             annotations.push(copyOfAnnotations);
         }
         return {

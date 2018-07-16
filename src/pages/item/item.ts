@@ -63,7 +63,7 @@ export class ItemPage extends _DetailPage {
             this.updateHotkeys(value);
         });
 
-        this.imageProvider.initImage(currentImagePath as string, this.annotationsProvider);
+        this.imageProvider.initImage(this.item, this.annotationsProvider, currentImagePath);
         this.getCurrentAnnotations();
 
         this.hotkeyService.add(new Hotkey(["del", "backspace"],
