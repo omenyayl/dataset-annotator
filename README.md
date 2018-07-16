@@ -5,13 +5,13 @@ Tool for annotating image datasets.
 
 ## Installing and Running as a user
 * Windows: 
-  * Download the .exe file [here](https://github.com/omenyayl/dataset-annotator/releases/download/v0.2.0/dataset-annotator-setup-0.2.0.exe) and install it.
+  * Download the .exe file [here](https://github.com/omenyayl/dataset-annotator/releases/download/v0.3.0/dataset-annotator-setup-0.3.0.exe) and install it.
   * Run the app from your desktop
 * Mac:
-  * Download the .dmg file [here](https://github.com/omenyayl/dataset-annotator/releases/download/v0.2.0/dataset-annotator-0.2.0.dmg) and install it
+  * Download the .dmg file [here](https://github.com/omenyayl/dataset-annotator/releases/download/v0.3.0/dataset-annotator-0.3.0.dmg) and install it
   * Run it from Applications
 * Linux:
-  * Download the .AppImage file [here](https://github.com/omenyayl/dataset-annotator/releases/download/v0.2.0/dataset-annotator-0.2.0-x86_64.AppImage) and run it - don't forget to add executable permissions to the file with chmod +x 
+  * Download the .AppImage file [here](https://github.com/omenyayl/dataset-annotator/releases/download/v0.3.0/dataset-annotator-0.3.0-x86_64.AppImage) and run it - don't forget to add executable permissions to the file with chmod +x 
 
 ## Developing
 ### Installing
