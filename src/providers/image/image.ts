@@ -51,8 +51,12 @@ export class ImageProvider {
             path, width, height, ratio
         );
         this.currentImage = newImage;
-        this.images[path] = newImage;
-        this.annotationsProvider.initAnnotations(this.currentImage.src);
+
+        if (! this.images[path]) {
+            this.annotationsProvider.initAnnotations(this.currentImage.src, ratio);
+            this.images[path] = newImage;
+        }
+
     }
 
 	/*generateSaveData(): Observable<any> {

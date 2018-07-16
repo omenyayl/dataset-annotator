@@ -107,10 +107,7 @@ export class FileProvider {
 
         }).pipe(
             tap((files) => {
-                this.ngZone.run(() => {
-                    this.filesChange.next(files);
-                    this.filesLoading.next(false);
-                });
+
             }),
             catchError((error: any): Observable<string[]> => {
                 this.ngZone.run(() => {

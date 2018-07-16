@@ -21,9 +21,12 @@ export class AnnotationsProvider {
                 private events: Events) {
     }
 
-    public initAnnotations(imageSrc: string) {
+    public initAnnotations(imageSrc: string, scale: number) {
         if (! this.annotations[imageSrc]) {
             this.annotations[imageSrc] = new AnnotationObject(imageSrc);
+        }
+        else if (scale != 1) {
+            AnnotationsProvider.rescaleAnnotation(this.annotations[imageSrc], scale);
         }
 
     }
@@ -214,17 +217,9 @@ export class AnnotationsProvider {
 	loadAnnotations(json_from_annotations_file: any): boolean {
         for (let annotation of json_from_annotations_file['frames']) {
             if (this.isAnnotationsEmpty(this.annotations[annotation.src])) {
-                if (this.imageProvider.images[annotation.src]) {
-                    let scale = this.imageProvider.images[annotation.src].scale;
-                    if (scale != 1) {
-                        AnnotationsProvider.rescaleAnnotation(annotation, scale);
-                    }
-                }
-
                 this.annotations[annotation.src] = this.deepCopyAnnotations(annotation);
             }
         }
-        this.renderCanvas();
         return false;
     }
 

@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, NgZone, ViewChild} from '@angular/core';
 import {Platform, Nav, MenuController, ToastController} from 'ionic-angular';
 import {StatusBar} from '@ionic-native/status-bar';
 import {SplashScreen} from '@ionic-native/splash-screen';
@@ -40,7 +40,8 @@ export class MyApp {
         private fileProvider: FileProvider,
         private annotationProvider: AnnotationsProvider,
         private menuCtrl: MenuController,
-        private toastCtrl: ToastController) {
+        private toastCtrl: ToastController,
+        private ngZone: NgZone) {
 
         platform.ready().then(() => {
 
@@ -68,7 +69,6 @@ export class MyApp {
         console.log(`Opening directory`);
         this.fileProvider.showOpenDialog()
             .subscribe((value) => {
-                this.fileProvider.selectedFolder = value;
                 this.fileProvider.listFiles(value, SUPPORTED_EXTENSIONS)
                     .subscribe((files) => {
                         if (files.length === 0) {
@@ -78,6 +78,13 @@ export class MyApp {
                                 position: 'bottom'
                             });
                             toast.present();
+                        } else {
+                            this.ngZone.run(()=>{
+                                this.fileProvider.filesChange.next(files);
+                                this.fileProvider.filesLoading.next(false);
+                            });
+                            this.fileProvider.selectedFolder = value;
+
                         }
 
                     })
