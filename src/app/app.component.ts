@@ -113,4 +113,14 @@ export class MyApp {
         this.menuCtrl.close();
         this.navProxy.pushMaster(HotkeysPage, null);
     }
+
+    readAnnotations() {
+        this.fileProvider.showOpenDialog('openFile')
+            .subscribe((path) => {
+                this.fileProvider.loadJSON(path)
+                    .subscribe((file_json) => {
+                        this.annotationProvider.loadAnnotations(file_json);
+                    });
+            });
+    }
 }

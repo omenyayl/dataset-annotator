@@ -1,26 +1,31 @@
 <ion-menu [content]="masterNav">
-  <ion-header>
-    <ion-toolbar>
-      <ion-title>Menu</ion-title>
-    </ion-toolbar>
-  </ion-header>
-  <ion-content>
-    <ion-list>
-      <button ion-item (click)="openHotkeysForm()">
-        Keybindings
-      </button>
-    </ion-list>
-  </ion-content>
+    <ion-header>
+        <ion-toolbar>
+            <ion-title>Menu</ion-title>
+        </ion-toolbar>
+    </ion-header>
+    <ion-content>
+        <ion-list>
+            <button ion-item (click)="openHotkeysForm()">
+                Keybindings
+            </button>
+            <button ion-item (click)="readAnnotations()">Load Annotations</button>
+        </ion-list>
+    </ion-content>
 </ion-menu>
 <ion-split-pane when="(min-width: 1px)" (ionChange)="navProxy.onSplitPaneChanged($event._visible);">
-  <ion-nav style="max-width: 10%!important;" [root]="masterPage" #masterNav></ion-nav>
-  <ion-nav [root]="detailPage" #detailNav main></ion-nav>
+    <ion-nav style="max-width: 10%!important;" [root]="masterPage" #masterNav></ion-nav>
+    <ion-nav [root]="detailPage" #detailNav main></ion-nav>
 
 
     <ion-fab padding bottom right>
-        <button ion-fab><ion-icon name="add"></ion-icon></button>
+        <button ion-fab>
+            <ion-icon name="add"></ion-icon>
+        </button>
         <ion-fab-list side="top" class="fab-list-active">
-            <button ion-fab color="secondary" (click)="openDir()"><ion-icon name="folder"></ion-icon></button>
+            <button ion-fab color="secondary" (click)="openDir()">
+                <ion-icon name="folder"></ion-icon>
+            </button>
             <button ion-fab color="secondary" (click)="saveFile()">
                 <ion-icon name="md-download"></ion-icon>
             </button>
