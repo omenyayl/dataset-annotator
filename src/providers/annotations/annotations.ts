@@ -212,9 +212,7 @@ export class AnnotationsProvider {
             AnnotationsProvider.unscaleLine(annotations.lines[i], scale);
         }
         for(let i = 0; i < annotations.rectangles.length; i++) {
-            console.log(annotations.rectangles[i]);
             AnnotationsProvider.unscaleRectangle(annotations.rectangles[i], scale);
-            console.log(annotations.rectangles[i]);
         }
         for(let i = 0; i < annotations.polygons.length; i++) {
             AnnotationsProvider.unscalePolygon(annotations.polygons[i], scale);
