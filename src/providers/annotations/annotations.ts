@@ -255,51 +255,49 @@ export class AnnotationsProvider {
 
 	loadAnnotations(json_from_annotations_file: any): boolean {
         for (let annotation of json_from_annotations_file['frames']) {
-            if (this.isAnnotationsEmpty(this.annotations[annotation.src])) {
-                this.annotations[annotation.src] = this.deepCopyAnnotations(annotation);
-            }
+            this.annotations[annotation.src] = this.deepAppendAnnotations(annotation, this.annotations[annotation.src]);
         }
         return false;
     }
 
-    deepCopyAnnotations(annotations: AnnotationObject) {
+    deepAppendAnnotations(annotations: AnnotationObject, existingAnnotations?: AnnotationObject) {
+
+        // Initialize undefined objects
+        if (!existingAnnotations) existingAnnotations = new AnnotationObject(annotations.src);
+        if (!annotations.lines) annotations.lines = [];
+        if (!annotations.rectangles) annotations.rectangles = [];
+        if (!annotations.polygons) annotations.polygons = [];
+        if (!annotations.polylines) annotations.polylines = [];
+
         let newAnnotations = new AnnotationObject(annotations.src);
-        if(annotations.lines){
-            for (let line of annotations.lines) {
-                newAnnotations.lines.push(new Line(
-                    new CoordinatesObject(line.start.x, line.start.y),
-                    new CoordinatesObject(line.end.x, line.end.y),
-                    line.label));
-            }
+        for (let line of annotations.lines.concat(existingAnnotations.lines)) {
+            newAnnotations.lines.push(new Line(
+                new CoordinatesObject(line.start.x, line.start.y),
+                new CoordinatesObject(line.end.x, line.end.y),
+                line.label));
         }
 
-        if(annotations.rectangles) {
-            for (let rectangle of annotations.rectangles) {
-                newAnnotations.rectangles.push(new Rectangle(
-                    new CoordinatesObject(rectangle.topLeft.x, rectangle.topLeft.y),
-                    new CoordinatesObject(rectangle.bottomRight.x, rectangle.bottomRight.y),
-                    rectangle.label));
-            }
+        for (let rectangle of annotations.rectangles.concat(existingAnnotations.rectangles)) {
+            newAnnotations.rectangles.push(new Rectangle(
+                new CoordinatesObject(rectangle.topLeft.x, rectangle.topLeft.y),
+                new CoordinatesObject(rectangle.bottomRight.x, rectangle.bottomRight.y),
+                rectangle.label));
         }
 
-        if(annotations.polygons) {
-            for (let polygon of annotations.polygons) {
-                let coordinates = [];
-                for (let coordinate of polygon.coordinates) {
-                    coordinates.push(new CoordinatesObject(coordinate.x, coordinate.y));
-                }
-                newAnnotations.polygons.push(new Polygon(coordinates, polygon.label));
+        for (let polygon of annotations.polygons.concat(existingAnnotations.polygons)) {
+            let coordinates = [];
+            for (let coordinate of polygon.coordinates) {
+                coordinates.push(new CoordinatesObject(coordinate.x, coordinate.y));
             }
+            newAnnotations.polygons.push(new Polygon(coordinates, polygon.label));
         }
 
-        if(annotations.polylines) {
-            for (let polyline of annotations.polylines) {
-                let coordinates = [];
-                for (let coordinate of polyline.coordinates) {
-                    coordinates.push(new CoordinatesObject(coordinate.x, coordinate.y));
-                }
-                newAnnotations.polylines.push(new Polyline(coordinates, polyline.label));
+        for (let polyline of annotations.polylines.concat(existingAnnotations.polylines)) {
+            let coordinates = [];
+            for (let coordinate of polyline.coordinates) {
+                coordinates.push(new CoordinatesObject(coordinate.x, coordinate.y));
             }
+            newAnnotations.polylines.push(new Polyline(coordinates, polyline.label));
         }
 
         return newAnnotations;

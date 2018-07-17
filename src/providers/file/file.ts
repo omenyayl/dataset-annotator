@@ -107,7 +107,6 @@ export class FileProvider {
 
         }).pipe(
             tap((files) => {
-
             }),
             catchError((error: any): Observable<string[]> => {
                 this.ngZone.run(() => {
