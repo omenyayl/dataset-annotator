@@ -15,10 +15,10 @@ Tool for annotating image datasets.
 
 ## Developing
 ### Installing
-Install with
+Go into the cloned directory, and install with
 ```
-npm install --unsafe-perm=true -g ionic electron
-npm install --unsafe-perm=true .
+yarn add global ionic electron
+yarn install
 ```
 
 ### Running
