@@ -69,7 +69,7 @@ export class ItemsPage extends _MasterPage {
 
     previousItem() {
         let newIndex = this.selected[1] - 1;
-        if(newIndex >= 0) {
+        if(this.files && newIndex >= 0) {
             this.onItemSelected(this.files[newIndex], newIndex);
 
             let yOffset = document.getElementById(`${newIndex}`).offsetTop;
@@ -79,7 +79,7 @@ export class ItemsPage extends _MasterPage {
 
     nextItem() {
         let newIndex = this.selected[1] + 1;
-        if(newIndex < this.files.length) {
+        if(this.files && newIndex < this.files.length) {
             this.onItemSelected(this.files[newIndex], newIndex);
 
             let yOffset = document.getElementById(`${newIndex}`).offsetTop;
