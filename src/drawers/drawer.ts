@@ -1,5 +1,5 @@
 import {CoordinatesObject} from "../objects/CoordinatesObject";
-import {AnnotationsProvider, Rectangle, Line, Polygon} from "../providers/annotations/annotations";
+import {AnnotationsProvider, Rectangle, Line, Polygon, Polyline} from "../providers/annotations/annotations";
 
 export abstract class Drawer {
     public static readonly POINT_RADIUS: number = 5;
@@ -67,6 +67,9 @@ export abstract class Drawer {
         else if (selectedElement instanceof Polygon) {
             Drawer.movePolygon(selectedElement, point, mouse);
         }
+        else if (selectedElement instanceof Polyline) {
+            Drawer.movePolyline(selectedElement, point, mouse);
+        }
 
     }
 
@@ -127,6 +130,22 @@ export abstract class Drawer {
     static movePolygon(selectedElement: Polygon, point: CoordinatesObject, mouse: CoordinatesObject) {
         if(!Drawer.oldElement){
             Drawer.oldElement = new Polygon();
+            for(let coordinate of selectedElement.coordinates){
+                this.oldElement.coordinates.push(
+                    new CoordinatesObject(coordinate.x, coordinate.y)
+                );
+            }
+        }
+        for(let i = 0; i < Drawer.oldElement.coordinates.length; i++) {
+            if (Drawer.computeDistance(Drawer.oldElement.coordinates[i], point) <= Drawer.POINT_RADIUS){
+                selectedElement.coordinates[i] = mouse;
+            }
+        }
+    }
+
+    static movePolyline(selectedElement: Polyline, point: CoordinatesObject, mouse: CoordinatesObject) {
+        if(!Drawer.oldElement){
+            Drawer.oldElement = new Polyline();
             for(let coordinate of selectedElement.coordinates){
                 this.oldElement.coordinates.push(
                     new CoordinatesObject(coordinate.x, coordinate.y)

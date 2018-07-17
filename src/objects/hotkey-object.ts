@@ -4,4 +4,5 @@ export class HotkeyObject {
     line: string;
     rectangle: string;
     polygon: string;
+    polyline: string;
 }

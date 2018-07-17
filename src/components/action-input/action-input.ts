@@ -60,6 +60,7 @@ export class ActionInputComponent {
     @HostListener('keydown', ['$event']) onEnterPressed(e) {
         if (e.keyCode === KEYCODE_ENTER) {
             this.accept();
+            e.target.blur();
             this.renderer.removeClass(e.srcElement, 'editing');
         }
         else if (e.keyCode === KEYCODE_ESCAPE) {

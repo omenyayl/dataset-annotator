@@ -10,7 +10,7 @@ object-input {
 .id-label-input:focus {
   transform: translateY(5px);
   width: stretch;
-  border: 1px solid rgba(56, 255, 59, 0.67);
+  border: 2px solid rgba(56, 255, 59, 0.67);
 }
 
 .editing {
@@ -19,4 +19,7 @@ object-input {
 
 .label-md {
   margin: 0!important;
+}
+.highlighted-border {
+  border: 2px solid #7ef05e;
 }

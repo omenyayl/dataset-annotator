@@ -1,78 +1,98 @@
 <ion-header>
-	<ion-navbar>
-		<ion-title>{{ item }}</ion-title>
-	</ion-navbar>
+    <ion-navbar>
+        <ion-title>{{ item }}</ion-title>
+    </ion-navbar>
 </ion-header>
 
 
-
 <ion-content padding>
-	<div padding style="border: 1px solid lightgrey">
-		<ion-grid class="button-group">
-			<ion-row text-center>
-				<!--<h2 style="transform: translateY(15px)">Tools: </h2>-->
-				<ion-col>
-					<button ion-button [ngClass]="{'activated-button': getSelectedCanvasDirective() === canvasDirectives.canvas_line}" color="dark" block
-							(click)="selectCanvasDirective(canvasDirectives.canvas_line)">
-						<p class="button-text">{{"Line (" + hotkeys.line + ")"}}</p>
-						<ion-icon name="md-create"></ion-icon></button>
-				</ion-col>
-				<ion-col>
-					<button ion-button [ngClass]="{'activated-button': getSelectedCanvasDirective() === canvasDirectives.canvas_rect}" color="dark" block
-							(click)="selectCanvasDirective(canvasDirectives.canvas_rect)">
-						<p class="button-text">{{"Rectangle (" + hotkeys.rectangle + ")"}}</p>
-						<ion-icon name="ios-square"></ion-icon></button>
-				</ion-col>
-				<ion-col>
-					<button ion-button [ngClass]="{'activated-button': getSelectedCanvasDirective() === canvasDirectives.canvas_polygon}" color="dark" block
-							(click)="selectCanvasDirective(canvasDirectives.canvas_polygon)">
-						<p class="button-text">{{"POLYGON (" + hotkeys.polygon + ")"}}</p>
-						<ion-icon name="star"></ion-icon></button>
-				</ion-col>
-			</ion-row>
-		</ion-grid>
-	</div>
+    <div padding style="border: 1px solid lightgrey">
+        <ion-grid class="button-group">
+            <ion-row text-center>
+                <!--<h2 style="transform: translateY(15px)">Tools: </h2>-->
+                <ion-col>
+                    <button ion-button
+                            [ngClass]="{'activated-button': getSelectedCanvasDirective() === canvasDirectives.canvas_line}"
+                            color="dark" block
+                            (click)="selectCanvasDirective(canvasDirectives.canvas_line)">
+                        <p class="button-text">{{"Line (" + hotkeys.line + ")"}}</p>
+                        <ion-icon name="md-create"></ion-icon>
+                    </button>
+                </ion-col>
+                <ion-col>
+                    <button ion-button
+                            [ngClass]="{'activated-button': getSelectedCanvasDirective() === canvasDirectives.canvas_rect}"
+                            color="dark" block
+                            (click)="selectCanvasDirective(canvasDirectives.canvas_rect)">
+                        <p class="button-text">{{"Rectangle (" + hotkeys.rectangle + ")"}}</p>
+                        <ion-icon name="ios-square"></ion-icon>
+                    </button>
+                </ion-col>
+                <ion-col>
+                    <button ion-button
+                            [ngClass]="{'activated-button': getSelectedCanvasDirective() === canvasDirectives.canvas_polygon}"
+                            color="dark" block
+                            (click)="selectCanvasDirective(canvasDirectives.canvas_polygon)">
+                        <p class="button-text">{{"POLYGON (" + hotkeys.polygon + ")"}}</p>
+                        <ion-icon name="star"></ion-icon>
+                    </button>
+                </ion-col>
+                <ion-col>
+                    <button ion-button
+                            [ngClass]="{'activated-button': getSelectedCanvasDirective() === canvasDirectives.canvas_polyline}"
+                            color="dark" block
+                            (click)="selectCanvasDirective(canvasDirectives.canvas_polyline)">
+                        <p class="button-text">{{"POLYLINE (" + hotkeys.polyline + ")"}}</p>
+                        <ion-icon name="star"></ion-icon>
+                    </button>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+    </div>
 
 
-	<div class="row">
-		<div class="col">
-			<!--<img class="img-position"-->
-				 <!--src="{{getImageSrc()}}"-->
-				 <!--[src]="sanitizer.bypassSecurityTrustResourceUrl(getImageSrc())"-->
-				 <!--width="{{getCurrentImage().width}}"-->
-				 <!--height="{{getCurrentImage().height}}"/>-->
-			<!--<canvas-->
-					<!--class="canvas-position"-->
-					<!--width="{{getCurrentImage().width}}"-->
-					<!--height="{{getCurrentImage().height}}"-->
-					<!--canvas-editor></canvas>-->
+    <div class="row">
+        <div class="col">
+            <!--<img class="img-position"-->
+            <!--src="{{getImageSrc()}}"-->
+            <!--[src]="sanitizer.bypassSecurityTrustResourceUrl(getImageSrc())"-->
+            <!--width="{{getCurrentImage().width}}"-->
+            <!--height="{{getCurrentImage().height}}"/>-->
+            <!--<canvas-->
+            <!--class="canvas-position"-->
+            <!--width="{{getCurrentImage().width}}"-->
+            <!--height="{{getCurrentImage().height}}"-->
+            <!--canvas-editor></canvas>-->
             <annotator></annotator>
-		</div>
+        </div>
 
-		<div class="col" [ngStyle]="{'height': getCurrentImage().height - 65 + 'px'}">
-			<ion-list-header class="labels-list-header">{{getSelectedCanvasDirective().toString()}}</ion-list-header>
-			<ion-scroll scrollY="true" style="height:40%">
-				<ion-list no-border scroll="true">
-					<ion-item no-lines no-padding *ngFor="let itm of getObjects()">
-                        <object-input [obj]="itm" (click)="itemSelect(itm)" [(value)]="itm.label" [(id)]="itm.action_id"></object-input>
+        <div class="col" [ngStyle]="{'height': getCurrentImage().height - 65 + 'px'}">
+            <ion-list-header class="labels-list-header">{{getSelectedCanvasDirective().toString()}}</ion-list-header>
+            <ion-scroll scrollY="true" style="height:40%">
+                <ion-list no-border scroll="true">
+                    <ion-item no-lines no-padding *ngFor="let itm of getObjects()">
+                        <div>
+                            <object-input [obj]="itm" (click)="itemSelect(itm)" [(value)]="itm.label"
+                                          [(id)]="itm.action_id"></object-input>
+                            <hr>
+                        </div>
                         <ion-icon class="icon-button" name="trash" (click)="itemDelete(itm)" item-end></ion-icon>
-                        <hr>
                     </ion-item>
-				</ion-list>
-			</ion-scroll>
+                </ion-list>
+            </ion-scroll>
 
-			<ion-list-header class="labels-list-header">Actions</ion-list-header>
-			<ion-scroll scrollY="true" style="height:40%">
-				<ion-list no-border scroll="true">
-					<ion-item no-lines no-padding *ngFor="let action of actions">
+            <ion-list-header class="labels-list-header">Actions</ion-list-header>
+            <ion-scroll scrollY="true" style="height:40%">
+                <ion-list no-border scroll="true">
+                    <ion-item no-lines no-padding *ngFor="let action of actions">
                         <action-input [(value)]="action.label" [(id)]="action.action_id"></action-input>
                         <ion-icon class="icon-button" name="trash" (click)="actionDelete(action)" item-end></ion-icon>
                         <hr>
-					</ion-item>
-				</ion-list>
-			</ion-scroll>
-			<button color="dark" ion-button block (click)="actionAdd()">new action</button>
-		</div>
-	</div>
+                    </ion-item>
+                </ion-list>
+            </ion-scroll>
+            <button color="dark" ion-button block (click)="actionAdd()">new action</button>
+        </div>
+    </div>
 </ion-content>
 

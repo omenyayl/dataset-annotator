@@ -12,7 +12,7 @@ import { HotkeysService, Hotkey } from 'angular2-hotkeys';
 import { HotkeyObject } from '../../objects/hotkey-object';
 import { DomSanitizer } from "@angular/platform-browser";
 import {ActionObject} from '../../objects/action-object';
-import { AnnotationsProvider, Line, Rectangle, Polygon } from "../../providers/annotations/annotations";
+import {AnnotationsProvider, Line, Rectangle, Polygon, Polyline} from "../../providers/annotations/annotations";
 
 //EventListener for deletion
 import { Events } from 'ionic-angular';
@@ -110,7 +110,7 @@ export class ItemPage extends _DetailPage {
         this.itemDelete(AnnotationsProvider.selectedElement);
     }
 
-	isSelected(itm){
+	static isSelected(itm){
 		return (AnnotationsProvider.selectedElement === itm);
 	}
 
@@ -129,6 +129,9 @@ export class ItemPage extends _DetailPage {
         }
         else if(itm instanceof Polygon) {
             successfullyRemoved = this.annotationsProvider.removePolygon(itm);
+        }
+        else if(itm instanceof Polyline) {
+            successfullyRemoved = this.annotationsProvider.removePolyline(itm);
         }
 
         if (successfullyRemoved) {
@@ -162,6 +165,8 @@ export class ItemPage extends _DetailPage {
                 return this.annotationsProvider.getRectangles();
             case DrawerNamesEnum.canvas_polygon:
                 return this.annotationsProvider.getPolygons();
+            case DrawerNamesEnum.canvas_polyline:
+                return this.annotationsProvider.getPolylines();
         }
     }
 
@@ -173,17 +178,6 @@ export class ItemPage extends _DetailPage {
         this.imageProvider.selectedCanvasDirective = directiveName;
     }
 
-    hotkeySetCanvasDirectiveLine() {
-        this.selectCanvasDirective(this.canvasDirectives.canvas_line);
-    }
-
-    hotkeySetCanvasDirectiveRectangle() {
-        this.selectCanvasDirective(this.canvasDirectives.canvas_rect);
-    }
-
-    hotkeySetCanvasDirectivePolygon() {
-        this.selectCanvasDirective(this.canvasDirectives.canvas_polygon);
-    }
 
     updateHotkeys(hotkeys) {
         if(this.hotkeys !== undefined) {
@@ -194,18 +188,23 @@ export class ItemPage extends _DetailPage {
 
         this.hotkeys = hotkeys;
         this.hotkeyService.add(new Hotkey(this.hotkeys.line,
-            (event: KeyboardEvent): boolean => {
-                this.hotkeySetCanvasDirectiveLine();
+            (): boolean => {
+                this.selectCanvasDirective(this.canvasDirectives.canvas_line);
                 return false;
             }));
         this.hotkeyService.add(new Hotkey(this.hotkeys.rectangle,
-            (event: KeyboardEvent): boolean => {
-                this.hotkeySetCanvasDirectiveRectangle();
+            (): boolean => {
+                this.selectCanvasDirective(this.canvasDirectives.canvas_rect);
                 return false;
             }));
         this.hotkeyService.add(new Hotkey(this.hotkeys.polygon,
-            (event: KeyboardEvent): boolean => {
-                this.hotkeySetCanvasDirectivePolygon();
+            (): boolean => {
+                this.selectCanvasDirective(this.canvasDirectives.canvas_polygon);
+                return false;
+            }));
+        this.hotkeyService.add(new Hotkey(this.hotkeys.polyline,
+            (): boolean => {
+                this.selectCanvasDirective(this.canvasDirectives.canvas_polyline);
                 return false;
             }));
     }

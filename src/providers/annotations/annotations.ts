@@ -147,8 +147,46 @@ export class AnnotationsProvider {
 
     // END - POLYGON METHODS
 
-	
-	
+
+
+	// BEGIN - POLYLINE METHODS
+
+    addPolyline(polyline: Polyline) {
+        if(!(polyline instanceof Polyline)) throw new TypeError("Trying to add a polygon that was not constructed as a new Polyline!");
+
+        let currentImage = this.imageProvider.currentImage;
+        if( currentImage ) {
+            this.annotations[currentImage.src].polylines.push(polyline);
+        }
+    }
+
+    removePolyline(polyline: Polyline) {
+        let annotation = this.getCurrentAnnotation();
+
+        let i = annotation.polylines.indexOf(polyline);
+
+        if (i != -1) {
+            annotation.polylines.splice(i, 1);
+            return true;
+        }
+
+        return false;
+    }
+
+
+    getPolylines() {
+        let currentImage = this.imageProvider.currentImage;
+        if (currentImage) {
+            return this.annotations[currentImage.src].polylines
+        } else {
+            return [];
+        }
+    }
+
+    // END - POLYLINE METHODS
+
+
+
 	// BEGIN - ACTION METHODS
 
   	getActions(){
@@ -226,25 +264,44 @@ export class AnnotationsProvider {
 
     deepCopyAnnotations(annotations: AnnotationObject) {
         let newAnnotations = new AnnotationObject(annotations.src);
-        for (let line of annotations.lines) {
-            newAnnotations.lines.push(new Line(
-                new CoordinatesObject(line.start.x, line.start.y),
-                new CoordinatesObject(line.end.x, line.end.y),
-                line.label));
-        }
-        for (let rectangle of annotations.rectangles) {
-            newAnnotations.rectangles.push(new Rectangle(
-                new CoordinatesObject(rectangle.topLeft.x, rectangle.topLeft.y),
-                new CoordinatesObject(rectangle.bottomRight.x, rectangle.bottomRight.y),
-                rectangle.label));
-        }
-        for (let polygon of annotations.polygons) {
-            let coordinates = [];
-            for (let coordinate of polygon.coordinates) {
-                coordinates.push(new CoordinatesObject(coordinate.x, coordinate.y));
+        if(annotations.lines){
+            for (let line of annotations.lines) {
+                newAnnotations.lines.push(new Line(
+                    new CoordinatesObject(line.start.x, line.start.y),
+                    new CoordinatesObject(line.end.x, line.end.y),
+                    line.label));
             }
-            newAnnotations.polygons.push(new Polygon(coordinates, polygon.label));
         }
+
+        if(annotations.rectangles) {
+            for (let rectangle of annotations.rectangles) {
+                newAnnotations.rectangles.push(new Rectangle(
+                    new CoordinatesObject(rectangle.topLeft.x, rectangle.topLeft.y),
+                    new CoordinatesObject(rectangle.bottomRight.x, rectangle.bottomRight.y),
+                    rectangle.label));
+            }
+        }
+
+        if(annotations.polygons) {
+            for (let polygon of annotations.polygons) {
+                let coordinates = [];
+                for (let coordinate of polygon.coordinates) {
+                    coordinates.push(new CoordinatesObject(coordinate.x, coordinate.y));
+                }
+                newAnnotations.polygons.push(new Polygon(coordinates, polygon.label));
+            }
+        }
+
+        if(annotations.polylines) {
+            for (let polyline of annotations.polylines) {
+                let coordinates = [];
+                for (let coordinate of polyline.coordinates) {
+                    coordinates.push(new CoordinatesObject(coordinate.x, coordinate.y));
+                }
+                newAnnotations.polylines.push(new Polyline(coordinates, polyline.label));
+            }
+        }
+
         return newAnnotations;
     }
 
@@ -252,7 +309,8 @@ export class AnnotationsProvider {
         return  ! annotations ||
                 annotations.lines.length === 0 &&
                 annotations.rectangles.length === 0 &&
-                annotations.polygons.length === 0
+                annotations.polygons.length === 0 &&
+                annotations.polylines.length === 0;
     }
 
 	static unscaleAnnotation(annotation: AnnotationObject, scale: number) {
@@ -274,6 +332,12 @@ export class AnnotationsProvider {
                 point.y = Math.round(point.y / scale);
             }
         }
+        for(let i = 0; i < annotation.polylines.length; i++) {
+            for (let point of annotation.polylines[i].coordinates) {
+                point.x = Math.round(point.x / scale);
+                point.y = Math.round(point.y / scale);
+            }
+        }
     }
 
     static rescaleAnnotation(annotation: AnnotationObject, scale: number) {
@@ -291,6 +355,12 @@ export class AnnotationsProvider {
         }
         for(let i = 0; i < annotation.polygons.length; i++) {
             for (let point of annotation.polygons[i].coordinates) {
+                point.x = Math.round(point.x * scale);
+                point.y = Math.round(point.y * scale);
+            }
+        }
+        for(let i = 0; i < annotation.polylines.length; i++) {
+            for (let point of annotation.polylines[i].coordinates) {
                 point.x = Math.round(point.x * scale);
                 point.y = Math.round(point.y * scale);
             }
@@ -332,6 +402,16 @@ export class Rectangle {
  * Defines the polygon shape
  */
 export class Polygon {
+    constructor(public coordinates: CoordinatesObject[] = [],
+                public label: string = 'unnamed'){}
+
+}
+
+
+/**
+ * Defines the polyline shape
+ */
+export class Polyline {
     constructor(public coordinates: CoordinatesObject[] = [],
                 public label: string = 'unnamed'){}
 

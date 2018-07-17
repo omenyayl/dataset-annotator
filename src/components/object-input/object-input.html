@@ -2,11 +2,14 @@
     <div (ionBlur)="accept()">
         <ion-row>
             <ion-col col-2>
-                <input (blur)="onBlur($event)" (focus)="onFocus()" class="id-label-input" placeholder="id" [(ngModel)]="newId"/>
+                <input [ngClass]="{'highlighted-border': isSelected()}"
+                       (blur)="onBlur($event)" (focus)="onFocus()"
+                       class="id-label-input" placeholder="id" [(ngModel)]="newId"/>
             </ion-col>
 
             <ion-col col-10>
-                <input (blur)="onBlur($event)" (focus)="onFocus()" class="id-label-input" placeholder="name" [(ngModel)]="newValue"/>
+                <input [ngClass]="{'highlighted-border': isSelected()}" (blur)="onBlur($event)"
+                       (focus)="onFocus()" class="id-label-input" placeholder="name" [(ngModel)]="newValue"/>
             </ion-col>
         </ion-row>
     </div>

@@ -10,11 +10,18 @@ export class HotkeyProvider {
         prevImage: "a",
         line: "q",
         rectangle: "w",
-        polygon: "e"
+        polygon: "e",
+        polyline: "r"
     });
 
     constructor() {
         let savedHotkeys = JSON.parse(localStorage.getItem('hotkeySettings'));
+
+        for(let hotkey in this.hotkeys.getValue()) {
+            if (! savedHotkeys[hotkey]){
+                savedHotkeys[hotkey] = this.hotkeys.getValue()[hotkey];
+            }
+        }
 
         if (savedHotkeys != null) {
             this.hotkeys.next(savedHotkeys);

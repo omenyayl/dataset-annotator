@@ -14,6 +14,7 @@ import {PolygonDrawer} from "../../drawers/polygon-drawer";
 import {Drawer} from "../../drawers/drawer";
 import {platform} from "process";
 import {FileProvider} from "../../providers/file/file";
+import {PolylineDrawer} from "../../drawers/polyline-drawer";
 
 /**
  * Generated class for the AnnotatorComponent component.
@@ -39,6 +40,8 @@ export class AnnotatorComponent {
     private lineDrawer: LineDrawer;
     private rectangleDrawer: RectangleDrawer;
     private polygonDrawer: PolygonDrawer;
+    private polylineDrawer: PolylineDrawer;
+
     private isDrawing: boolean;
     private isPointHeld: boolean;
     private heldPoint: CoordinatesObject;
@@ -67,6 +70,7 @@ export class AnnotatorComponent {
         this.lineDrawer = new LineDrawer(this.context, this.annotationsProvider);
         this.rectangleDrawer = new RectangleDrawer(this.context, this.annotationsProvider);
         this.polygonDrawer = new PolygonDrawer(this.context, this.annotationsProvider);
+        this.polylineDrawer = new PolylineDrawer(this.context, this.annotationsProvider);
 
         this.isDrawing = false; // for drawing
         this.isPointHeld = false; // for moving points
@@ -97,8 +101,18 @@ export class AnnotatorComponent {
         this.lineDrawer.render();
         this.rectangleDrawer.render();
         this.polygonDrawer.render();
+        this.polylineDrawer.render();
     }
 
+    // Handles right click for ending the polyline draw
+    @HostListener('contextmenu', ['$event']) onRightClick(event) {
+        if (this.imageProvider.selectedCanvasDirective === DrawerNamesEnum.canvas_polyline){
+            this.polylineDrawer.addPoint(new CoordinatesObject(event.offsetX, event.offsetY));
+            this.polylineDrawer.saveFromCoordinates(...this.polylineDrawer.getPoints());
+            this.render();
+            this.isDrawing = false;
+        }
+    }
 
     @HostListener('click', ['$event']) onMouseClick(event) {
 
@@ -120,9 +134,12 @@ export class AnnotatorComponent {
 
             this.isDrawing = true;
 
-            // Adding the initial starting point to the polygon
+            // Adding the initial starting point to the polygon/polyline
             if (this.imageProvider.selectedCanvasDirective === DrawerNamesEnum.canvas_polygon) {
                 this.polygonDrawer.addPoint(this.start);
+            }
+            else if (this.imageProvider.selectedCanvasDirective === DrawerNamesEnum.canvas_polyline) {
+                this.polylineDrawer.addPoint(this.start);
             }
 
             this.render(); // re-render whatever was selected
@@ -152,6 +169,9 @@ export class AnnotatorComponent {
                     } else {
                         this.polygonDrawer.addPoint(mouseCoordinates);
                     }
+                    break;
+                case DrawerNamesEnum.canvas_polyline:
+                    this.polylineDrawer.addPoint(mouseCoordinates);
                     break;
             }
 
@@ -200,6 +220,9 @@ export class AnnotatorComponent {
                 case DrawerNamesEnum.canvas_polygon:
                     this.polygonDrawer.drawFromCoordinates(this.start, mouseCoordinates);
                     break;
+                case DrawerNamesEnum.canvas_polyline:
+                    this.polylineDrawer.drawFromCoordinates(this.start, mouseCoordinates);
+                    break;
             }
         }
 
@@ -218,7 +241,8 @@ export class AnnotatorComponent {
     checkIfHovering(mouseCoordinates): boolean {
         return this.lineDrawer.isHovering(mouseCoordinates) ||
             this.rectangleDrawer.isHovering(mouseCoordinates) ||
-            this.polygonDrawer.isHovering(mouseCoordinates);
+            this.polygonDrawer.isHovering(mouseCoordinates) ||
+            this.polylineDrawer.isHovering(mouseCoordinates);
     }
 
     /**
@@ -229,7 +253,8 @@ export class AnnotatorComponent {
     selectElement(mouseCoordinates): boolean {
         return this.lineDrawer.selectElement(mouseCoordinates) ||
             this.rectangleDrawer.selectElement(mouseCoordinates) ||
-            this.polygonDrawer.selectElement(mouseCoordinates);
+            this.polygonDrawer.selectElement(mouseCoordinates) ||
+            this.polylineDrawer.selectElement(mouseCoordinates);
     }
 
     getImageSrc(): string {

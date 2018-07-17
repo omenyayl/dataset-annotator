@@ -1,6 +1,7 @@
 import {Component, EventEmitter, HostListener, Input, Output, Renderer2} from "@angular/core";
 import {Events} from "ionic-angular";
 import {AnnotationsProvider} from "../../providers/annotations/annotations";
+import {ItemPage} from "../../pages/item/item";
 
 const KEYCODE_ENTER = 13;
 const KEYCODE_ESCAPE = 27;
@@ -15,7 +16,7 @@ const KEYCODE_SHIFT = 16;
 export class ObjectInputComponent {
     @Input() value: string;
     @Input() id: string;
-    @Input() obj: Object;
+    @Input() obj: any;
     newValue: string;
     newId: string;
     @Output() valueChange = new EventEmitter<string>();
@@ -55,6 +56,7 @@ export class ObjectInputComponent {
     @HostListener('keydown', ['$event']) onEnterPressed(e) {
         if (e.keyCode === KEYCODE_ENTER) {
             this.accept();
+            e.target.blur();
             this.renderer.removeClass(e.srcElement, 'editing');
         }
         else if (e.keyCode === KEYCODE_ESCAPE) {
@@ -82,5 +84,8 @@ export class ObjectInputComponent {
         this.events.publish('render-canvas');
     }
 
+    isSelected() {
+        return ItemPage.isSelected(this.obj);
+    }
 
 }
