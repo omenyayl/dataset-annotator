@@ -1,6 +1,6 @@
 {
   "name": "dataset-annotator",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "author": "Oleg Menyaylenko",
   "private": true,
   "scripts": {
