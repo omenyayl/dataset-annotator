@@ -17,10 +17,9 @@ export class HotkeyProvider {
     constructor() {
         let savedHotkeys = JSON.parse(localStorage.getItem('hotkeySettings'));
 
-        if (savedHotkeys != null) {
+        if (savedHotkeys) {
         	for(let hotkey in this.hotkeys.getValue()) {
-			  	//if (! savedHotkeys[hotkey]){
-        	    if (! savedHotkeys.hasOwnProperty(hotkey)){
+			  	if (! savedHotkeys[hotkey]){
         	        savedHotkeys[hotkey] = this.hotkeys.getValue()[hotkey];
         	    }
         	}
