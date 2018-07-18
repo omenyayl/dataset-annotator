@@ -6,15 +6,13 @@ import {
     Content
 } from 'ionic-angular';
 import {NavProxyService} from '../../providers/nav-proxy/nav-proxy';
-import {
-    ItemPage
-} from '../item/item';
 import {_MasterPage} from "../_MasterPage";
 import {FileProvider} from "../../providers/file/file";
 import {HotkeyProvider} from "../../providers/hotkeys/hotkeys";
 import {Observable} from "rxjs/Observable";
 import { HotkeysService, Hotkey } from 'angular2-hotkeys';
 import { HotkeyObject } from '../../objects/hotkey-object';
+import {ItemPage} from "../item/item";
 
 @IonicPage()
 @Component({
@@ -32,6 +30,7 @@ export class ItemsPage extends _MasterPage {
     filesLoading$: Observable<boolean>;
     selected: [string, number];
     hotkeys: HotkeyObject;
+    inHome: boolean = true;
 
     constructor(public navCtrl: NavController,
                 public navParams: NavParams,
@@ -64,7 +63,12 @@ export class ItemsPage extends _MasterPage {
         //     this.navCtrl.push(...)
         // Use our proxy:
         this.selected = [item, index];
-        this.navProxy.pushDetail(ItemPage, item);
+        if(this.inHome) {
+            this.navProxy.pushDetail(ItemPage, item);
+            this.inHome = false;
+        } else {
+            this.navProxy.selectedItem.next(this.selected[0]);
+        }
     }
 
     previousItem() {

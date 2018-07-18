@@ -60,6 +60,10 @@ export class ImageProvider {
 
     }
 
+    flushImages() {
+        this.images = [];
+    }
+
 	/*generateSaveData(): Observable<any> {
 	  	return new Observable<any>((observer) => {
 		  	//observer.next({'testFile': 'testData', 'frame_05420': '[{type: \'box\'}]'});

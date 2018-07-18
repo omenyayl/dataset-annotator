@@ -31,6 +31,11 @@ export class AnnotationsProvider {
 
     }
 
+    flushAnnotations() {
+        this.annotations = [];
+        this.actions = [];
+    }
+
     renderCanvas() {
         this.events.publish('render-canvas');
     }

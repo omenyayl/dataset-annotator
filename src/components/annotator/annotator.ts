@@ -57,21 +57,11 @@ export class AnnotatorComponent {
                 private events: Events,
                 private imageProvider: ImageProvider,
                 private fileProvider: FileProvider) {
-        let imageObj = imageProvider.currentImage;
-        this.imgWidth = imageObj.width;
-        this.imgHeight = imageObj.height;
-        this.src = path.join(this.fileProvider.selectedFolder, imageObj.src);
         this.renderer = renderer;
         this.sanitizer = sanitizer;
     }
 
     initImage(context: CanvasRenderingContext2D, src, width, height){
-        // sharp(src)
-        //     .resize(width, height)
-        //     .then((data) => {
-
-        //     });
-
         let img = new Image();
         img.width = width;
         img.height = height;
@@ -83,24 +73,32 @@ export class AnnotatorComponent {
         };
     }
 
-    ngAfterViewInit() {
+    onImageChanged() {
+        let imageObj = this.imageProvider.currentImage;
+        if (imageObj) {
+            this.imgWidth = imageObj.width;
+            this.imgHeight = imageObj.height;
+            this.src = path.join(this.fileProvider.selectedFolder, imageObj.src);
+            this.initAnnotator();
+        }
+    }
 
-        this.context = this.drawing.nativeElement.getContext('2d');
-        this.imageContext = this.visualization.nativeElement.getContext('2d');
-
-        this.initImage(this.imageContext, this.getImageSrc(), this.imgWidth, this.imgHeight);
-
+    initAnnotator() {
+        this.initImage(this.imageContext, this.src, this.imgWidth, this.imgHeight);
         // Initialize our drawing tools
         this.lineDrawer = new LineDrawer(this.context, this.annotationsProvider);
         this.rectangleDrawer = new RectangleDrawer(this.context, this.annotationsProvider);
         this.polygonDrawer = new PolygonDrawer(this.context, this.annotationsProvider);
         this.polylineDrawer = new PolylineDrawer(this.context, this.annotationsProvider);
-
         this.isDrawing = false; // for drawing
         this.isPointHeld = false; // for moving points
+    }
 
+    ngAfterViewInit() {
+        this.context = this.drawing.nativeElement.getContext('2d');
+        this.imageContext = this.visualization.nativeElement.getContext('2d');
         this.subscribeToEvents();
-
+        this.onImageChanged();
         this.render();
     }
 
@@ -115,6 +113,7 @@ export class AnnotatorComponent {
      */
     subscribeToEvents() {
         this.events.subscribe('render-canvas', () => {
+            this.onImageChanged();
             this.render();
         });
     }
