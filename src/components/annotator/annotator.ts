@@ -15,6 +15,7 @@ import {Drawer} from "../../drawers/drawer";
 import {platform} from "process";
 import {FileProvider} from "../../providers/file/file";
 import {PolylineDrawer} from "../../drawers/polyline-drawer";
+// import * as sharp from 'sharp';
 
 /**
  * Generated class for the AnnotatorComponent component.
@@ -64,19 +65,30 @@ export class AnnotatorComponent {
         this.sanitizer = sanitizer;
     }
 
+    initImage(context: CanvasRenderingContext2D, src, width, height){
+        // sharp(src)
+        //     .resize(width, height)
+        //     .then((data) => {
+
+        //     });
+
+        let img = new Image();
+        img.width = width;
+        img.height = height;
+        img.src = src;
+        img.onload = () => {
+            context.drawImage(img, 0, 0, width, height);
+            img.remove();
+            img = null;
+        };
+    }
+
     ngAfterViewInit() {
 
         this.context = this.drawing.nativeElement.getContext('2d');
         this.imageContext = this.visualization.nativeElement.getContext('2d');
-        let img = new Image();
-        img.width = this.imgWidth;
-        img.height = this.imgHeight;
-        img.src = this.getImageSrc();
-        img.onload = () => {
-            this.imageContext.drawImage(img, 0, 0);
-            img.remove();
-            img = null;
-        };
+
+        this.initImage(this.imageContext, this.getImageSrc(), this.imgWidth, this.imgHeight);
 
         // Initialize our drawing tools
         this.lineDrawer = new LineDrawer(this.context, this.annotationsProvider);
