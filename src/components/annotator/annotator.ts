@@ -15,6 +15,7 @@ import {Drawer} from "../../drawers/drawer";
 import {platform} from "process";
 import {FileProvider} from "../../providers/file/file";
 import {PolylineDrawer} from "../../drawers/polyline-drawer";
+// import * as sharp from 'sharp';
 
 /**
  * Generated class for the AnnotatorComponent component.
@@ -27,11 +28,12 @@ import {PolylineDrawer} from "../../drawers/polyline-drawer";
     templateUrl: 'annotator.html'
 })
 export class AnnotatorComponent {
-    @ViewChild("visualization") visualization: ElementRef;
-    @ViewChild('img') img: ElementRef;
+    @ViewChild("drawing") drawing: ElementRef;
+    @ViewChild('visualization') visualization: ElementRef;
 
     private context: CanvasRenderingContext2D;
-    private imageElement: HTMLImageElement;
+    private imageContext: CanvasRenderingContext2D;
+
 
     src: string;
     imgWidth: number;
@@ -55,28 +57,48 @@ export class AnnotatorComponent {
                 private events: Events,
                 private imageProvider: ImageProvider,
                 private fileProvider: FileProvider) {
-        let imageObj = imageProvider.currentImage;
-        this.imgWidth = imageObj.width;
-        this.imgHeight = imageObj.height;
-        this.src = path.join(this.fileProvider.selectedFolder, imageObj.src);
         this.renderer = renderer;
         this.sanitizer = sanitizer;
     }
 
-    ngAfterViewInit() {
-        this.context = this.visualization.nativeElement.getContext("2d");
-        this.imageElement = this.img.nativeElement;
+    initImage(context: CanvasRenderingContext2D, src, width, height){
+        let img = new Image();
+        img.width = width;
+        img.height = height;
+        img.src = src;
+        img.onload = () => {
+            context.drawImage(img, 0, 0, width, height);
+            img.remove();
+            img = null;
+        };
+    }
+
+    onImageChanged() {
+        let imageObj = this.imageProvider.currentImage;
+        if (imageObj) {
+            this.imgWidth = imageObj.width;
+            this.imgHeight = imageObj.height;
+            this.src = path.join(this.fileProvider.selectedFolder, imageObj.src);
+            this.initAnnotator();
+        }
+    }
+
+    initAnnotator() {
+        this.initImage(this.imageContext, this.src, this.imgWidth, this.imgHeight);
         // Initialize our drawing tools
         this.lineDrawer = new LineDrawer(this.context, this.annotationsProvider);
         this.rectangleDrawer = new RectangleDrawer(this.context, this.annotationsProvider);
         this.polygonDrawer = new PolygonDrawer(this.context, this.annotationsProvider);
         this.polylineDrawer = new PolylineDrawer(this.context, this.annotationsProvider);
-
         this.isDrawing = false; // for drawing
         this.isPointHeld = false; // for moving points
+    }
 
+    ngAfterViewInit() {
+        this.context = this.drawing.nativeElement.getContext('2d');
+        this.imageContext = this.visualization.nativeElement.getContext('2d');
         this.subscribeToEvents();
-
+        this.onImageChanged();
         this.render();
     }
 
@@ -91,12 +113,13 @@ export class AnnotatorComponent {
      */
     subscribeToEvents() {
         this.events.subscribe('render-canvas', () => {
+            this.onImageChanged();
             this.render();
         });
     }
 
     render() {
-        this.context.clearRect(0, 0, this.imageElement.width, this.imageElement.height);
+        this.context.clearRect(0, 0, this.imgWidth, this.imgHeight);
         // this.context.drawImage(this.imageElement, 0, 0, this.imgWidth, this.imgHeight);
         this.lineDrawer.render();
         this.rectangleDrawer.render();
@@ -200,9 +223,9 @@ export class AnnotatorComponent {
 
         let hovering = this.checkIfHovering(mouseCoordinates);
         if (hovering) {
-            this.renderer.setStyle(this.visualization.nativeElement, 'cursor', 'pointer');
+            this.renderer.setStyle(this.drawing.nativeElement, 'cursor', 'pointer');
         } else {
-            this.renderer.setStyle(this.visualization.nativeElement, 'cursor', 'default');
+            this.renderer.setStyle(this.drawing.nativeElement, 'cursor', 'default');
         }
 
         // Draw the imageElement as the mouse moves

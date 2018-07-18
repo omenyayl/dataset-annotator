@@ -9,6 +9,7 @@ import {FileProvider} from "../providers/file/file";
 import {AnnotationsProvider} from "../providers/annotations/annotations";
 import {HotkeysPage} from '../pages/hotkeys/hotkeys';
 import FileFilter = Electron.FileFilter;
+import {ImageProvider} from "../providers/image/image";
 
 const SUPPORTED_EXTENSIONS = [
     '.jpg',
@@ -41,6 +42,7 @@ export class MyApp {
         private annotationProvider: AnnotationsProvider,
         private menuCtrl: MenuController,
         private toastCtrl: ToastController,
+        private imageProvider: ImageProvider,
         private ngZone: NgZone) {
 
         platform.ready().then(() => {
@@ -82,6 +84,8 @@ export class MyApp {
                             this.ngZone.run(()=>{
                                 this.fileProvider.filesChange.next(files);
                                 this.fileProvider.filesLoading.next(false);
+                                this.annotationProvider.flushAnnotations();
+                                this.imageProvider.flushImages();
                             });
                             this.fileProvider.selectedFolder = value;
 
