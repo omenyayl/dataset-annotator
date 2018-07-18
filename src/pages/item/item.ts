@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {IonicPage, NavController, NavParams, ViewController} from 'ionic-angular';
+import {IonicPage, NavParams} from 'ionic-angular';
 import {_DetailPage} from '../_DetailPage';
 import {FileProvider} from "../../providers/file/file";
 import * as path from 'path';
