@@ -5,7 +5,7 @@ import {DrawerNamesEnum} from "../../enums/drawer-names-enum";
 import {AnnotationsProvider} from "../annotations/annotations";
 import {FileProvider} from "../file/file";
 
-const systemResolutionMultiplier = 0.5; // For determining max/min width/height
+const systemResolutionMultiplier = 0.4; // For determining max/min width/height
 
 /**
  Provider that contains image information and methods
