@@ -70,10 +70,12 @@ export class AnnotatorComponent {
             context.drawImage(img, 0, 0, width, height);
             img.remove();
             img = null;
+            this.render();
         };
     }
 
     onImageChanged() {
+        console.log('image changed');
         let imageObj = this.imageProvider.currentImage;
         if (imageObj) {
             this.imgWidth = imageObj.width;
@@ -99,13 +101,6 @@ export class AnnotatorComponent {
         this.imageContext = this.visualization.nativeElement.getContext('2d');
         this.subscribeToEvents();
         this.onImageChanged();
-        this.render();
-    }
-
-    afterLoading() {
-        this.context.clearRect(0, 0, this.imgWidth, this.imgHeight);
-        // this.context.drawImage(this.imageElement, 0, 0, this.imgWidth, this.imgHeight);
-        this.render();
     }
 
     /**
@@ -114,7 +109,6 @@ export class AnnotatorComponent {
     subscribeToEvents() {
         this.events.subscribe('render-canvas', () => {
             this.onImageChanged();
-            this.render();
         });
     }
 

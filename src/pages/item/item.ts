@@ -55,6 +55,7 @@ export class ItemPage extends _DetailPage {
         navParams.data ? this.initAnnotator(navParams.data) : console.error('ERROR: navParams.data is null!');
         this.navProxy.selectedItem.pipe()
             .subscribe((filename) => {
+                // console.log('filename changed!');
                 this.item = filename;
                 this.initAnnotator(filename);
                 this.renderCanvas();
@@ -161,7 +162,6 @@ export class ItemPage extends _DetailPage {
     }
 
     actionSelect(itm) {
-        console.log('selected!');
         this.annotationsProvider.selectAction(itm);
     }
 

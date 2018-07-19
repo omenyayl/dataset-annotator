@@ -10,6 +10,7 @@ import {AnnotationsProvider} from "../providers/annotations/annotations";
 import {HotkeysPage} from '../pages/hotkeys/hotkeys';
 import FileFilter = Electron.FileFilter;
 import {ImageProvider} from "../providers/image/image";
+import {ItemPage} from "../pages/item/item";
 
 const SUPPORTED_EXTENSIONS = [
     '.jpg',
@@ -84,13 +85,12 @@ export class MyApp {
                             this.ngZone.run(()=>{
                                 this.fileProvider.filesChange.next(files);
                                 this.fileProvider.filesLoading.next(false);
+                                this.fileProvider.selectedFolder = value;
                                 this.annotationProvider.flushAnnotations();
                                 this.imageProvider.flushImages();
+                                this.navProxy.pushDetail(ItemPage, files[0]);
                             });
-                            this.fileProvider.selectedFolder = value;
-
                         }
-
                     })
             })
     }
@@ -131,6 +131,7 @@ export class MyApp {
                 this.fileProvider.loadJSON(path)
                     .subscribe((file_json) => {
                         this.annotationProvider.loadAnnotations(file_json);
+                        this.menuCtrl.close();
                     });
             });
     }

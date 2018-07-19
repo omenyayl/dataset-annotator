@@ -3,9 +3,9 @@ import {ImageObject} from "../../objects/image-object";
 import * as imageSize from 'image-size';
 import {DrawerNamesEnum} from "../../enums/drawer-names-enum";
 import {AnnotationsProvider} from "../annotations/annotations";
+import {FileProvider} from "../file/file";
 
-const MAX_IMAGE_WIDTH = 750;
-const MAX_IMAGE_HEIGHT = 1000;
+const systemResolutionMultiplier = 0.5; // For determining max/min width/height
 
 /**
  Provider that contains image information and methods
@@ -18,7 +18,17 @@ export class ImageProvider {
     public selectedCanvasDirective: DrawerNamesEnum;
     private annotationsProvider: AnnotationsProvider;
 
+    minWidth: number;
+    minHeight: number;
+
+    maxWidth: number;
+    maxHeight: number;
+
     constructor() {
+        this.minWidth = systemResolutionMultiplier * FileProvider.systemResolution.width;
+        this.minHeight = systemResolutionMultiplier * FileProvider.systemResolution.height;
+        this.maxWidth = this.minWidth + 100;
+        this.maxHeight = this.minHeight + 100;
     }
 
     /**
@@ -26,6 +36,7 @@ export class ImageProvider {
      * width, height, src, and scaling factor
      * @param name The name of the image
      * @param annotationsProvider the AnnotationsProvider
+     * @param fullPath
      * @returns {ImageObject} the ImageObject object with width, height, src, and scale
      */
     initImage(name: string,
@@ -38,15 +49,25 @@ export class ImageProvider {
         let width = sizeOfCurrentImage.width;
         let height = sizeOfCurrentImage.height;
         let ratio = 1;
-        if (width > MAX_IMAGE_WIDTH) {
-            ratio = MAX_IMAGE_WIDTH / width;
-            width = MAX_IMAGE_WIDTH;
+        if (width > this.maxWidth) {
+            ratio = this.maxWidth / width;
+            width = this.maxWidth;
             height *= ratio;
         }
-        else if (height > MAX_IMAGE_HEIGHT) {
-            ratio = MAX_IMAGE_HEIGHT / height;
+        else if (width < this.minWidth) {
+            ratio = this.minWidth / width;
+            width = this.minWidth;
+            height *= ratio;
+        }
+        else if (height > this.maxHeight) {
+            ratio = this.maxHeight / height;
+            height = this.maxHeight;
             width *= ratio;
-            height = MAX_IMAGE_HEIGHT;
+        }
+        else if (height < this.minHeight) {
+            ratio = this.minHeight / height;
+            height = this.minHeight;
+            width *= ratio;
         }
         let newImage = new ImageObject(
             name, width, height, ratio

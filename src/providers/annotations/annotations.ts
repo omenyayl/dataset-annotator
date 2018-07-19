@@ -205,7 +205,6 @@ export class AnnotationsProvider {
 	  		nextId = Math.max(action.action_id, nextId);
 		}
 	  	nextId += 1;
-	  	//console.log(`New ID assigned: ${nextId}`);
 	  	return nextId;
 	}
 
@@ -260,8 +259,14 @@ export class AnnotationsProvider {
 
 	loadAnnotations(json_from_annotations_file: any): boolean {
         for (let annotation of json_from_annotations_file['frames']) {
-            this.annotations[annotation.src] = this.deepAppendAnnotations(annotation, this.annotations[annotation.src]);
+            let newAnnotation = this.deepAppendAnnotations(annotation, this.annotations[annotation.src]);
+            let image = this.imageProvider.images[annotation.src];
+            if (image) {
+                AnnotationsProvider.rescaleAnnotation(newAnnotation, image.scale);
+            }
+            this.annotations[annotation.src] = newAnnotation
         }
+        this.renderCanvas();
         return false;
     }
 

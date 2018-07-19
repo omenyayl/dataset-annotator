@@ -12,7 +12,6 @@ import {HotkeyProvider} from "../../providers/hotkeys/hotkeys";
 import {Observable} from "rxjs/Observable";
 import { HotkeysService, Hotkey } from 'angular2-hotkeys';
 import { HotkeyObject } from '../../objects/hotkey-object';
-import {ItemPage} from "../item/item";
 
 @IonicPage()
 @Component({
@@ -30,7 +29,6 @@ export class ItemsPage extends _MasterPage {
     filesLoading$: Observable<boolean>;
     selected: [string, number];
     hotkeys: HotkeyObject;
-    inHome: boolean = true;
 
     constructor(public navCtrl: NavController,
                 public navParams: NavParams,
@@ -49,8 +47,8 @@ export class ItemsPage extends _MasterPage {
         this.filesLoading$ = this.fileProvider.filesLoading.pipe();
         this.fileProvider.filesChange.pipe().subscribe((files) => {
             this.files = files;
+            this.selected = [this.files[0], 0];
         });
-        this.selected = [null, -1];
     }
 
     /**
@@ -63,12 +61,7 @@ export class ItemsPage extends _MasterPage {
         //     this.navCtrl.push(...)
         // Use our proxy:
         this.selected = [item, index];
-        if(this.inHome) {
-            this.navProxy.pushDetail(ItemPage, item);
-            this.inHome = false;
-        } else {
-            this.navProxy.selectedItem.next(this.selected[0]);
-        }
+        this.navProxy.selectedItem.next(this.selected[0]);
     }
 
     previousItem() {
@@ -99,12 +92,12 @@ export class ItemsPage extends _MasterPage {
 
         this.hotkeys = hotkeys;
         this.hotkeyService.add(new Hotkey(this.hotkeys.nextImage,
-            (event: KeyboardEvent): boolean => {
+            (): boolean => {
                 this.nextItem();
                 return false;
             }));
         this.hotkeyService.add(new Hotkey(this.hotkeys.prevImage,
-            (event: KeyboardEvent): boolean => {
+            (): boolean => {
                 this.previousItem();
                 return false;
             }));

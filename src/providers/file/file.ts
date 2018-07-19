@@ -7,8 +7,9 @@ import * as fs from 'fs';
 import * as path from 'path';
 import {Subject} from "rxjs/Subject";
 import FileFilter = Electron.FileFilter;
+import Size = Electron.Size;
 
-let {dialog} = remote;
+let {dialog, screen} = remote;
 let actionOutputName = 'actions.json';
 
 @Injectable()
@@ -19,9 +20,11 @@ export class FileProvider {
 
     filesChange: Subject<string[]> = new Subject<string[]>(); // Subject containing a list of files found
     filesLoading: Subject<boolean> = new Subject<boolean>(); // Indicates whether the listFiles() operation is ongoing
+    static systemResolution: Size;
 
 
     constructor(private ngZone: NgZone) {
+        FileProvider.systemResolution = screen.getPrimaryDisplay().size;
     }
 
     /**
@@ -79,7 +82,6 @@ export class FileProvider {
      * @returns {Observable<string[]>}
      */
     listFiles(directoryPath: string, extensions?: string[]): Observable<string[]> {
-
         return new Observable<string[]>((observer) => {
             this.ngZone.run(() => {
                 this.filesLoading.next(true);
