@@ -2,7 +2,6 @@ import {Component} from '@angular/core';
 import {IonicPage, MenuController, NavController, NavParams} from 'ionic-angular';
 import {HotkeysPage} from "../hotkeys/hotkeys";
 import {NavProxyService} from "../../providers/nav-proxy/nav-proxy";
-import {ImageSizeSettingProvider} from "../../providers/image-size-setting/image-size-setting";
 import {ImageSizePage} from "../image-size/image-size";
 
 /**
