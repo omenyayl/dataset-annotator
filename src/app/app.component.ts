@@ -12,6 +12,7 @@ import FileFilter = Electron.FileFilter;
 import {ImageProvider} from "../providers/image/image";
 import {ItemPage} from "../pages/item/item";
 import {remote, ipcRenderer} from 'electron';
+import {SettingsPage} from "../pages/settings/settings";
 
 
 const SUPPORTED_EXTENSIONS = [
@@ -134,10 +135,9 @@ export class MyApp {
         })
     }
 
-    openHotkeysForm() {
-        console.log("open keybindings form");
+    openSettingsForm() {
         this.menuCtrl.close();
-        this.navProxy.pushMaster(HotkeysPage, null);
+        this.navProxy.pushMaster(SettingsPage, null);
     }
 
     readAnnotations() {

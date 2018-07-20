@@ -4,8 +4,7 @@ import * as imageSize from 'image-size';
 import {DrawerNamesEnum} from "../../enums/drawer-names-enum";
 import {AnnotationsProvider} from "../annotations/annotations";
 import {FileProvider} from "../file/file";
-
-const systemResolutionMultiplier = 0.4; // For determining max/min width/height
+import {ImageSizeSettingProvider} from "../image-size-setting/image-size-setting";
 
 /**
  Provider that contains image information and methods
@@ -18,15 +17,17 @@ export class ImageProvider {
     public selectedCanvasDirective: DrawerNamesEnum;
     private annotationsProvider: AnnotationsProvider;
 
+    systemResolutionMultiplier: number;
     minWidth: number;
     minHeight: number;
 
     maxWidth: number;
     maxHeight: number;
 
-    constructor() {
-        this.minWidth = systemResolutionMultiplier * FileProvider.systemResolution.width;
-        this.minHeight = systemResolutionMultiplier * FileProvider.systemResolution.height;
+    constructor(imageSizeSetting: ImageSizeSettingProvider) {
+        this.systemResolutionMultiplier = imageSizeSetting.getSize();
+        this.minWidth = this.systemResolutionMultiplier * FileProvider.systemResolution.width;
+        this.minHeight = this.systemResolutionMultiplier * FileProvider.systemResolution.height;
         this.maxWidth = this.minWidth + 100;
         this.maxHeight = this.minHeight + 100;
     }

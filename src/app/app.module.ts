@@ -18,6 +18,9 @@ import { AnnotationsProvider } from '../providers/annotations/annotations';
 import {AnnotatorComponent} from "../components/annotator/annotator";
 import {ObjectInputComponent} from "../components/object-input/object-input";
 import {ActionInputComponent} from "../components/action-input/action-input";
+import {SettingsPage} from "../pages/settings/settings";
+import { ImageSizeSettingProvider } from '../providers/image-size-setting/image-size-setting';
+import {ImageSizePage} from "../pages/image-size/image-size";
 
 @NgModule({
     declarations: [
@@ -26,6 +29,8 @@ import {ActionInputComponent} from "../components/action-input/action-input";
         ItemPage,
         PlaceholderPage,
         HotkeysPage,
+        SettingsPage,
+        ImageSizePage,
         ObjectInputComponent,
         AnnotatorComponent,
         ActionInputComponent
@@ -41,7 +46,9 @@ import {ActionInputComponent} from "../components/action-input/action-input";
         ItemsPage,
         ItemPage,
         PlaceholderPage,
-        HotkeysPage
+        HotkeysPage,
+        SettingsPage,
+        ImageSizePage
     ],
     providers: [
         StatusBar,
@@ -51,7 +58,8 @@ import {ActionInputComponent} from "../components/action-input/action-input";
         NavProxyService,
         ImageProvider,
         HotkeyProvider,
-        AnnotationsProvider
+        AnnotationsProvider,
+    ImageSizeSettingProvider
     ]
 })
 export class AppModule {

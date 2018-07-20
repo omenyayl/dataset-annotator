@@ -44,12 +44,12 @@ function createWindow() {
         // when you should delete the corresponding element.
         win = null;
     });
-    globalShortcut.register('f5', function () {
-        console.log('f5 is pressed');
-        win.reload()
+
+    globalShortcut.register('CommandOrControl+r', function () {
     });
-    globalShortcut.register('CommandOrControl+R', function () {
-        console.log('CommandOrControl+R is pressed');
+
+    globalShortcut.register('CommandOrControl+Shift+r', function () {
+        console.log('CommandOrControl+Shift+r is pressed');
         win.reload()
     });
 
