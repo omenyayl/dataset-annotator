@@ -51,8 +51,10 @@ export class RectangleDrawer extends Drawer{
 
     saveFromCoordinates(...coordinates: CoordinatesObject[]) {
         let newRectangle = new Rectangle(
-            coordinates[0],
-            coordinates[1],
+            new CoordinatesObject(Math.min(coordinates[0].x, coordinates[1].x),
+                                    Math.max(coordinates[0].y, coordinates[1].y)),
+            new CoordinatesObject(Math.max(coordinates[0].x, coordinates[1].x),
+                                    Math.min(coordinates[0].y, coordinates[1].y)),
             AnnotationsProvider.lastLabel ? AnnotationsProvider.lastLabel : 'unnamed'
         );
 

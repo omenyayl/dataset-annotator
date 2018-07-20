@@ -220,7 +220,7 @@ export class FileProvider {
     }
 
     static setHasUnsavedChanges(hasUnsavedChanges: boolean) {
-        remote.getGlobal('shared').hasUnsavedChanges = true;
+        remote.getGlobal('shared').hasUnsavedChanges = hasUnsavedChanges;
     }
 
 }
