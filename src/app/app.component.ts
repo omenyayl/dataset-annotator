@@ -1,4 +1,4 @@
-import {Component, HostListener, NgZone, ViewChild} from '@angular/core';
+import {Component, NgZone, ViewChild} from '@angular/core';
 import {Platform, Nav, MenuController, ToastController} from 'ionic-angular';
 import {StatusBar} from '@ionic-native/status-bar';
 import {SplashScreen} from '@ionic-native/splash-screen';
@@ -7,11 +7,10 @@ import {ItemsPage} from '../pages/items/items';
 import {PlaceholderPage} from '../pages/placeholder/placeholder';
 import {FileProvider} from "../providers/file/file";
 import {AnnotationsProvider} from "../providers/annotations/annotations";
-import {HotkeysPage} from '../pages/hotkeys/hotkeys';
 import FileFilter = Electron.FileFilter;
 import {ImageProvider} from "../providers/image/image";
 import {ItemPage} from "../pages/item/item";
-import {remote, ipcRenderer} from 'electron';
+import {ipcRenderer} from 'electron';
 import {SettingsPage} from "../pages/settings/settings";
 
 
