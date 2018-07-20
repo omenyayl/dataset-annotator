@@ -4,6 +4,7 @@ import {AnnotationObject} from "../../objects/annotation-object";
 import { ImageProvider } from "../image/image"
 import {ActionObject} from "../../objects/action-object";
 import {Events} from "ionic-angular";
+import {FileProvider} from "../file/file";
 
 /**
     Provider that deals with getting and setting annotations
@@ -57,6 +58,7 @@ export class AnnotationsProvider {
         let currentImage = this.imageProvider.currentImage;
         if (currentImage ) {
             this.annotations[currentImage.src].rectangles.push(rectangle);
+            FileProvider.setHasUnsavedChanges(true);
         }
     }
 
@@ -67,6 +69,7 @@ export class AnnotationsProvider {
 
         if (i != -1) {
             annotation.rectangles.splice(i, 1);
+            FileProvider.setHasUnsavedChanges(true);
             return true;
         }
 
@@ -96,6 +99,7 @@ export class AnnotationsProvider {
         let currentImage = this.imageProvider.currentImage;
         if( currentImage ) {
             this.annotations[currentImage.src].lines.push(line);
+            FileProvider.setHasUnsavedChanges(true);
         }
 
     }
@@ -107,6 +111,7 @@ export class AnnotationsProvider {
 
         if (i != -1) {
             annotation.lines.splice(i, 1);
+            FileProvider.setHasUnsavedChanges(true);
             return true;
         }
 
@@ -125,6 +130,7 @@ export class AnnotationsProvider {
         let currentImage = this.imageProvider.currentImage;
         if( currentImage ) {
             this.annotations[currentImage.src].polygons.push(polygon);
+            FileProvider.setHasUnsavedChanges(true);
         }
     }
 
@@ -144,6 +150,7 @@ export class AnnotationsProvider {
 
         if (i != -1) {
             annotation.polygons.splice(i, 1);
+            FileProvider.setHasUnsavedChanges(true);
             return true;
         }
 
@@ -162,6 +169,7 @@ export class AnnotationsProvider {
         let currentImage = this.imageProvider.currentImage;
         if( currentImage ) {
             this.annotations[currentImage.src].polylines.push(polyline);
+            FileProvider.setHasUnsavedChanges(true);
         }
     }
 
@@ -172,6 +180,7 @@ export class AnnotationsProvider {
 
         if (i != -1) {
             annotation.polylines.splice(i, 1);
+            FileProvider.setHasUnsavedChanges(true);
             return true;
         }
 
@@ -210,6 +219,7 @@ export class AnnotationsProvider {
 
   	addAction(action : ActionObject){
 		action.action_id = this.getActionId();
+        FileProvider.setHasUnsavedChanges(true);
 		this.actions.push(action);
 	}
 
@@ -218,6 +228,7 @@ export class AnnotationsProvider {
 
         if (i != -1) {
             this.actions.splice(i, 1);
+            FileProvider.setHasUnsavedChanges(true);
             return true;
         }
 

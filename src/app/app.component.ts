@@ -1,4 +1,4 @@
-import {Component, NgZone, ViewChild} from '@angular/core';
+import {Component, HostListener, NgZone, ViewChild} from '@angular/core';
 import {Platform, Nav, MenuController, ToastController} from 'ionic-angular';
 import {StatusBar} from '@ionic-native/status-bar';
 import {SplashScreen} from '@ionic-native/splash-screen';
@@ -11,6 +11,8 @@ import {HotkeysPage} from '../pages/hotkeys/hotkeys';
 import FileFilter = Electron.FileFilter;
 import {ImageProvider} from "../providers/image/image";
 import {ItemPage} from "../pages/item/item";
+import {remote, ipcRenderer} from 'electron';
+
 
 const SUPPORTED_EXTENSIONS = [
     '.jpg',
@@ -61,8 +63,13 @@ export class MyApp {
             this.masterNav.setRoot(ItemsPage, {detailNavCtrl: this.detailNav});
             this.detailNav.setRoot(PlaceholderPage);
 
+            ipcRenderer.on('saveAnnotations', () => {
+                this.saveFileDialog()
+                    .then(()=>{
+                        ipcRenderer.send('close');
+                    });
+            })
         });
-
     }
 
     /**
@@ -95,28 +102,36 @@ export class MyApp {
             })
     }
 
-    saveFile() {
-        console.log('Saving file...');
-        let filters: FileFilter[] = [];
-        filters.push({
-            name: 'JSON',
-            extensions: ['json']
-        });
-        this.fileProvider.showSaveDialog(filters)
-            .subscribe((file) => {
-                console.log(`Saving to ${file}`);
-                let saveJson = this.annotationProvider.generateSaveData();
-                this.fileProvider.saveFile(saveJson, file).subscribe((success) => {
-                    if (success) {
-                        let toast = this.toastCtrl.create({
-                            message: 'Successfully saved the annotations.',
-                            duration: 3000,
-                            position: 'bottom'
-                        });
-                        toast.present();
-                    }
+    saveFileDialog() {
+        return new Promise((resolve) => {
+            console.log('Saving file...');
+            let filters: FileFilter[] = [];
+            filters.push({
+                name: 'JSON',
+                extensions: ['json']
+            });
+            this.fileProvider.showSaveDialog(filters)
+                .subscribe((file) => {
+                    file ? this.saveFile(file) : console.error('File is undefined when attempting to save.');
+                    FileProvider.setHasUnsavedChanges(false);
+                    resolve();
                 })
-            })
+        });
+    }
+
+    saveFile(file: string) {
+        console.log(`Saving to ${file}`);
+        let saveJson = this.annotationProvider.generateSaveData();
+        this.fileProvider.saveFile(saveJson, file).subscribe((success) => {
+            if (success) {
+                let toast = this.toastCtrl.create({
+                    message: 'Successfully saved the annotations.',
+                    duration: 3000,
+                    position: 'bottom'
+                });
+                toast.present();
+            }
+        })
     }
 
     openHotkeysForm() {

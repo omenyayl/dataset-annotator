@@ -160,7 +160,7 @@ export class FileProvider {
 			});
 		  	observer.complete();
 		}).pipe(
-		    catchError(this.handleError('File.saveFile()', null))
+		    catchError(this.handleError('File.saveFileDialog()', null))
         )
   	}
 
@@ -217,6 +217,10 @@ export class FileProvider {
             // Let the app keep running by returning an empty result.
             return of(result as T);
         };
+    }
+
+    static setHasUnsavedChanges(hasUnsavedChanges: boolean) {
+        remote.getGlobal('shared').hasUnsavedChanges = true;
     }
 
 }

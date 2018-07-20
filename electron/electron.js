@@ -2,7 +2,8 @@
 const electron = require('electron');
 const globalShortcut = electron.globalShortcut;
 const {autoUpdater} = require("electron-updater");
-
+const dialog = require('electron').dialog;
+const {ipcMain} = require('electron');
 
 // Module to control application life.
 const {
@@ -34,6 +35,9 @@ function createWindow() {
     // Open the DevTools.
     // win.webContents.openDevTools();
     // Emitted when the window is closed.
+
+    global.shared = {hasUnsavedChanges: false};
+
     win.on('closed', () => {
         // Dereference the window object, usually you would store windows
         // in an array if your app supports multi windows, this is the time
@@ -49,7 +53,45 @@ function createWindow() {
         win.reload()
     });
 
+    ipcMain.on('close', () => {
+        app.exit();
+    });
+
+    win.on('close', async (e) => {
+        if (global.shared.hasUnsavedChanges){
+            e.preventDefault();
+            let button_id = await showSaveDialog();
+            switch(button_id) {
+                case 0:
+                    app.exit();
+                    break;
+                case 1:
+                    break;
+                case 2:
+                    win.webContents.send('saveAnnotations');
+                    break;
+            }
+        }
+    });
+
+
     autoUpdater.checkForUpdatesAndNotify();
+}
+
+function showSaveDialog() {
+    return new Promise((resolve) => {
+        dialog.showMessageBox({
+            type: 'warning',
+            buttons: ["Don't Save", "Cancel", "Save"],
+            defaultId: 2,
+            title: "You have unsaved annotations",
+            message: "Do you want to save your changes?",
+            detail: "Your changes will be lost if you don't save them.",
+            cancelId: 1,
+        }, (button_id) => {
+            resolve(button_id);
+        });
+    });
 }
 
 // This method will be called when Electron has finished
@@ -58,11 +100,13 @@ function createWindow() {
 app.on('ready', createWindow);
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
+
+    app.quit();
+
     // On OS X it is common for applications and their menu bar
     // to stay active until the user quits explicitly with Cmd + Q
-    if (process.platform !== 'darwin') {
-        app.quit();
-    }
+    // if (process.platform !== 'darwin') {
+    // }
 });
 app.on('activate', () => {
     // On OS X it's common to re-create a window in the app when the
@@ -71,3 +115,35 @@ app.on('activate', () => {
         createWindow();
     }
 });
+
+
+// ipcMain.on('close', (event, hasUnsavedChanges) => {
+//     if(hasUnsavedChanges) {
+//         win.on('close', (e) => {
+//             e.preventDefault();
+//             dialog.showMessageBox({
+//                 type: 'warning',
+//                 buttons: ["Don't Save", "Cancel", "Save"],
+//                 defaultId: 2,
+//                 title: "You have unsaved annotations",
+//                 message: "Do you want to save your changes?",
+//                 detail: "Your changes will be lost if you don't save them.",
+//                 cancelId: 1,
+//             }, (button_id) => {
+//                 switch (button_id) {
+//                     case 0:
+//                         app.quit();
+//                         break;
+//                     case 1:
+//                         app.quit();
+//
+//                         break;
+//                     case 2:
+//                         app.quit();
+//
+//                         break;
+//                 }
+//             })
+//         });
+//     }
+// });
