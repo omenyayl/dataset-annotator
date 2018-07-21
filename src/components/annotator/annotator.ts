@@ -12,7 +12,6 @@ import { Events } from 'ionic-angular';
 import {AnnotationsProvider} from "../../providers/annotations/annotations";
 import {PolygonDrawer} from "../../drawers/polygon-drawer";
 import {Drawer} from "../../drawers/drawer";
-import {platform} from "process";
 import {FileProvider} from "../../providers/file/file";
 import {PolylineDrawer} from "../../drawers/polyline-drawer";
 // import * as sharp from 'sharp';
@@ -35,10 +34,6 @@ export class AnnotatorComponent {
     private imageContext: CanvasRenderingContext2D;
 
 
-    src: string;
-    imgWidth: number;
-    imgHeight: number;
-
     private lineDrawer: LineDrawer;
     private rectangleDrawer: RectangleDrawer;
     private polygonDrawer: PolygonDrawer;
@@ -51,6 +46,9 @@ export class AnnotatorComponent {
     private renderer: Renderer2;
     sanitizer: DomSanitizer;
 
+    imgWidth: number;
+    imgHeight: number;
+
     constructor(private annotationsProvider: AnnotationsProvider,
                 renderer: Renderer2,
                 sanitizer: DomSanitizer,
@@ -61,7 +59,7 @@ export class AnnotatorComponent {
         this.sanitizer = sanitizer;
     }
 
-    initImage(context: CanvasRenderingContext2D, src, width, height){
+    initImage(context: CanvasRenderingContext2D, src, width, height, scale){
         let img = new Image();
         img.width = width;
         img.height = height;
@@ -80,13 +78,16 @@ export class AnnotatorComponent {
         if (imageObj) {
             this.imgWidth = imageObj.width;
             this.imgHeight = imageObj.height;
-            this.src = path.join(this.fileProvider.selectedFolder, imageObj.src);
-            this.initAnnotator();
+            this.annotationsProvider.initAnnotations(imageObj.src, imageObj.scale);
+            this.initAnnotator(imageObj.width,
+                imageObj.height,
+                path.join(this.fileProvider.selectedFolder, imageObj.src),
+                imageObj.scale);
         }
     }
 
-    initAnnotator() {
-        this.initImage(this.imageContext, this.src, this.imgWidth, this.imgHeight);
+    initAnnotator(width: number, height: number, src: string, scale: number) {
+        this.initImage(this.imageContext, src, width, height, scale);
         // Initialize our drawing tools
         this.lineDrawer = new LineDrawer(this.context, this.annotationsProvider);
         this.rectangleDrawer = new RectangleDrawer(this.context, this.annotationsProvider);
@@ -272,15 +273,6 @@ export class AnnotatorComponent {
             this.rectangleDrawer.selectElement(mouseCoordinates) ||
             this.polygonDrawer.selectElement(mouseCoordinates) ||
             this.polylineDrawer.selectElement(mouseCoordinates);
-    }
-
-    getImageSrc(): string {
-        let imgPath = this.src;
-        if (platform == 'win32'){
-            return `file:///${imgPath}`;
-        } else {
-            return imgPath;
-        }
     }
 
 }

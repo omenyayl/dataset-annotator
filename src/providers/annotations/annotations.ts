@@ -12,6 +12,7 @@ import {FileProvider} from "../file/file";
 @Injectable()
 export class AnnotationsProvider {
   	private annotations: AnnotationObject[] = [];
+  	private loadedAnnotations: AnnotationObject[] = []; // these will load up when their corresponding images load
 
   	private actions: ActionObject[] = [];
     public static selectedElement: any;
@@ -23,11 +24,17 @@ export class AnnotationsProvider {
     }
 
     public initAnnotations(imageSrc: string, scale: number) {
-        if (! this.annotations[imageSrc]) {
-            this.annotations[imageSrc] = new AnnotationObject(imageSrc);
+        if(this.loadedAnnotations[imageSrc]) {
+            console.log('loading existing annotations');
+            this.annotations[imageSrc] = AnnotationsProvider.deepAppendAnnotations(
+                this.loadedAnnotations[imageSrc],
+                scale,
+                this.annotations[imageSrc]);
+
+            this.loadedAnnotations[imageSrc] = null;
         }
-        else if (scale != 1) {
-            AnnotationsProvider.rescaleAnnotation(this.annotations[imageSrc], scale);
+        else if (! this.annotations[imageSrc]) {
+            this.annotations[imageSrc] = new AnnotationObject(imageSrc);
         }
 
     }
@@ -268,44 +275,82 @@ export class AnnotationsProvider {
         };
 	}
 
-	loadAnnotations(json_from_annotations_file: any): boolean {
+	loadAnnotations(json_from_annotations_file: any) {
         for (let annotation of json_from_annotations_file['frames']) {
-            let newAnnotation = this.deepAppendAnnotations(annotation, this.annotations[annotation.src]);
-            let image = this.imageProvider.images[annotation.src];
-            if (image) {
-                AnnotationsProvider.rescaleAnnotation(newAnnotation, image.scale);
-            }
-            this.annotations[annotation.src] = newAnnotation
+            this.loadedAnnotations[annotation.src] = annotation;
         }
+        this.initAnnotations(this.imageProvider.currentImage.src, this.imageProvider.currentImage.scale);
         this.renderCanvas();
-        return false;
     }
 
-    deepAppendAnnotations(annotations: AnnotationObject, existingAnnotations?: AnnotationObject) {
+    // scaleAnnotationAndAppend(loadedAnnotation: AnnotationObject, scale: number) {
+    //     AnnotationsProvider.rescaleAnnotation(loadedAnnotation, scale);
+    //
+    // }
+    //
+    // static deepInstantiateAnnotation(annotation: AnnotationObject) {
+    //     let newAnnotation = new AnnotationObject(annotation.src);
+    //
+    //     for (let line of annotation.lines) {
+    //         newAnnotation.lines.push(new Line(
+    //             new CoordinatesObject(line.start.x, line.start.y),
+    //             new CoordinatesObject(line.end.x, line.end.y),
+    //             line.label));
+    //     }
+    //
+    //     for (let rectangle of annotation.rectangles) {
+    //         newAnnotation.rectangles.push(new Rectangle(
+    //             new CoordinatesObject(rectangle.topLeft.x, rectangle.topLeft.y),
+    //             new CoordinatesObject(rectangle.bottomRight.x, rectangle.bottomRight.y),
+    //             rectangle.label));
+    //     }
+    //
+    //     for (let polygon of annotation.polygons) {
+    //         let coordinates = [];
+    //         for (let coordinate of polygon.coordinates) {
+    //             coordinates.push(new CoordinatesObject(coordinate.x, coordinate.y));
+    //         }
+    //         newAnnotation.polygons.push(new Polygon(coordinates, polygon.label));
+    //     }
+    //
+    //     for (let polyline of annotation.polylines) {
+    //         let coordinates = [];
+    //         for (let coordinate of polyline.coordinates) {
+    //             coordinates.push(new CoordinatesObject(coordinate.x, coordinate.y));
+    //         }
+    //         newAnnotation.polylines.push(new Polyline(coordinates, polyline.label));
+    //     }
+    //
+    //     return newAnnotation;
+    // }
+
+    static deepAppendAnnotations(annotation: AnnotationObject, scale: number, existingAnnotation?: AnnotationObject) {
 
         // Initialize undefined objects
-        if (!existingAnnotations) existingAnnotations = new AnnotationObject(annotations.src);
-        if (!annotations.lines) annotations.lines = [];
-        if (!annotations.rectangles) annotations.rectangles = [];
-        if (!annotations.polygons) annotations.polygons = [];
-        if (!annotations.polylines) annotations.polylines = [];
+        if (!existingAnnotation) existingAnnotation = new AnnotationObject(annotation.src);
+        if (!annotation.lines) annotation.lines = [];
+        if (!annotation.rectangles) annotation.rectangles = [];
+        if (!annotation.polygons) annotation.polygons = [];
+        if (!annotation.polylines) annotation.polylines = [];
 
-        let newAnnotations = new AnnotationObject(annotations.src);
-        for (let line of annotations.lines.concat(existingAnnotations.lines)) {
+        AnnotationsProvider.rescaleAnnotation(annotation, scale);
+
+        let newAnnotations = new AnnotationObject(annotation.src);
+        for (let line of annotation.lines.concat(existingAnnotation.lines)) {
             newAnnotations.lines.push(new Line(
                 new CoordinatesObject(line.start.x, line.start.y),
                 new CoordinatesObject(line.end.x, line.end.y),
                 line.label));
         }
 
-        for (let rectangle of annotations.rectangles.concat(existingAnnotations.rectangles)) {
+        for (let rectangle of annotation.rectangles.concat(existingAnnotation.rectangles)) {
             newAnnotations.rectangles.push(new Rectangle(
                 new CoordinatesObject(rectangle.topLeft.x, rectangle.topLeft.y),
                 new CoordinatesObject(rectangle.bottomRight.x, rectangle.bottomRight.y),
                 rectangle.label));
         }
 
-        for (let polygon of annotations.polygons.concat(existingAnnotations.polygons)) {
+        for (let polygon of annotation.polygons.concat(existingAnnotation.polygons)) {
             let coordinates = [];
             for (let coordinate of polygon.coordinates) {
                 coordinates.push(new CoordinatesObject(coordinate.x, coordinate.y));
@@ -313,7 +358,7 @@ export class AnnotationsProvider {
             newAnnotations.polygons.push(new Polygon(coordinates, polygon.label));
         }
 
-        for (let polyline of annotations.polylines.concat(existingAnnotations.polylines)) {
+        for (let polyline of annotation.polylines.concat(existingAnnotation.polylines)) {
             let coordinates = [];
             for (let coordinate of polyline.coordinates) {
                 coordinates.push(new CoordinatesObject(coordinate.x, coordinate.y));
