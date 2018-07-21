@@ -1,7 +1,8 @@
 # Dataset Annotator
 Tool for annotating image datasets.
 ## Demo
-![alt text](https://s3.amazonaws.com/olegpublicbucket/Screen+Shot+2018-07-14+at+12.26.19+PM.png)
+![demo pic](https://s3.amazonaws.com/olegpublicbucket/Screen+Shot+2018-07-14+at+12.26.19+PM.png)
+[here](https://pastebin.com/BYk2EKhG) is what the exported data looks like
 
 ## Installing and Running as a user
 * Windows: 
