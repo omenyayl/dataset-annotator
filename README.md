@@ -2,7 +2,7 @@
 Tool for annotating image datasets.
 ## Demo
 ![demo pic](https://s3.amazonaws.com/olegpublicbucket/Screen+Shot+2018-07-14+at+12.26.19+PM.png)
-[here](https://pastebin.com/BYk2EKhG) is what the exported data looks like
+[here](https://pastebin.com/BYk2EKhG) is what the exported data looks like (this data did not come from the same image shown above)
 
 ## Installing and Running as a user
 * Windows: 
