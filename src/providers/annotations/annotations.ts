@@ -255,34 +255,48 @@ export class AnnotationsProvider {
         return this.annotations;
 	}
 
+	static concatArraysUnique(object1Keys: any, object2Keys: any) {
+        return object1Keys.concat(
+            object2Keys.filter((key) => {
+                return object1Keys.indexOf(key) < 0;
+            }));
+    }
+
+
+    /**
+     * Goes through the hand annotations and the loaded annotations, combines them, and exports them
+     * @returns {any} An object to be exported as a JSON containing all of the annotation data
+     */
   	generateSaveData(): any {
         let annotations = [];
-        for (let image in this.annotations) {
 
-            if(this.isAnnotationsEmpty(this.annotations[image]) &&
-                this.isAnnotationsEmpty(this.loadedAnnotations[image])) continue;
+        let annotationsKeys = Object.keys(this.annotations);
+        let loadedAnnotationsKeys = Object.keys(this.loadedAnnotations);
 
-            let copyOfAnnotations = JSON.parse(JSON.stringify(this.annotations[image]));
+        for (let imageSrc of AnnotationsProvider.concatArraysUnique(annotationsKeys, loadedAnnotationsKeys)) {
 
-            let annotationImage = this.imageProvider.images[image];
-            if (annotationImage) {
-                AnnotationsProvider.unscaleAnnotation(copyOfAnnotations, annotationImage.scale);
+            let annotation = this.annotations[imageSrc];
+            let copyOfAnnotations: AnnotationObject = new AnnotationObject(imageSrc);
+            if (!AnnotationsProvider.isAnnotationsEmpty(annotation)) {
+                copyOfAnnotations = JSON.parse(JSON.stringify(annotation));
+                let annotationImage = this.imageProvider.images[imageSrc];
+                if (annotationImage) {
+                    AnnotationsProvider.unscaleAnnotation(copyOfAnnotations, annotationImage.scale);
+                }
             }
 
-            let loadedAnnotation = this.loadedAnnotations[image];
-
-            // Push the remaining annotations that were loaded into the program.
-            // These annotations were never scaled
+            let loadedAnnotation = this.loadedAnnotations[imageSrc];
             if (loadedAnnotation) {
                 annotations.push(AnnotationsProvider.deepAppendAnnotations(
                     loadedAnnotation,
                     copyOfAnnotations
                 ));
-            } else {
+            } else if(annotationsKeys.length > 0) {
                 annotations.push(copyOfAnnotations);
             }
 
         }
+
         return {
             'frames': annotations,
             'actions': this.actions
@@ -291,7 +305,12 @@ export class AnnotationsProvider {
 
 	loadAnnotations(json_from_annotations_file: any) {
         for (let annotation of json_from_annotations_file['frames']) {
-            this.loadedAnnotations[annotation.src] = annotation;
+            if (this.loadedAnnotations[annotation.src]) {
+                this.loadedAnnotations[annotation.src] =
+                    AnnotationsProvider.deepAppendAnnotations(this.loadedAnnotations[annotation.src], annotation);
+            } else {
+                this.loadedAnnotations[annotation.src] = annotation;
+            }
         }
         this.initAnnotations(this.imageProvider.currentImage.src, this.imageProvider.currentImage.scale);
         this.renderCanvas();
@@ -308,7 +327,9 @@ export class AnnotationsProvider {
 
         // Initialize undefined objects
         if (!existingAnnotation) existingAnnotation = new AnnotationObject(annotation.src);
+        if (!annotation) annotation = new AnnotationObject(annotation.src);
         this.instantiateMissingAnnotationAttributes(annotation);
+        this.instantiateMissingAnnotationAttributes(existingAnnotation);
 
         let newAnnotations = new AnnotationObject(annotation.src);
         for (let line of annotation.lines.concat(existingAnnotation.lines)) {
@@ -344,7 +365,7 @@ export class AnnotationsProvider {
         return newAnnotations;
     }
 
-	isAnnotationsEmpty(annotations: AnnotationObject) {
+	static isAnnotationsEmpty(annotations: AnnotationObject) {
         return  ! annotations ||
                 annotations.lines.length === 0 &&
                 annotations.rectangles.length === 0 &&
