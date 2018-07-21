@@ -73,7 +73,6 @@ export class AnnotatorComponent {
     }
 
     onImageChanged() {
-        console.log('image changed');
         let imageObj = this.imageProvider.currentImage;
         if (imageObj) {
             this.imgWidth = imageObj.width;

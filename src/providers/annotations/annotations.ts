@@ -25,10 +25,9 @@ export class AnnotationsProvider {
 
     public initAnnotations(imageSrc: string, scale: number) {
         if(this.loadedAnnotations[imageSrc]) {
-            console.log('loading existing annotations');
+            AnnotationsProvider.rescaleAnnotation(this.loadedAnnotations[imageSrc], scale);
             this.annotations[imageSrc] = AnnotationsProvider.deepAppendAnnotations(
                 this.loadedAnnotations[imageSrc],
-                scale,
                 this.annotations[imageSrc]);
 
             this.loadedAnnotations[imageSrc] = null;
@@ -80,7 +79,6 @@ export class AnnotationsProvider {
             return true;
         }
 
-        console.log('failed to remove rect');
 
         return false;
     }
@@ -261,13 +259,29 @@ export class AnnotationsProvider {
         let annotations = [];
         for (let image in this.annotations) {
 
-            if(this.isAnnotationsEmpty(this.annotations[image])) continue;
+            if(this.isAnnotationsEmpty(this.annotations[image]) &&
+                this.isAnnotationsEmpty(this.loadedAnnotations[image])) continue;
+
             let copyOfAnnotations = JSON.parse(JSON.stringify(this.annotations[image]));
 
-            if (this.imageProvider.images[image]) {
-                AnnotationsProvider.unscaleAnnotation(copyOfAnnotations, this.imageProvider.images[image].scale);
+            let annotationImage = this.imageProvider.images[image];
+            if (annotationImage) {
+                AnnotationsProvider.unscaleAnnotation(copyOfAnnotations, annotationImage.scale);
             }
-            annotations.push(copyOfAnnotations);
+
+            let loadedAnnotation = this.loadedAnnotations[image];
+
+            // Push the remaining annotations that were loaded into the program.
+            // These annotations were never scaled
+            if (loadedAnnotation) {
+                annotations.push(AnnotationsProvider.deepAppendAnnotations(
+                    loadedAnnotation,
+                    copyOfAnnotations
+                ));
+            } else {
+                annotations.push(copyOfAnnotations);
+            }
+
         }
         return {
             'frames': annotations,
@@ -283,57 +297,18 @@ export class AnnotationsProvider {
         this.renderCanvas();
     }
 
-    // scaleAnnotationAndAppend(loadedAnnotation: AnnotationObject, scale: number) {
-    //     AnnotationsProvider.rescaleAnnotation(loadedAnnotation, scale);
-    //
-    // }
-    //
-    // static deepInstantiateAnnotation(annotation: AnnotationObject) {
-    //     let newAnnotation = new AnnotationObject(annotation.src);
-    //
-    //     for (let line of annotation.lines) {
-    //         newAnnotation.lines.push(new Line(
-    //             new CoordinatesObject(line.start.x, line.start.y),
-    //             new CoordinatesObject(line.end.x, line.end.y),
-    //             line.label));
-    //     }
-    //
-    //     for (let rectangle of annotation.rectangles) {
-    //         newAnnotation.rectangles.push(new Rectangle(
-    //             new CoordinatesObject(rectangle.topLeft.x, rectangle.topLeft.y),
-    //             new CoordinatesObject(rectangle.bottomRight.x, rectangle.bottomRight.y),
-    //             rectangle.label));
-    //     }
-    //
-    //     for (let polygon of annotation.polygons) {
-    //         let coordinates = [];
-    //         for (let coordinate of polygon.coordinates) {
-    //             coordinates.push(new CoordinatesObject(coordinate.x, coordinate.y));
-    //         }
-    //         newAnnotation.polygons.push(new Polygon(coordinates, polygon.label));
-    //     }
-    //
-    //     for (let polyline of annotation.polylines) {
-    //         let coordinates = [];
-    //         for (let coordinate of polyline.coordinates) {
-    //             coordinates.push(new CoordinatesObject(coordinate.x, coordinate.y));
-    //         }
-    //         newAnnotation.polylines.push(new Polyline(coordinates, polyline.label));
-    //     }
-    //
-    //     return newAnnotation;
-    // }
-
-    static deepAppendAnnotations(annotation: AnnotationObject, scale: number, existingAnnotation?: AnnotationObject) {
-
-        // Initialize undefined objects
-        if (!existingAnnotation) existingAnnotation = new AnnotationObject(annotation.src);
+    static instantiateMissingAnnotationAttributes(annotation: AnnotationObject) {
         if (!annotation.lines) annotation.lines = [];
         if (!annotation.rectangles) annotation.rectangles = [];
         if (!annotation.polygons) annotation.polygons = [];
         if (!annotation.polylines) annotation.polylines = [];
+    }
 
-        AnnotationsProvider.rescaleAnnotation(annotation, scale);
+    static deepAppendAnnotations(annotation: AnnotationObject, existingAnnotation?: AnnotationObject) {
+
+        // Initialize undefined objects
+        if (!existingAnnotation) existingAnnotation = new AnnotationObject(annotation.src);
+        this.instantiateMissingAnnotationAttributes(annotation);
 
         let newAnnotations = new AnnotationObject(annotation.src);
         for (let line of annotation.lines.concat(existingAnnotation.lines)) {
@@ -405,6 +380,7 @@ export class AnnotationsProvider {
     }
 
     static rescaleAnnotation(annotation: AnnotationObject, scale: number) {
+        this.instantiateMissingAnnotationAttributes(annotation);
         for(let i = 0; i < annotation.lines.length; i++) {
             annotation.lines[i].start.x = Math.round(annotation.lines[i].start.x * scale);
             annotation.lines[i].start.y = Math.round(annotation.lines[i].start.y * scale);
