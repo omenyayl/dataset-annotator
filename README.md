@@ -40,7 +40,7 @@ npm run dev
 ### Saving and Loading
 *Loading Images*
 
-Click the blue FAB button in the bottom right corner, followed by clicking the lower sub-icon (folder). This will bring up a folder selection window, which will allow you to load a folder of images into the annotator. The annotator currently accepts jpg and png images.
+Click the blue plus button in the bottom right corner, followed by clicking the lower sub-icon (folder). This will bring up a folder selection window, which will allow you to load a folder of images into the annotator. The annotator currently accepts jpg and png images.
 
 
 *Loading Annotations*
