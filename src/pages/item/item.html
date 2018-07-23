@@ -1,6 +1,11 @@
 <ion-header>
     <ion-navbar>
         <ion-title>{{ item }}</ion-title>
+        <ion-buttons right>
+            <button ion-button icon-only (click)="openHelpPage()">
+                <ion-icon style="border: 1px solid grey; border-radius: 50%; padding: 10px 10px 10px 10px" name="md-help"></ion-icon>
+            </button>
+        </ion-buttons>
     </ion-navbar>
 </ion-header>
 

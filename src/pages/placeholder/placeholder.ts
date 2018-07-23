@@ -1,13 +1,15 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {
-  IonicPage,
-  NavController,
-  NavParams } from 'ionic-angular';
+    IonicPage,
+    NavController,
+    NavParams
+} from 'ionic-angular';
+import {HelpPage} from "../help/help";
 
 @IonicPage()
 @Component({
-  selector: 'page-placeholder',
-  templateUrl: 'placeholder.html',
+    selector: 'page-placeholder',
+    templateUrl: 'placeholder.html',
 })
 
 /**
@@ -15,6 +17,15 @@ import {
  */
 export class PlaceholderPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) { }
+    constructor(public navCtrl: NavController, public navParams: NavParams) {
+    }
+
+    openHelpPage() {
+        this.navCtrl.push(HelpPage)
+            .catch((e) => {
+                console.error('Caught error at PlacehorderPage.openHelpPage()');
+                console.error(e);
+            });
+    }
 
 }

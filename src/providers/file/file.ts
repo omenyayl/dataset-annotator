@@ -30,16 +30,20 @@ export class FileProvider {
     /**
      * Opens a directory dialog box handled by the OS.
      * @param {"openFile" | "openDirectory"} properties
+     * @param filters {FileFilter[]} Files to filter according to the following extensions
      * @returns {Observable<string>}
      */
-    showOpenDialog(properties?: "openFile" | "openDirectory"): Observable<string> {
+    showOpenDialog(properties?: "openFile" | "openDirectory", filters?: FileFilter[]): Observable<string> {
 
         return new Observable<string>((observer) => {
             if (!properties) {
                 properties = 'openDirectory';
             }
             dialog.showOpenDialog({
-                properties: [properties]
+                properties: [properties],
+                ...(filters && {
+                    filters: filters
+                })
             }, (path) => {
                 if (!path) {
                     observer.error();

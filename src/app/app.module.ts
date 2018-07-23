@@ -21,6 +21,7 @@ import {ActionInputComponent} from "../components/action-input/action-input";
 import {SettingsPage} from "../pages/settings/settings";
 import { ImageSizeSettingProvider } from '../providers/image-size-setting/image-size-setting';
 import {ImageSizePage} from "../pages/image-size/image-size";
+import {HelpPage} from "../pages/help/help";
 
 @NgModule({
     declarations: [
@@ -28,6 +29,7 @@ import {ImageSizePage} from "../pages/image-size/image-size";
         ItemsPage,
         ItemPage,
         PlaceholderPage,
+        HelpPage,
         HotkeysPage,
         SettingsPage,
         ImageSizePage,
@@ -47,6 +49,7 @@ import {ImageSizePage} from "../pages/image-size/image-size";
         ItemPage,
         PlaceholderPage,
         HotkeysPage,
+        HelpPage,
         SettingsPage,
         ImageSizePage
     ],
