@@ -26,8 +26,10 @@ Table of Contents
 ### Installing
 Go into the cloned directory, and install with
 ```
-yarn add global ionic electron
-yarn install
+git clone https://github.com/omenyayl/dataset-annotator
+sudo npm install -g electron ionic
+cd dataset-annotator
+npm install
 ```
 
 ### Running
