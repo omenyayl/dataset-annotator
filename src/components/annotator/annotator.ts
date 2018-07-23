@@ -32,6 +32,7 @@ export class AnnotatorComponent {
 
     private context: CanvasRenderingContext2D;
     private imageContext: CanvasRenderingContext2D;
+    public logText: string;
 
 
     private lineDrawer: LineDrawer;
@@ -127,7 +128,7 @@ export class AnnotatorComponent {
             this.polylineDrawer.addPoint(new CoordinatesObject(event.offsetX, event.offsetY));
             this.polylineDrawer.saveFromCoordinates(...this.polylineDrawer.getPoints());
             this.render();
-            this.isDrawing = false;
+            this.finishDrawing();
         }
     }
 
@@ -153,9 +154,11 @@ export class AnnotatorComponent {
 
             // Adding the initial starting point to the polygon/polyline
             if (this.imageProvider.selectedCanvasDirective === DrawerNamesEnum.canvas_polygon) {
+                this.logText = 'Click on the starting point to finish drawing';
                 this.polygonDrawer.addPoint(this.start);
             }
             else if (this.imageProvider.selectedCanvasDirective === DrawerNamesEnum.canvas_polyline) {
+                this.logText = 'Right click to finish drawing';
                 this.polylineDrawer.addPoint(this.start);
             }
 
@@ -169,12 +172,12 @@ export class AnnotatorComponent {
             switch (this.imageProvider.selectedCanvasDirective){
                 case DrawerNamesEnum.canvas_line:
                     this.lineDrawer.saveFromCoordinates(this.start, mouseCoordinates);
-                    this.isDrawing = false;
+                    this.finishDrawing();
                     this.render();
                     break;
                 case DrawerNamesEnum.canvas_rect:
                     this.rectangleDrawer.saveFromCoordinates(this.start, mouseCoordinates);
-                    this.isDrawing = false;
+                    this.finishDrawing();
                     this.render();
                     break;
                 case DrawerNamesEnum.canvas_polygon:
@@ -182,7 +185,7 @@ export class AnnotatorComponent {
                         this.polygonDrawer.addPoint(this.start);
                         this.polygonDrawer.saveFromCoordinates(...this.polygonDrawer.getPoints());
                         this.render();
-                        this.isDrawing = false;
+                        this.finishDrawing();
                     } else {
                         this.polygonDrawer.addPoint(mouseCoordinates);
                     }
@@ -272,6 +275,15 @@ export class AnnotatorComponent {
             this.rectangleDrawer.selectElement(mouseCoordinates) ||
             this.polygonDrawer.selectElement(mouseCoordinates) ||
             this.polylineDrawer.selectElement(mouseCoordinates);
+    }
+
+    logClear() {
+        this.logText = '';
+    }
+
+    finishDrawing(){
+        this.isDrawing = false;
+        this.logClear();
     }
 
 }

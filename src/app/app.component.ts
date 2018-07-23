@@ -140,12 +140,23 @@ export class MyApp {
     }
 
     readAnnotations() {
-        this.fileProvider.showOpenDialog('openFile')
+        let filters: FileFilter[] = [];
+        filters.push({
+            name: 'JSON',
+            extensions: ['json']
+        });
+        this.fileProvider.showOpenDialog('openFile', filters)
             .subscribe((path) => {
                 this.fileProvider.loadJSON(path)
                     .subscribe((file_json) => {
                         this.annotationProvider.loadAnnotations(file_json);
                         this.menuCtrl.close();
+                        let toast = this.toastCtrl.create({
+                            message: 'Successfully loaded annotations.',
+                            duration: 1500,
+                            position: 'bottom'
+                        });
+                        toast.present();
                     });
             });
     }

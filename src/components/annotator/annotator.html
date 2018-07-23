@@ -1,4 +1,5 @@
 <div id="container">
     <canvas class="img" #visualization width={{imgWidth}} height="{{imgHeight}}"></canvas>
     <canvas #drawing id="gameCanvas" width={{imgWidth}} height="{{imgHeight}}"></canvas>
-</div>  
+</div>
+<p [ngStyle]="{'width': imgWidth, 'border': logText ? '1px solid black' : ''}">{{logText}}</p>

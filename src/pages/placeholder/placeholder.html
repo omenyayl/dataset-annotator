@@ -1,12 +1,18 @@
 <ion-header>
-  <ion-navbar>
-    <ion-title>Dataset Annotator</ion-title>
-  </ion-navbar>
+    <ion-navbar>
+        <ion-title>Dataset Annotator</ion-title>
+        <ion-buttons right>
+            <button ion-button icon-only (click)="openHelpPage()">
+                <ion-icon style="border: 1px solid grey; border-radius: 50%; padding: 10px 10px 10px 10px"
+                          name="md-help"></ion-icon>
+            </button>
+        </ion-buttons>
+    </ion-navbar>
 </ion-header>
 
 <ion-content padding>
 
-  <h1>To begin</h1>
-  <p>Click the folder icon below to import your dataset.</p>
+    <h1>To begin</h1>
+    <p>Click the folder icon below to import your dataset.</p>
 
 </ion-content>

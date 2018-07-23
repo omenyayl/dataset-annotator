@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {IonicPage, NavParams} from 'ionic-angular';
+import {IonicPage, NavController, NavParams} from 'ionic-angular';
 import {_DetailPage} from '../_DetailPage';
 import {FileProvider} from "../../providers/file/file";
 import * as path from 'path';
@@ -17,6 +17,7 @@ import {AnnotationsProvider, Line, Rectangle, Polygon, Polyline} from "../../pro
 //EventListener for deletion
 import {Events} from 'ionic-angular';
 import {NavProxyService} from "../../providers/nav-proxy/nav-proxy";
+import {HelpPage} from "../help/help";
 
 @IonicPage()
 @Component({
@@ -49,6 +50,7 @@ export class ItemPage extends _DetailPage {
                 private hotkeyProvider: HotkeyProvider,
                 private hotkeyService: HotkeysService,
                 private annotationsProvider: AnnotationsProvider,
+                private navCtrl: NavController,
                 sanitizer: DomSanitizer) {
 
         super();
@@ -219,6 +221,14 @@ export class ItemPage extends _DetailPage {
                 this.selectCanvasDirective(this.canvasDirectives.canvas_polyline);
                 return false;
             }));
+    }
+
+    openHelpPage() {
+        this.navCtrl.push(HelpPage)
+            .catch((e) => {
+                console.error('Caught error at ItemPage.openHelpPage()');
+                console.error(e);
+            });
     }
 
     ionViewDidLeave() {

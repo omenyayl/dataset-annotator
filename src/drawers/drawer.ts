@@ -37,7 +37,7 @@ export abstract class Drawer {
         this.context.stroke();
     }
 
-    public drawText(text, location, color) {
+    public drawText(text, location, color=Drawer.DEFAULT_COLOR) {
         this.context.font = `${Drawer.FONT_SIZE}px Arial`;
         this.context.fillStyle = color;
         this.context.textAlign = 'center';
