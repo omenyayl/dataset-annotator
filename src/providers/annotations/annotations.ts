@@ -40,6 +40,7 @@ export class AnnotationsProvider {
 
     flushAnnotations() {
         this.annotations = [];
+        this.loadedAnnotations = [];
         this.actions = [];
     }
 
