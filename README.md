@@ -40,20 +40,21 @@ npm run dev
 ### Saving and Loading
 *Loading Images*
 
-Click the blue plus button in the bottom right corner, followed by clicking the lower sub-icon (folder). This will bring up a folder selection window, which will allow you to load a folder of images into the annotator. The annotator currently accepts jpg and png images.
+To load images, click the deep blue plus button in the bottom right corner. Two bright blue circle buttons will pop up, click the lower circle button with the folder on it. This will bring up a file selection window. From your computer, upload a load a folder of images into the annotator; the annotator currently accepts .jpg and .png images.
 
 
 *Loading Annotations*
 
-To load previous annotations click on the hamburger icon on the top left corner, and then select the Load Annotations option. This will bring up a file selection menu, which will allow you to select a *.json* file.
+To load previous annotations, click on the hamburger icon (the three lines) in the top left corner to bring out a side menu. Then select the Load Annotations option. This will bring up a file selection window, which will allow you to select a *.json* file and import it. Click away from the side menu to see the annotations show up on your loaded images.
 
 *Saving Annotations*
 
-To save annotations start by clicking on the blue FAB button in the bottom right corner, and then selected the upper sub-icon (download).
+To save annotations start by clicking on the deep blue plus button in the bottom right corner, and then select the upper bright blue circle that has a download icon on it.
 
 ### Hotkeys
-There are several predefined hotkeys available to help you label quickly and efficiently.
-A few of the hotkeys can be modified to your liking in the Settings menu. The keybindings menu can be found by clicking on the hamburger in the top left corner and opening the Settings option.
+There are several predefined hotkeys available to help you label quickly and efficiently. (Hotkeys make certain buttons on the keyboard into shortcuts; for example, pressing the letter ‘w’ switches the current tool in use to a rectangle instead of a polyline; using hotkeys makes complex tasks easier by minimizing the effort needed). The current hotkey for an individual action, such as clicking the rectangle tool, is marked next to the tool name in parenthesis.
+“Image of a button with a hotkeys distinction by it, plus little arrows pointing at the name and the hotkey”
+A few of the hotkeys can be modified to your liking; for example, if you want to go to the next image, you can change the hotkey from ‘D’ to the ‘down’ arrow on the keyboard. Click the hamburger icon in the top left corner to pull up the side menu. Click the Settings option. The top option is called ‘keybindings’ and is where you can change what some of the hotkeys are.
 '''
 picture pointing to hamburger
 picture pointing to keybindings menu
@@ -69,20 +70,23 @@ The full list of available hotkeys. Hotkeys are keyboard shortcuts to make compl
 #### Line
 The line tool lets you create an annotation that is comprised of two points. To place a line left click to place the starting point, and left click again to place the second point.
 #### Rectangle
-This tool lets you create classic rectangle style annotations. Similar to the line tool, left click to place the first point, and left click once again to place the second point.
+This tool lets you create classic rectangle style annotations. Similar to the line tool, left click to place the starting point, and left click once again to place the finishing point, once the rectangle covers your desired object.
 #### Polygon
-This is a tool for more intricate labels. Left click to place new points, there is no limit on how many points you can place. End your annotation by clicking on the initial point for the polygon in order to close it. A polygon must have a minium of three seperate points.
+This is a tool for more intricate labels. Left click to place new points of a multisided shape. End your annotation by clicking on the initial point of the polygon, as this will close out the figure. There is no limit on how many points you can place, but the polygon must have a minimum of three separate points.
 #### Polyline
-For line intricate line labeling. This tool works similarly to the polygon tool, but does not require you to close your annotation. To end a polyline annotation, right click to *place your final point*. A polyline annotation has no minimum or maximum amount of points.
+Polyline is used for intricate line labeling. Left click to place the initial point. Click other new points to change the direction of the line. To end a polyline annotation, right click. **This will place a final point**. A polyline annotation has no maximum amount of points.
 
 ### Labels and editing
 '''
 Labels menu
 '''
-The menu on the upper right handside of the labeling canvas will display a list of existing annotations, according to your selected tool. The left hand field as a numeric field made to correspond to defined actions across multiple frames (see the next section). The middle field is a field for the the annotation's label. The right hand trashcan button deletes labels.
+On the right-hand\* side of the current image you are ready to label, there are three buttons, two in deep blue and one in gray. Under the two deep blue buttons is a list of the existing annotations. The top deep blue button changes names depending on what tool is selected, while the second deep blue button has the title ‘action’. This side display will not show all annotations on the image, only annotations that fall under the tool currently in use. For example, if you have the polyline tool selected, only the poly lines you’ve created will appear on the display list. For multiple annotations of a certain tool on a single image, you might need to scroll under the tool title to see all of the objects. 
+For each annotation, there are two fields and a trash can icon. The left-hand field is a numeric field made to correspond to defined actions across multiple frames (see the next section). The right-hand field is a name field for the annotation's label, such as “car”. The right-hand trashcan button deletes the annotation completely from the image.
+
+\**When operating in a smaller window, this list moves to below the image*
 
 #### Auto-labeling
-Upon labeling an annotation, newly created annotations will be created with the same name. This is done to make labeling a sequence of the same object through frames very quick and easy to do.
+Upon labeling an annotation, the next annotations created will have the same name. This is done to help label a sequence of the same object through frames more efficiently. However, you can easily change the name of the new annotation by typing it in the name field of the annotation.
 
 #### Editing annotations
 Each annotation has large circles at their respective corner and end points. By left clicking and dragging on these points you can edit existing labels. By clicking on these points you can also select an annotation both on the canvas and in the existing annotations menu. Note that there is no way to add more points to an existing annotation.
@@ -91,4 +95,11 @@ Each annotation has large circles at their respective corner and end points. By 
 '''
 Actions menu
 '''
-Actions serve as a way for connecting selected labels across multiple frames. This should allow your to create intuitive label sequences for video classifiers. To create an action, click 'New Action' button at the bottom of the Actions menu. Each action will have an numeric ID field and an editable label field. To attach annotations to an action, simply edit the desired annotations left-hand numeric field to correspond with the action's given ID. Seperate instances of actions are meant to have seperate action IDs.
+Actions serve as a way for connecting selected labels across multiple frames. This should allow you to create label sequences for video classifiers. 
+To create an action:
+ 1. Click “'New Action' button, this is the gray button on the bottom of the side display bar. Each action will have a numeric ID field and an editable name field.  
+ 2. Fill in the left-hand numeric field on the annotation you want to start a sequence of side display bar with a number ID. For example, if you know you want to label a person walking across multiple scenes, start on the first scene where the person appears. In the left-hand numeric field of the annotation, you fill in a number, such as “3”.
+ 3. Then fill in the corresponding number ID on the action you created on the left-hand numeric field. In the example above, you’d mark it “3” again.
+ 4. Don’t forget to name the action in the right-hand field
+
+*Separate instances of actions are meant to have separate action IDs. A black car driving across a sequence of images should have a different action ID from a blue car driving across the same sequence of images. In addition, each object you’ve annotated must have a unique action ID.*
