@@ -6,70 +6,82 @@
 -->
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>Hotkeys</ion-title>
-  </ion-navbar>
+    <ion-navbar>
+        <ion-title>Hotkeys</ion-title>
+    </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
-  <form [formGroup]="hotkeys" (ngSubmit)="updateHotkeys()">
-    <ion-item>
-      <ion-label stacked>Next image</ion-label>
-      <ion-input type="text" formControlName="nextImage"
-        (click)="$event.target.select()"
-        (keydown)="markInput($event)" (keyup)="saveCompositeInput($event, 'nextImage')"></ion-input>
-    </ion-item>
-    <p *ngIf="duplicates.nextImage.length >= 1"
-      style="float: right; color:firebrick; font-size:10px; margin-bottom: 0px">
-      {{"Conflicts with " + duplicates.nextImage.toString().split(',').join(', ')}}
-    </p>
+    <form [formGroup]="hotkeys" (ngSubmit)="updateHotkeys()">
+        <ion-item>
+            <ion-label stacked>Next image</ion-label>
+            <ion-input type="text" formControlName="nextImage"
+                       (click)="$event.target.select()"
+                       (keydown)="markInput($event)" (keyup)="saveCompositeInput($event, 'nextImage')"></ion-input>
+        </ion-item>
+        <p *ngIf="duplicates.nextImage.length >= 1"
+           style="float: right; color:firebrick; font-size:10px; margin-bottom: 0px">
+            {{"Conflicts with " + duplicates.nextImage.toString().split(',').join(', ')}}
+        </p>
 
-    <ion-item>
-      <ion-label stacked>Previous image</ion-label>
-      <ion-input type="text" formControlName="prevImage"
-        (click)="$event.target.select()"
-        (keydown)="markInput($event)" (keyup)="saveCompositeInput($event, 'prevImage')"></ion-input>
-    </ion-item>
-    <p *ngIf="duplicates.prevImage.length >= 1"
-      style="float: right; color:firebrick; font-size:10px; margin-bottom: 0px">
-      {{"Conflicts with " + duplicates.prevImage.toString().split(',').join(', ')}}
-    </p>
+        <ion-item>
+            <ion-label stacked>Previous image</ion-label>
+            <ion-input type="text" formControlName="prevImage"
+                       (click)="$event.target.select()"
+                       (keydown)="markInput($event)" (keyup)="saveCompositeInput($event, 'prevImage')"></ion-input>
+        </ion-item>
+        <p *ngIf="duplicates.prevImage.length >= 1"
+           style="float: right; color:firebrick; font-size:10px; margin-bottom: 0px">
+            {{"Conflicts with " + duplicates.prevImage.toString().split(',').join(', ')}}
+        </p>
 
-    <ion-item>
-      <ion-label stacked>Draw line</ion-label>
-      <ion-input type="text" formControlName="line"
-        (click)="$event.target.select()"
-        (keydown)="markInput($event)" (keyup)="saveCompositeInput($event, 'line')"></ion-input>
-    </ion-item>
-    <p *ngIf="duplicates.line.length >= 1"
-      style="float: right; color:firebrick; font-size:10px; margin-bottom: 0px">
-      {{"Conflicts with " + duplicates.line.toString().split(',').join(', ')}}
-    </p>
+        <ion-item>
+            <ion-label stacked>Draw line</ion-label>
+            <ion-input type="text" formControlName="line"
+                       (click)="$event.target.select()"
+                       (keydown)="markInput($event)" (keyup)="saveCompositeInput($event, 'line')"></ion-input>
+        </ion-item>
+        <p *ngIf="duplicates.line.length >= 1"
+           style="float: right; color:firebrick; font-size:10px; margin-bottom: 0px">
+            {{"Conflicts with " + duplicates.line.toString().split(',').join(', ')}}
+        </p>
 
-    <ion-item>
-      <ion-label stacked>Draw rectangle</ion-label>
-      <ion-input type="text" formControlName="rectangle"
-        (click)="$event.target.select()"
-        (keydown)="markInput($event)" (keyup)="saveCompositeInput($event, 'rectangle')"></ion-input>
-    </ion-item>
-    <p *ngIf="duplicates.rectangle.length >= 1"
-      style="float: right; color:firebrick; font-size:10px; margin-bottom: 0px">
-      {{"Conflicts with " + duplicates.rectangle.toString().split(',').join(', ')}}
-    </p>
+        <ion-item>
+            <ion-label stacked>Draw rectangle</ion-label>
+            <ion-input type="text" formControlName="rectangle"
+                       (click)="$event.target.select()"
+                       (keydown)="markInput($event)" (keyup)="saveCompositeInput($event, 'rectangle')"></ion-input>
+        </ion-item>
+        <p *ngIf="duplicates.rectangle.length >= 1"
+           style="float: right; color:firebrick; font-size:10px; margin-bottom: 0px">
+            {{"Conflicts with " + duplicates.rectangle.toString().split(',').join(', ')}}
+        </p>
 
-    <ion-item>
-      <ion-label stacked>Draw polygon</ion-label>
-      <ion-input type="text" formControlName="polygon"
-        (click)="$event.target.select()"
-        (keydown)="markInput($event)" (keyup)="saveCompositeInput($event, 'polygon')"></ion-input>
-    </ion-item>
-    <p *ngIf="duplicates.polygon.length >= 1"
-      style="float: right; color:firebrick; font-size:10px; margin-bottom: 0px">
-      {{"Conflicts with " + duplicates.polygon.toString().split(',').join(', ')}}
-    </p>
+        <ion-item>
+            <ion-label stacked>Draw polygon</ion-label>
+            <ion-input type="text" formControlName="polygon"
+                       (click)="$event.target.select()"
+                       (keydown)="markInput($event)" (keyup)="saveCompositeInput($event, 'polygon')"></ion-input>
+        </ion-item>
+        <p *ngIf="duplicates.polygon.length >= 1"
+           style="float: right; color:firebrick; font-size:10px; margin-bottom: 0px">
+            {{"Conflicts with " + duplicates.polygon.toString().split(',').join(', ')}}
+        </p>
 
-    <button ion-button type="submit" margin>Update</button>
-  </form>
+        <ion-item>
+            <ion-label stacked>Draw polyline</ion-label>
+            <ion-input type="text" formControlName="polyline"
+                       (click)="$event.target.select()"
+                       (keydown)="markInput($event)" (keyup)="saveCompositeInput($event, 'polyline')"></ion-input>
+        </ion-item>
+        <p *ngIf="duplicates.polyline.length >= 1"
+           style="float: right; color:firebrick; font-size:10px; margin-bottom: 0px">
+            {{"Conflicts with " + duplicates.polyline.toString().split(',').join(', ')}}
+        </p>
+
+        <button ion-button type="submit" margin>Update</button>
+
+    </form>
 </ion-content>
