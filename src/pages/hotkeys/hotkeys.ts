@@ -19,7 +19,13 @@ export class HotkeysPage {
         line: [],
         rectangle: [],
         polygon: [],
-        polyline: []
+        polyline: [],
+        autoLabel1: [],
+        autoLabel2: [],
+        autoLabel3: [],
+        autoLabel4: [],
+        autoLabel5: [],
+        autoLabel6: [],
     };
 
     constructor(public navCtrl: NavController,
@@ -35,7 +41,13 @@ export class HotkeysPage {
                 line: [value.line],
                 rectangle: [value.rectangle],
                 polygon: [value.polygon],
-                polyline: [value.polyline]
+                polyline: [value.polyline],
+                autoLabel1: [value.autoLabel1],
+                autoLabel2: [value.autoLabel2],
+                autoLabel3: [value.autoLabel3],
+                autoLabel4: [value.autoLabel4],
+                autoLabel5: [value.autoLabel5],
+                autoLabel6: [value.autoLabel6],
             }, {
                 validator: this.duplicateHotkeyValidator.bind(this)
             });
@@ -97,7 +109,13 @@ export class HotkeysPage {
             line: [],
             rectangle: [],
             polygon: [],
-            polyline: []
+            polyline: [],
+            autoLabel1: [],
+            autoLabel2: [],
+            autoLabel3: [],
+            autoLabel4: [],
+            autoLabel5: [],
+            autoLabel6: [],
         };
 
         for (let i = 0; i < keys.length; i++) {

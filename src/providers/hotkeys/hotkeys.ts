@@ -11,7 +11,13 @@ export class HotkeyProvider {
         line: "q",
         rectangle: "w",
         polygon: "e",
-        polyline: "r"
+        polyline: "r",
+        autoLabel1: "1",
+        autoLabel2: "2",
+        autoLabel3: "3",
+        autoLabel4: "4",
+        autoLabel5: "5",
+        autoLabel6: "6",
     });
 
     constructor() {
@@ -28,7 +34,6 @@ export class HotkeyProvider {
     }
 
     update(hotkeys: HotkeyObject) {
-        console.log(hotkeys);
         localStorage.setItem('hotkeySettings', JSON.stringify(hotkeys));
         this.hotkeys.next(hotkeys);
     }

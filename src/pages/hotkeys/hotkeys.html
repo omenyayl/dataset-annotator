@@ -81,6 +81,72 @@
             {{"Conflicts with " + duplicates.polyline.toString().split(',').join(', ')}}
         </p>
 
+        <ion-item>
+            <ion-label stacked>Auto Label 1</ion-label>
+            <ion-input type="text" formControlName="autoLabel1"
+                       (click)="$event.target.select()"
+                       (keydown)="markInput($event)" (keyup)="saveCompositeInput($event, 'autoLabel1')"></ion-input>
+        </ion-item>
+        <p *ngIf="duplicates.autoLabel1.length >= 1"
+           style="float: right; color:firebrick; font-size:10px; margin-bottom: 0px">
+            {{"Conflicts with " + duplicates.autoLabel1.toString().split(',').join(', ')}}
+        </p>
+
+        <ion-item>
+            <ion-label stacked>Auto Label 2</ion-label>
+            <ion-input type="text" formControlName="autoLabel2"
+                       (click)="$event.target.select()"
+                       (keydown)="markInput($event)" (keyup)="saveCompositeInput($event, 'autoLabel2')"></ion-input>
+        </ion-item>
+        <p *ngIf="duplicates.autoLabel2.length >= 1"
+           style="float: right; color:firebrick; font-size:10px; margin-bottom: 0px">
+            {{"Conflicts with " + duplicates.autoLabel2.toString().split(',').join(', ')}}
+        </p>
+
+        <ion-item>
+            <ion-label stacked>Auto Label 3</ion-label>
+            <ion-input type="text" formControlName="autoLabel3"
+                       (click)="$event.target.select()"
+                       (keydown)="markInput($event)" (keyup)="saveCompositeInput($event, 'autoLabel3')"></ion-input>
+        </ion-item>
+        <p *ngIf="duplicates.autoLabel3.length >= 1"
+           style="float: right; color:firebrick; font-size:10px; margin-bottom: 0px">
+            {{"Conflicts with " + duplicates.autoLabel3.toString().split(',').join(', ')}}
+        </p>
+
+        <ion-item>
+            <ion-label stacked>Auto Label 4</ion-label>
+            <ion-input type="text" formControlName="autoLabel4"
+                       (click)="$event.target.select()"
+                       (keydown)="markInput($event)" (keyup)="saveCompositeInput($event, 'autoLabel4')"></ion-input>
+        </ion-item>
+        <p *ngIf="duplicates.autoLabel4.length >= 1"
+           style="float: right; color:firebrick; font-size:10px; margin-bottom: 0px">
+            {{"Conflicts with " + duplicates.autoLabel4.toString().split(',').join(', ')}}
+        </p>
+
+        <ion-item>
+            <ion-label stacked>Auto Label 5</ion-label>
+            <ion-input type="text" formControlName="autoLabel5"
+                       (click)="$event.target.select()"
+                       (keydown)="markInput($event)" (keyup)="saveCompositeInput($event, 'autoLabel5')"></ion-input>
+        </ion-item>
+        <p *ngIf="duplicates.autoLabel5.length >= 1"
+           style="float: right; color:firebrick; font-size:10px; margin-bottom: 0px">
+            {{"Conflicts with " + duplicates.autoLabel5.toString().split(',').join(', ')}}
+        </p>
+
+        <ion-item>
+            <ion-label stacked>Auto Label 6</ion-label>
+            <ion-input type="text" formControlName="autoLabel6"
+                       (click)="$event.target.select()"
+                       (keydown)="markInput($event)" (keyup)="saveCompositeInput($event, 'autoLabel6')"></ion-input>
+        </ion-item>
+        <p *ngIf="duplicates.autoLabel6.length >= 1"
+           style="float: right; color:firebrick; font-size:10px; margin-bottom: 0px">
+            {{"Conflicts with " + duplicates.autoLabel6.toString().split(',').join(', ')}}
+        </p>
+
         <button ion-button type="submit" margin>Update</button>
 
     </form>
