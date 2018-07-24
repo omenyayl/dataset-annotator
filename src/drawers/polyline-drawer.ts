@@ -78,7 +78,7 @@ export class PolylineDrawer extends Drawer{
     selectElement(coordinates: CoordinatesObject): boolean {
         for (let polyline of this.polylines) {
             if (PolylineDrawer.isNearCoordinates(polyline, coordinates)) {
-                Drawer.setSelectedElement(polyline);
+                this.setSelectedElement(polyline);
                 return true;
             }
         }

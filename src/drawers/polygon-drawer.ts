@@ -77,7 +77,7 @@ export class PolygonDrawer extends Drawer{
     selectElement(coordinates: CoordinatesObject): boolean {
         for (let polygon of this.polygons) {
             if (PolygonDrawer.isNearCoordinates(polygon, coordinates)) {
-                Drawer.setSelectedElement(polygon);
+                this.setSelectedElement(polygon);
                 return true;
             }
         }

@@ -73,7 +73,7 @@ export class LineDrawer extends Drawer{
     selectElement(location: CoordinatesObject) : boolean {
         for (let line of this.lines) {
             if (LineDrawer.isNearCoordinates(line, location)) {
-                Drawer.setSelectedElement(line);
+                this.setSelectedElement(line);
                 return true;
             }
         }

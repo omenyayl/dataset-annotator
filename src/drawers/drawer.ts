@@ -48,8 +48,8 @@ export abstract class Drawer {
         return AnnotationsProvider.selectedElement;
     }
 
-    static setSelectedElement(element: any) {
-        AnnotationsProvider.selectedElement = element;
+    setSelectedElement(element: any) {
+        this.annotationsProvider.selectElement(element);
     }
 
     static computeDistance(from: CoordinatesObject, to: CoordinatesObject){

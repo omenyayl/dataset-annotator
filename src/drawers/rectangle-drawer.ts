@@ -107,7 +107,7 @@ export class RectangleDrawer extends Drawer{
     selectElement(coordinates: CoordinatesObject): boolean {
         for (let rectangle of this.rectangles) {
             if (RectangleDrawer.isNearCoordinates(rectangle, coordinates)) {
-                Drawer.setSelectedElement(rectangle);
+                this.setSelectedElement(rectangle);
                 return true;
             }
         }

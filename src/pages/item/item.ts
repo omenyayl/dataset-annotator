@@ -189,7 +189,7 @@ export class ItemPage extends _DetailPage {
     }
 
     selectCanvasDirective(directiveName: DrawerNamesEnum) {
-        this.imageProvider.selectedCanvasDirective = directiveName;
+        this.imageProvider.selectDrawingTool(directiveName);
     }
 
 

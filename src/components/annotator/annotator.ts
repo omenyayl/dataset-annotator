@@ -115,7 +115,6 @@ export class AnnotatorComponent {
 
     render() {
         this.context.clearRect(0, 0, this.imgWidth, this.imgHeight);
-        // this.context.drawImage(this.imageElement, 0, 0, this.imgWidth, this.imgHeight);
         this.lineDrawer.render();
         this.rectangleDrawer.render();
         this.polygonDrawer.render();

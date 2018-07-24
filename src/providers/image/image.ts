@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {Injectable, NgZone} from '@angular/core';
 import {ImageObject} from "../../objects/image-object";
 import * as imageSize from 'image-size';
 import {DrawerNamesEnum} from "../../enums/drawer-names-enum";
@@ -24,7 +24,8 @@ export class ImageProvider {
     maxWidth: number;
     maxHeight: number;
 
-    constructor(imageSizeSetting: ImageSizeSettingProvider) {
+    constructor(imageSizeSetting: ImageSizeSettingProvider,
+                private ngZone: NgZone) {
         this.systemResolutionMultiplier = imageSizeSetting.getSize();
         this.minWidth = this.systemResolutionMultiplier * FileProvider.systemResolution.width;
         this.minHeight = this.systemResolutionMultiplier * FileProvider.systemResolution.height;
@@ -86,5 +87,9 @@ export class ImageProvider {
         this.images = [];
     }
 
-
+    selectDrawingTool(name: DrawerNamesEnum) {
+        this.ngZone.run(() => {
+            this.selectedCanvasDirective = name;
+        })
+    }
 }

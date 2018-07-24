@@ -1,5 +1,5 @@
 import {CoordinatesObject} from "../../objects/CoordinatesObject";
-import {Injectable} from '@angular/core';
+import {Injectable, NgZone} from '@angular/core';
 import {AnnotationObject} from "../../objects/annotation-object";
 import { ImageProvider } from "../image/image"
 import {ActionObject} from "../../objects/action-object";
@@ -20,7 +20,8 @@ export class AnnotationsProvider {
     public static lastLabel: string;
 
     constructor(private imageProvider: ImageProvider,
-                private events: Events) {
+                private events: Events,
+                private ngZone: NgZone) {
     }
 
     public initAnnotations(imageSrc: string, scale: number) {
@@ -61,11 +62,13 @@ export class AnnotationsProvider {
     }
 
     addRectangle(rectangle: Rectangle) {
-        if(!(rectangle instanceof Rectangle)) throw new TypeError("Trying to add a rectangle that was not constructed as a new Rectangle!");
+        if(!(rectangle instanceof Rectangle)) throw new TypeError("Trying to add a rectangle that was not c onstructed as a new Rectangle!");
 
         let currentImage = this.imageProvider.currentImage;
         if (currentImage ) {
-            this.annotations[currentImage.src].rectangles.push(rectangle);
+            this.ngZone.run(()=>{
+                this.annotations[currentImage.src].rectangles.push(rectangle);
+            });
             FileProvider.setHasUnsavedChanges(true);
         }
     }
@@ -105,7 +108,9 @@ export class AnnotationsProvider {
 
         let currentImage = this.imageProvider.currentImage;
         if( currentImage ) {
-            this.annotations[currentImage.src].lines.push(line);
+            this.ngZone.run(() => {
+                this.annotations[currentImage.src].lines.push(line);
+            });
             FileProvider.setHasUnsavedChanges(true);
         }
 
@@ -136,7 +141,9 @@ export class AnnotationsProvider {
 
         let currentImage = this.imageProvider.currentImage;
         if( currentImage ) {
-            this.annotations[currentImage.src].polygons.push(polygon);
+            this.ngZone.run(() => {
+                this.annotations[currentImage.src].polygons.push(polygon);
+            });
             FileProvider.setHasUnsavedChanges(true);
         }
     }
@@ -175,7 +182,9 @@ export class AnnotationsProvider {
 
         let currentImage = this.imageProvider.currentImage;
         if( currentImage ) {
-            this.annotations[currentImage.src].polylines.push(polyline);
+            this.ngZone.run(() => {
+                this.annotations[currentImage.src].polylines.push(polyline);
+            });
             FileProvider.setHasUnsavedChanges(true);
         }
     }
@@ -227,7 +236,9 @@ export class AnnotationsProvider {
   	addAction(action : ActionObject){
 		action.action_id = this.getActionId();
         FileProvider.setHasUnsavedChanges(true);
-		this.actions.push(action);
+        this.ngZone.run(() => {
+            this.actions.push(action);
+        });
 	}
 
 	removeAction(action : ActionObject){
@@ -245,6 +256,12 @@ export class AnnotationsProvider {
   	selectAction(action : ActionObject){
 		AnnotationsProvider.selectedAction = action;
 	}
+
+	selectElement(element: any) {
+        this.ngZone.run(() => {
+            AnnotationsProvider.selectedElement = element;
+        });
+    }
 
   	// END - ACTION METHODS
   
