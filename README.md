@@ -9,8 +9,8 @@ Table of Contents
  * [Instructions](#instructions)
 
 ## Demo
-![demo pic](https://s3.amazonaws.com/olegpublicbucket/Screen+Shot+2018-07-14+at+12.26.19+PM.png)
-[here](https://pastebin.com/BYk2EKhG) is what the exported data looks like (this data did not come from the same image shown above)
+![demo pic](https://s3.amazonaws.com/olegpublicbucket/annotator-test.PNG)
+[here](https://s3.amazonaws.com/olegpublicbucket/annotator-test.json) is what the exported data looks like
 
 ## Installing and Running as a user
 * Windows: 
