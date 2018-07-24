@@ -1,4 +1,4 @@
-import {Component, NgZone, ViewChild} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {Platform, Nav, MenuController, ToastController} from 'ionic-angular';
 import {StatusBar} from '@ionic-native/status-bar';
 import {SplashScreen} from '@ionic-native/splash-screen';
@@ -45,8 +45,7 @@ export class MyApp {
         private annotationProvider: AnnotationsProvider,
         private menuCtrl: MenuController,
         private toastCtrl: ToastController,
-        private imageProvider: ImageProvider,
-        private ngZone: NgZone) {
+        private imageProvider: ImageProvider) {
 
         platform.ready().then(() => {
 
@@ -81,24 +80,32 @@ export class MyApp {
             .subscribe((value) => {
                 this.fileProvider.listFiles(value, SUPPORTED_EXTENSIONS)
                     .subscribe((files) => {
-                        if (files.length === 0) {
+                        this.fileProvider.filesLoading.next(false);
+                        if (! files ) return;
+                        else if (files.length === 0) {
                             let toast = this.toastCtrl.create({
                                 message: 'ERROR: Did not find any images (.jpg/.png) in the directory.',
                                 duration: 3000,
                                 position: 'bottom'
                             });
                             toast.present();
-                        } else {
-                            this.ngZone.run(()=>{
-                                this.fileProvider.filesChange.next(files);
-                                this.fileProvider.filesLoading.next(false);
-                                this.fileProvider.selectedFolder = value;
-                                this.annotationProvider.flushAnnotations();
-                                this.imageProvider.flushImages();
-                                this.navProxy.pushDetail(ItemPage, files[0]);
-                            });
                         }
-                    })
+                        else if (this.fileProvider.selectedFolder === value) {
+                            let toast = this.toastCtrl.create({
+                                message: 'WARNING: Already opened this directory.',
+                                duration: 1500,
+                                position: 'bottom'
+                            });
+                            toast.present();
+                        }
+                        else {
+                            this.fileProvider.filesChange.next(files);
+                            this.fileProvider.selectedFolder = value;
+                            this.annotationProvider.flushAnnotations();
+                            this.imageProvider.flushImages();
+                            this.navProxy.pushDetail(ItemPage, files[0]);
+                        }
+                    });
             })
     }
 
