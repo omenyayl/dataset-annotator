@@ -39,6 +39,7 @@ export class AnnotationsProvider {
     }
 
     flushAnnotations() {
+        this.loadedAnnotations = [];
         this.annotations = [];
         this.loadedAnnotations = [];
         this.actions = [];
@@ -278,7 +279,9 @@ export class AnnotationsProvider {
 
             let annotation = this.annotations[imageSrc];
             let copyOfAnnotations: AnnotationObject = new AnnotationObject(imageSrc);
-            if (!AnnotationsProvider.isAnnotationsEmpty(annotation)) {
+            let isAnnotationsEmpty = AnnotationsProvider.isAnnotationsEmpty(annotation);
+
+            if (!isAnnotationsEmpty) {
                 copyOfAnnotations = JSON.parse(JSON.stringify(annotation));
                 let annotationImage = this.imageProvider.images[imageSrc];
                 if (annotationImage) {
@@ -292,7 +295,7 @@ export class AnnotationsProvider {
                     loadedAnnotation,
                     copyOfAnnotations
                 ));
-            } else if(annotationsKeys.length > 0) {
+            } else if(!isAnnotationsEmpty) {
                 annotations.push(copyOfAnnotations);
             }
 

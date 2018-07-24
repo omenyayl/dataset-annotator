@@ -1,7 +1,7 @@
 import {Injectable, NgZone} from '@angular/core';
 import {remote} from 'electron';
 import {Observable} from "rxjs/Observable";
-import {catchError, tap} from "rxjs/operators";
+import {catchError} from "rxjs/operators";
 import {of} from "rxjs/observable/of";
 import * as fs from 'fs';
 import * as path from 'path';
@@ -112,14 +112,12 @@ export class FileProvider {
             }
 
         }).pipe(
-            tap((files) => {
-            }),
-            catchError((error: any): Observable<string[]> => {
+            catchError((error: any): Observable<any> => {
                 this.ngZone.run(() => {
                     this.filesLoading.next(false);
                 });
                 console.log(`Caught error when listing files: ${error}`);
-                return of([] as string[]);
+                return of(null);
             })
         );
 
