@@ -10,7 +10,7 @@ Table of Contents
 
 ## Demo
 ![demo pic](https://s3.amazonaws.com/olegpublicbucket/annotator-test.PNG)
-[here](https://s3.amazonaws.com/olegpublicbucket/annotator-test.json) is what the exported data looks like (this data did not come from the same image shown above)
+[here](https://s3.amazonaws.com/olegpublicbucket/annotator-test.json) is what the exported data looks like
 
 ## Installing and Running as a user
 * Windows: 
