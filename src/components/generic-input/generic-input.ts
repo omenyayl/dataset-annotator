@@ -13,54 +13,34 @@ const KEYCODE_SHIFT = 16;
  * Components.
  */
 @Component({
-  selector: 'action-input',
-  templateUrl: 'action-input.html'
+    selector: 'generic-input',
+    templateUrl: 'generic-input.html'
 })
-export class ActionInputComponent {
-    @Input() value: string;
-    @Input() id: string;
-    @Input() obj: Object;
-    newValue: string;
-    newId: string;
-    @Output() valueChange = new EventEmitter<string>();
-    @Output() idChange = new EventEmitter<string>();
-    editing: boolean;
-    idProvided: boolean;
+export class GenericInputComponent {
+    @Input() labels: string[];
+    @Input() idx: number;
+    private newTxt: string;
+    @Output() txtChange = new EventEmitter<string>();
 
     constructor(private renderer: Renderer2){
     }
 
-    ngOnInit() {
-        this.editing = false;
-        this.idProvided = this.id !== undefined;
-    }
     ngOnChanges(): void {
-        this.newValue = this.value;
-        this.newId = this.id;
-    }
-
-    startEditing(): void {
-        this.editing = true;
+        this.newTxt = this.labels[this.idx];
     }
 
     accept(): void {
-        this.value = this.newValue;
-        this.id = this.newId;
-        this.valueChange.emit(this.newValue);
-        this.idChange.emit(this.newId);
-        this.editing = false;
+        this.labels[this.idx] = this.newTxt;
+        this.txtChange.emit(this.newTxt);
     }
 
     cancel(): void {
-        this.newValue = this.value;
-        this.newId = this.id;
-        this.editing = false;
+        this.newTxt = this.labels[this.idx];
     }
 
     @HostListener('keydown', ['$event']) onEnterPressed(e) {
         if (e.keyCode === KEYCODE_ENTER) {
             this.accept();
-            e.target.blur();
             this.renderer.removeClass(e.srcElement, 'editing');
         }
         else if (e.keyCode === KEYCODE_ESCAPE) {

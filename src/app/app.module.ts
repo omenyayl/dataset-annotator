@@ -22,6 +22,8 @@ import {SettingsPage} from "../pages/settings/settings";
 import { ImageSizeSettingProvider } from '../providers/image-size-setting/image-size-setting';
 import {ImageSizePage} from "../pages/image-size/image-size";
 import {HelpPage} from "../pages/help/help";
+import {AutoLabelPage} from "../pages/auto-label/auto-label";
+import {GenericInputComponent} from "../components/generic-input/generic-input";
 
 @NgModule({
     declarations: [
@@ -33,9 +35,11 @@ import {HelpPage} from "../pages/help/help";
         HotkeysPage,
         SettingsPage,
         ImageSizePage,
+        AutoLabelPage,
         ObjectInputComponent,
         AnnotatorComponent,
-        ActionInputComponent
+        ActionInputComponent,
+        GenericInputComponent
     ],
     imports: [
         BrowserModule,
@@ -50,6 +54,7 @@ import {HelpPage} from "../pages/help/help";
         PlaceholderPage,
         HotkeysPage,
         HelpPage,
+        AutoLabelPage,
         SettingsPage,
         ImageSizePage
     ],
@@ -62,7 +67,7 @@ import {HelpPage} from "../pages/help/help";
         ImageProvider,
         HotkeyProvider,
         AnnotationsProvider,
-    ImageSizeSettingProvider
+        ImageSizeSettingProvider
     ]
 })
 export class AppModule {

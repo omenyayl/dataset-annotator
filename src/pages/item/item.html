@@ -70,7 +70,7 @@
                                           [(id)]="itm.action_id"></object-input>
                             <hr>
                         </div>
-                        <ion-icon class="icon-button" name="trash" (click)="itemDelete(itm)" item-end></ion-icon>
+                        <ion-icon class="edit-icon-button" name="trash" (click)="itemDelete(itm)" item-end></ion-icon>
                     </ion-item>
                 </ion-list>
             </ion-scroll>
@@ -80,7 +80,7 @@
                 <ion-list no-border scroll="true">
                     <ion-item no-lines no-padding *ngFor="let action of actions">
                         <action-input [(value)]="action.label" [(id)]="action.action_id"></action-input>
-                        <ion-icon class="icon-button" name="trash" (click)="actionDelete(action)" item-end></ion-icon>
+                        <ion-icon class="edit-icon-button" name="trash" (click)="actionDelete(action)" item-end></ion-icon>
                         <hr>
                     </ion-item>
                 </ion-list>

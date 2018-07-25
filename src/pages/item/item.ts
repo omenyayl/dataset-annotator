@@ -30,16 +30,12 @@ import {HelpPage} from "../help/help";
  */
 export class ItemPage extends _DetailPage {
 
-    boxes = [];
-    lines = [];
-    polys = [];
-    actions = [];
-
     name: string;
     item: string = null;
     hotkeys: HotkeyObject;
     canvasDirectives = DrawerNamesEnum;
     sanitizer: DomSanitizer;
+    actions: ActionObject[];
     private currentImagePath: string;
 
     constructor(public navParams: NavParams,
@@ -82,6 +78,10 @@ export class ItemPage extends _DetailPage {
             }));
     }
 
+    ionViewDidLoad() {
+        this.hotkeyProvider.initHotkeyLabels();
+    }
+
     initAnnotator(src: string) {
         this.currentImagePath = path.join(this.fileProvider.selectedFolder, src);
         this.imageProvider.initImage(src, this.annotationsProvider, this.currentImagePath);
@@ -114,10 +114,6 @@ export class ItemPage extends _DetailPage {
      * and puts them in: dummy
      */
     getCurrentAnnotations() {
-        //let allAnnotations = [];
-        this.boxes = this.annotationsProvider.getRectangles();
-        this.lines = this.annotationsProvider.getLines();
-        this.polys = this.annotationsProvider.getPolygons();
         this.actions = this.annotationsProvider.getActions();
     }
 
@@ -195,9 +191,10 @@ export class ItemPage extends _DetailPage {
 
     updateHotkeys(hotkeys) {
         if (this.hotkeys !== undefined) {
-            this.hotkeyService.remove(new Hotkey(this.hotkeys.line, null));
-            this.hotkeyService.remove(new Hotkey(this.hotkeys.rectangle, null));
-            this.hotkeyService.remove(new Hotkey(this.hotkeys.polygon, null));
+            this.hotkeyService.remove(new Hotkey(this.hotkeys.line, (): boolean =>{ return false }));
+            this.hotkeyService.remove(new Hotkey(this.hotkeys.rectangle, (): boolean =>{ return false }));
+            this.hotkeyService.remove(new Hotkey(this.hotkeys.polygon, (): boolean =>{ return false }));
+            this.hotkeyService.remove(new Hotkey(this.hotkeys.polyline, (): boolean =>{ return false }));
         }
 
         this.hotkeys = hotkeys;
@@ -231,7 +228,4 @@ export class ItemPage extends _DetailPage {
             });
     }
 
-    ionViewDidLeave() {
-
-    }
 }

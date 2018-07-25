@@ -78,12 +78,12 @@ page-item {
   float: right;
 }
 
-.icon-button {
-  transform: translateY(-4px);
+.edit-icon-button {
+  transform: translateY(-4px) !important;
   color: darkred;
 }
 
-.icon-button:hover {
+.edit-icon-button:hover {
   color: lightcoral;
   cursor: pointer;
 }
@@ -91,5 +91,5 @@ page-item {
 .labels-list-header {
   background-color: map-get($colors, primary);
   color: white;
-  text-align: center!important;
+  text-align: center !important;
 }

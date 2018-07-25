@@ -30,7 +30,7 @@ export class ObjectInputComponent {
 
     ngOnInit() {
         this.idProvided = this.id !== undefined;
-        this.editing = true;
+        this.editing = false;
     }
     ngOnChanges(): void {
         this.newValue = this.value;

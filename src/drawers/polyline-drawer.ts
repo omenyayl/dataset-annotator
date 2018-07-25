@@ -67,10 +67,12 @@ export class PolylineDrawer extends Drawer{
 
     saveFromCoordinates(...coordinates: CoordinatesObject[]) {
         if (coordinates.length > 1) {
-            this.getAnnotationsProvider().addPolyline(new Polyline(
+            let polylineToAdd = new Polyline(
                 coordinates,
                 AnnotationsProvider.lastLabel ? AnnotationsProvider.lastLabel : 'unnamed'
-            ));
+            );
+            this.getAnnotationsProvider().addPolyline(polylineToAdd);
+            this.getAnnotationsProvider().selectElement(polylineToAdd);
         }
         this.points = [];
     }
