@@ -50,12 +50,13 @@ export class HotkeyProvider {
         let storedLabels = localStorage.getItem(LOCAL_STORAGE_HOTKEY_LABELS);
         if (storedLabels) {
             this.labels = JSON.parse(storedLabels);
-            for (let i = 0; i < this.labels.length; i++) {
+            for (let i = 0; i < LABEL_HOTKEYS_COUNT; i++) {
                 if (this.labels[i].length > 0) {
                     this.updateHotkeyLabel((i+1).toString());
                 }
             }
         } else {
+            this.labels = [];
             for(let i = 0; i < LABEL_HOTKEYS_COUNT; i++) {
                 this.labels.push('');
             }
