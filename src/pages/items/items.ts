@@ -56,17 +56,15 @@ export class ItemsPage extends _MasterPage {
      * @param item: string
      * @param index: number
      */
-    onItemSelected(item, index) {
-        // Rather than using:
-        //     this.navCtrl.push(...)
-        // Use our proxy:
+    onItemSelected(item: string, index: number) {
         this.selected = [item, index];
         this.navProxy.selectedItem.next(this.selected[0]);
     }
 
     previousItem() {
+
         let newIndex = this.selected[1] - 1;
-        if(this.files && newIndex >= 0) {
+        if(this.files !== undefined && newIndex >= 0) {
             this.onItemSelected(this.files[newIndex], newIndex);
 
             let yOffset = document.getElementById(`${newIndex}`).offsetTop;
@@ -86,8 +84,8 @@ export class ItemsPage extends _MasterPage {
 
     updateHotkeys(hotkeys) {
         if(this.hotkeys !== undefined) {
-            this.hotkeyService.remove(new Hotkey(this.hotkeys.nextImage, null));
-            this.hotkeyService.remove(new Hotkey(this.hotkeys.prevImage, null));
+            this.hotkeyService.add(new Hotkey(this.hotkeys.nextImage, (): boolean =>{ return false }));
+            this.hotkeyService.add(new Hotkey(this.hotkeys.prevImage, (): boolean =>{ return false }));
         }
 
         this.hotkeys = hotkeys;

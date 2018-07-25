@@ -66,10 +66,12 @@ export class PolygonDrawer extends Drawer{
 
     saveFromCoordinates(...coordinates: CoordinatesObject[]) {
         if (coordinates.length > 3) {
-            this.getAnnotationsProvider().addPolygon(new Polygon(
+            let polygonToAdd = new Polygon(
                 coordinates,
-            AnnotationsProvider.lastLabel ? AnnotationsProvider.lastLabel : 'unnamed'
-            ));
+                AnnotationsProvider.lastLabel ? AnnotationsProvider.lastLabel : 'unnamed'
+            );
+            this.getAnnotationsProvider().addPolygon(polygonToAdd);
+            this.getAnnotationsProvider().selectElement(polygonToAdd);
         }
         this.points = [];
     }

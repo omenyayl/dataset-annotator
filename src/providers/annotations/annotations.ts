@@ -50,6 +50,16 @@ export class AnnotationsProvider {
         this.events.publish('render-canvas');
     }
 
+    setLabelOnSelectedElement(label: string) {
+        this.ngZone.run(() => {
+            if(AnnotationsProvider.selectedElement && AnnotationsProvider.selectedElement.hasOwnProperty('label')) {
+                AnnotationsProvider.selectedElement.label = label;
+                AnnotationsProvider.lastLabel = label;
+            }
+        });
+        this.renderCanvas();
+    }
+
 
     // BEGIN - RECTANGLE METHODS
     getRectangles() {

@@ -1,0 +1,15 @@
+generic-input {
+
+}
+.label-input {
+  width: stretch;
+  border: 1px solid rgba(161, 211, 255, 0.42);
+}
+
+.label-input:focus {
+  border: 1px solid rgba(56, 255, 59, 0.67);
+}
+
+.editing {
+  border: 1px solid rgba(255, 8, 28, 0.67)!important;
+}

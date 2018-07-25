@@ -12,6 +12,7 @@ import {ImageProvider} from "../providers/image/image";
 import {ItemPage} from "../pages/item/item";
 import {ipcRenderer} from 'electron';
 import {SettingsPage} from "../pages/settings/settings";
+import {AutoLabelPage} from "../pages/auto-label/auto-label";
 
 
 const SUPPORTED_EXTENSIONS = [
@@ -166,5 +167,10 @@ export class MyApp {
                         toast.present();
                     });
             });
+    }
+
+    openAutoLabelPage() {
+        this.menuCtrl.close();
+        this.navProxy.pushMaster(AutoLabelPage, null);
     }
 }

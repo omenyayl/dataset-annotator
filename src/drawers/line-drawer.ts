@@ -27,6 +27,7 @@ export class LineDrawer extends Drawer{
     saveLine(line: Line){
         if (Drawer.computeDistance(line.start, line.end) > Drawer.POINT_RADIUS * 2){
             this.getAnnotationsProvider().addLine(line);
+            this.getAnnotationsProvider().selectElement(line);
             let color = line == Drawer.getSelectedElement() ? Drawer.SELECTED_COLOR : Drawer.DEFAULT_COLOR;
             super.drawLine(line.start, line.end, color);
         }

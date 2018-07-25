@@ -60,6 +60,7 @@ export class RectangleDrawer extends Drawer{
 
         if (Drawer.computeDistance(coordinates[0], coordinates[1]) > Drawer.POINT_RADIUS * 2){
             this.getAnnotationsProvider().addRectangle(newRectangle);
+            this.getAnnotationsProvider().selectElement(newRectangle);
             this.drawRectangle(newRectangle);
         }
 
