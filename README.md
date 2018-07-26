@@ -1,8 +1,6 @@
 # Dataset Annotator
 Tool for annotating image datasets.
 
-NOTE: Further work by the team will be done in https://github.com/TATSIAVI/dataset-annotator 
-
 Table of Contents
 =================
 
