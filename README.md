@@ -30,6 +30,7 @@ Table of Contents
 Go into the cloned directory, and install with
 ```
 git clone https://github.com/omenyayl/dataset-annotator
+sudo npm config set unsafe-perm true
 sudo npm install -g electron ionic
 cd dataset-annotator
 npm install
