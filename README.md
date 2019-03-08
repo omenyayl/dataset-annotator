@@ -1,9 +1,6 @@
 # Dataset Annotator
 Tool for annotating image datasets.
 
-NOTE: New features and updates will go to https://github.com/TATSIAVI/DAB
-This repo will still receive code refactorization, bug-fixes, etc. 
-
 Table of Contents
 =================
 
